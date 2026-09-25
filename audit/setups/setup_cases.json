@@ -1,0 +1,37 @@
+{
+  "caseId": "SETUP-AUDIT-001",
+  "title": "Setup Model Case Categorization (Cases A, B, C)",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "description": "Categorization of Setup Model evaluations into Case A (Coherent), Case B (Confirmed Questionable), and Case C (Unconfirmed Interesting).",
+  "cases": [
+    {
+      "id": "SETUP-CASE-A-01",
+      "modelId": "MODEL_A_LONG",
+      "direction": "LONG",
+      "status": "CONFIRMED",
+      "fulfilledConditions": ["LIQUIDITY_SWEEP", "MSS_CONFIRMED", "FVG_CONFLUENCE"],
+      "caseType": "CASE_A_COHERENT",
+      "notes": "Coherent setup: All 3 mandatory rules met in chronological sequence."
+    },
+    {
+      "id": "SETUP-CASE-B-01",
+      "modelId": "MODEL_C_LONG",
+      "direction": "LONG",
+      "status": "CONFIRMED",
+      "fulfilledConditions": ["LIQUIDITY_SWEEP", "MSS_CONFIRMED"],
+      "caseType": "CASE_B_CONFIRMED_QUESTIONABLE",
+      "notes": "Confirmed setup meeting bare minimum conditions without FVG."
+    },
+    {
+      "id": "SETUP-CASE-C-01",
+      "modelId": "MODEL_B_LONG",
+      "direction": "LONG",
+      "status": "FORMING",
+      "fulfilledConditions": ["LIQUIDITY_SWEEP", "DISPLACEMENT"],
+      "missingConditions": ["FVG_CONFLUENCE"],
+      "caseType": "CASE_C_UNCONFIRMED_INTERESTING",
+      "notes": "Strong forming setup with sweep and displacement, waiting for FVG."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "caseId": "OB-AUDIT-001",
+  "title": "Order Block Origin and FVG Imbalance Association",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "description": "Order Block origin candle audit with FVG association and status lifecycle.",
+  "cases": [
+    {
+      "id": "OB-UNTESTED-01",
+      "direction": "BULLISH_OB",
+      "highPrice": 18005.0,
+      "lowPrice": 17998.0,
+      "status": "UNTESTED",
+      "associatedFvgId": "FVG-BULL-01",
+      "classification": "CLEAR",
+      "notes": "Last bearish candle prior to bullish displacement creating FVG."
+    }
+  ]
+}

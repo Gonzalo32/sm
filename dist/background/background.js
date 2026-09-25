@@ -1,0 +1,1 @@
+chrome.runtime.onInstalled.addListener(()=>{console.log("[ICT Assistant] Chrome Extension installed successfully.")});chrome.runtime.onMessage.addListener((e,t,o)=>(e.type==="ICT_PROBE_DATA"&&(console.log("[Background] Received probe data from content script:",e.payload),chrome.storage.local.set({lastProbeData:e.payload}),o({status:"OK"})),!0));

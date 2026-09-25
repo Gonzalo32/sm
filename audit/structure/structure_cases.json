@@ -1,0 +1,31 @@
+{
+  "caseId": "STRUCT-AUDIT-001",
+  "title": "BOS Trend Continuation vs MSS Trend Reversal",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "description": "Structure breaks distinguishing trend continuation (BOS) vs trend reversal (MSS).",
+  "cases": [
+    {
+      "id": "STRUCT-BOS-01",
+      "type": "BOS",
+      "direction": "BULLISH",
+      "brokenSwingPrice": 18030.0,
+      "breakPrice": 18052.0,
+      "priorTrend": "BULLISH",
+      "newTrend": "BULLISH",
+      "classification": "CLEAR",
+      "notes": "Bullish trend continuation break above Swing High."
+    },
+    {
+      "id": "STRUCT-MSS-01",
+      "type": "MSS",
+      "direction": "BULLISH",
+      "brokenSwingPrice": 17985.0,
+      "breakPrice": 18038.0,
+      "priorTrend": "BEARISH",
+      "newTrend": "BULLISH",
+      "classification": "CLEAR",
+      "notes": "Trend reversal shift breaking Swing High in BEARISH regime."
+    }
+  ]
+}

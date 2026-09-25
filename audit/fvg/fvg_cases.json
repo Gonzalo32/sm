@@ -1,0 +1,31 @@
+{
+  "caseId": "FVG-AUDIT-001",
+  "title": "Fair Value Gap Imbalance Lifecycle Audit",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "description": "3-candle FVG creation, partial mitigation, and full mitigation lifecycle audit dataset.",
+  "cases": [
+    {
+      "id": "FVG-ACTIVE-01",
+      "createdTimestamp": 1700000120000,
+      "direction": "BULLISH",
+      "highPrice": 18025.0,
+      "lowPrice": 18010.0,
+      "gapSize": 15.0,
+      "status": "ACTIVE",
+      "classification": "CLEAR",
+      "notes": "Imbalance between candle 1 high (18010) and candle 3 low (18025)."
+    },
+    {
+      "id": "FVG-MITIGATED-01",
+      "createdTimestamp": 1700000240000,
+      "direction": "BEARISH",
+      "highPrice": 17980.0,
+      "lowPrice": 17965.0,
+      "gapSize": 15.0,
+      "status": "FULLY_MITIGATED",
+      "classification": "CLEAR",
+      "notes": "Bearish gap filled completely by subsequent retracement candle."
+    }
+  ]
+}

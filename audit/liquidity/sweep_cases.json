@@ -1,0 +1,33 @@
+{
+  "caseId": "SWEEP-AUDIT-001",
+  "title": "BSL/SSL Sweep vs Breakout Discrimination",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "description": "Audit dataset evaluating liquidity sweeps with wick rejection vs deep structural breakouts.",
+  "cases": [
+    {
+      "id": "SWEEP-CONFIRMED-01",
+      "timestamp": 1700000480000,
+      "liquidityType": "BSL",
+      "levelPrice": 18050.0,
+      "extremePrice": 18058.0,
+      "closePrice": 18020.0,
+      "penetration": 8.0,
+      "isBreakout": false,
+      "classification": "CLEAR",
+      "notes": "Classic wick sweep of 18050 BSL with close back inside range at 18020."
+    },
+    {
+      "id": "SWEEP-BREAKOUT-01",
+      "timestamp": 1700000540000,
+      "liquidityType": "SSL",
+      "levelPrice": 17950.0,
+      "extremePrice": 17900.0,
+      "closePrice": 17902.0,
+      "penetration": 50.0,
+      "isBreakout": true,
+      "classification": "QUESTIONABLE",
+      "notes": "50 point deep penetration closing outside level; classified as trend breakout."
+    }
+  ]
+}

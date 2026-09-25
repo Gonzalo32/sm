@@ -1,0 +1,43 @@
+{
+  "caseId": "DISP-AUDIT-001",
+  "title": "Clear Displacement vs Borderline Expansion",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "description": "Reproducible sample set comparing clear quantifiable displacement against borderline range expansion.",
+  "cases": [
+    {
+      "id": "DISP-CLEAR-01",
+      "timestamp": 1700000480000,
+      "open": 17998,
+      "high": 18050,
+      "low": 17997,
+      "close": 18048,
+      "bodyRatio": 0.943,
+      "range": 53,
+      "averagePreviousRange": 4.0,
+      "rangeMultiplier": 13.25,
+      "direction": "BULLISH",
+      "classification": "CLEAR",
+      "hasStructuralBreak": true,
+      "hasFvgCreated": true,
+      "notes": "Strong body ratio (94.3%) and 13.25x range expansion with BOS break."
+    },
+    {
+      "id": "DISP-BORDERLINE-01",
+      "timestamp": 1700000540000,
+      "open": 18000,
+      "high": 18010,
+      "low": 17999,
+      "close": 18006.1,
+      "bodyRatio": 0.609,
+      "range": 11,
+      "averagePreviousRange": 7.0,
+      "rangeMultiplier": 1.571,
+      "direction": "BULLISH",
+      "classification": "BORDERLINE",
+      "hasStructuralBreak": false,
+      "hasFvgCreated": false,
+      "notes": "Meets 0.60 body ratio and 1.50 range multiplier thresholds near lower boundary."
+    }
+  ]
+}
