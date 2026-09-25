@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ICTValidationCaseSchema",
+  "type": "object",
+  "required": [
+    "caseId",
+    "symbol",
+    "timeframe",
+    "eventType",
+    "eventTimestamp",
+    "eventIndex",
+    "detectionSnapshot",
+    "validationStatus",
+    "isNegativeCase"
+  ],
+  "properties": {
+    "caseId": {
+      "type": "string",
+      "description": "Stable and reproducible unique identifier: VAL-{symbol}-{tf}-{eventType}-{timestamp}"
+    },
+    "symbol": {
+      "type": "string",
+      "enum": ["MNQ", "NQ"]
+    },
+    "timeframe": {
+      "type": "string",
+      "enum": ["1m", "5m", "15m", "1h", "4h", "1d"]
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "SWING_HIGH",
+        "SWING_LOW",
+        "BOS",
+        "MSS",
+        "BSL",
+        "SSL",
+        "LIQUIDITY_SWEEP",
+        "FVG_CREATED",
+        "FVG_FILLED",
+        "ORDER_BLOCK_CREATED",
+        "ORDER_BLOCK_INVALIDATED",
+        "DISPLACEMENT",
+        "SETUP",
+        "NONE"
+      ]
+    },
+    "eventTimestamp": {
+      "type": "number"
+    },
+    "confirmationTimestamp": {
+      "type": "number"
+    },
+    "eventIndex": {
+      "type": "number"
+    },
+    "detectionSnapshot": {
+      "type": "object",
+      "description": "Frozen snapshot representing information available strictly at event timestamp"
+    },
+    "validationStatus": {
+      "type": "string",
+      "enum": ["UNREVIEWED", "CLEAR", "BORDERLINE", "QUESTIONABLE"]
+    },
+    "detectionReviewType": {
+      "type": "string",
+      "enum": ["NONE", "DETECTION_REVIEW", "CONCEPT_REVIEW"]
+    },
+    "validationReason": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "isNegativeCase": {
+      "type": "boolean"
+    },
+    "expectedEvent": {
+      "type": "string"
+    },
+    "isBorderlineBreak": {
+      "type": "boolean"
+    },
+    "isBorderlineDisplacement": {
+      "type": "boolean"
+    },
+    "reviewTimestamp": {
+      "type": "number"
+    },
+    "reviewer": {
+      "type": "string"
+    }
+  }
+}

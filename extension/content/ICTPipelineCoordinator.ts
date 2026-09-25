@@ -1,6 +1,7 @@
 /**
- * ICT Assistant - Real Market Pipeline & Coordinator (ISOLATED World)
- * Connects CandleStore -> ICTEngine -> ConfluenceEngine -> SetupEngine -> MarketContextEngine -> VisualAdapter -> ICTHUD.
+ * ICT Assistant - Real Market & Replay Pipeline Coordinator (ISOLATED World)
+ * Connects CandleStore / ReplayEngine -> ICTEngine -> ConfluenceEngine -> SetupEngine -> MarketContextEngine -> VisualAdapter -> ICTHUD.
+ * Guarantees 100% shared domain logic between LIVE stream and REPLAY mode.
  */
 
 import { CandleStore } from '../../core/market/CandleStore';
@@ -9,6 +10,8 @@ import { ICTEngine, ICTEngineResult } from '../../core/ict/engine/ICTEngine';
 import { ConfluenceEngine } from '../../core/ict/confluence/ConfluenceEngine';
 import { SetupEngine } from '../../core/ict/setups/SetupEngine';
 import { MarketContextEngine, ICTMarketContext } from '../../core/ict/context/MarketContextEngine';
+import { ReplayEngine } from '../../core/ict/replay/ReplayEngine';
+import { ReplayState } from '../../core/ict/replay/ReplayTypes';
 import { VisualAdapter } from '../visual/VisualAdapter';
 import { ICTHUD } from '../visual/ICTHUD';
 import { CanvasRenderer } from '../visual/CanvasRenderer';
@@ -21,12 +24,16 @@ export interface PipelineEvaluationResult {
   executionTimeMs: number;
 }
 
+export type PipelineMode = 'LIVE' | 'REPLAY';
+
 export class ICTPipelineCoordinator {
   private symbol: string;
   private timeframe: Timeframe;
+  private mode: PipelineMode = 'LIVE';
   private debugMode: boolean = true;
 
   private store: CandleStore;
+  private replayEngine: ReplayEngine;
   private ictEngine: ICTEngine;
   private confluenceEngine: ConfluenceEngine;
   private setupEngine: SetupEngine;
@@ -45,6 +52,7 @@ export class ICTPipelineCoordinator {
     this.debugMode = options?.debug ?? true;
 
     this.store = new CandleStore(symbol, timeframe);
+    this.replayEngine = new ReplayEngine(symbol, timeframe);
     this.ictEngine = new ICTEngine();
     this.confluenceEngine = new ConfluenceEngine();
     this.setupEngine = new SetupEngine();
@@ -53,6 +61,25 @@ export class ICTPipelineCoordinator {
 
     this.hud = options?.hud || null;
     this.renderer = options?.renderer || null;
+
+    // Listen to replay updates to re-evaluate on every step
+    this.replayEngine.subscribe((state, currentSlice) => {
+      if (this.mode === 'REPLAY') {
+        this.evaluateSlice(currentSlice, state);
+      }
+    });
+  }
+
+  public setMode(mode: PipelineMode): void {
+    this.mode = mode;
+  }
+
+  public getMode(): PipelineMode {
+    return this.mode;
+  }
+
+  public getReplayEngine(): ReplayEngine {
+    return this.replayEngine;
   }
 
   public setContext(symbol: string, timeframe: Timeframe): void {
@@ -71,7 +98,9 @@ export class ICTPipelineCoordinator {
       this.renderer.clear();
     }
 
-    this.reevaluate();
+    if (this.mode === 'LIVE') {
+      this.reevaluate();
+    }
   }
 
   public getContext(): { symbol: string; timeframe: Timeframe } {
@@ -83,20 +112,37 @@ export class ICTPipelineCoordinator {
   }
 
   public ingestCandle(candle: Candle): PipelineEvaluationResult {
+    this.mode = 'LIVE';
     this.store.ingestCandle(candle);
     return this.reevaluate();
   }
 
   public ingestCandles(candles: Candle[]): PipelineEvaluationResult {
+    this.mode = 'LIVE';
     this.store.loadHistory(candles);
     return this.reevaluate();
   }
 
-  public reevaluate(): PipelineEvaluationResult {
-    const startTime = performance.now();
-    const candles = this.store.getCandles();
+  public loadReplayDataset(candles: Candle[], symbol?: string, timeframe?: Timeframe): ReplayState {
+    this.mode = 'REPLAY';
+    if (symbol) this.symbol = symbol;
+    if (timeframe) this.timeframe = timeframe;
+    return this.replayEngine.loadDataset(candles, this.symbol, this.timeframe);
+  }
 
-    // 1. Process ICT Engine
+  public reevaluate(): PipelineEvaluationResult {
+    const candles = this.store.getCandles();
+    return this.evaluateSlice(candles);
+  }
+
+  /**
+   * Shared Domain Logic Processor: Evaluates any given slice of candles.
+   * Guarantees 100% equivalence between LIVE stream and REPLAY step.
+   */
+  public evaluateSlice(candles: Candle[], replayState?: ReplayState): PipelineEvaluationResult {
+    const startTime = performance.now();
+
+    // 1. Process ICT Engine on candle slice strictly available up to current index
     const engineResult = this.ictEngine.process(candles, this.symbol, this.timeframe);
     const { state, events } = engineResult;
 
@@ -114,19 +160,13 @@ export class ICTPipelineCoordinator {
 
     const executionTimeMs = Math.round(performance.now() - startTime);
 
-    // Debug logging
-    if (this.debugMode && candles.length > 0) {
-      console.log(
-        `[ICT Pipeline Debug] Symbol:${this.symbol} TF:${this.timeframe} Candles:${candles.length} Events:${events.length} Setups:${setups.length} Exec:${executionTimeMs}ms Range:[${candles[0].timestamp} -> ${candles[candles.length - 1].timestamp}]`
-      );
-    }
-
-    // Update HUD
+    // Update HUD (supports both LIVE and REPLAY display)
     if (this.hud) {
       this.hud.render(marketContext, {
         candleCount: candles.length,
         executionTimeMs,
         fps: 60,
+        replayState,
       });
     }
 

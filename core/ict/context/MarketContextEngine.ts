@@ -1,6 +1,6 @@
 /**
  * Multi-Timeframe ICT Market Context Engine
- * Feeds the conceptual data model for the Info Panel HUD.
+ * Feeds the conceptual data model and Market Context Assistant for TradeSea.
  */
 
 import { Timeframe } from '../../market/Candle';
@@ -56,6 +56,9 @@ export interface ICTMarketContext {
     invalidationReason?: string;
   };
 
+  narrativeSummary: string[];
+  narrativeText: string;
+
   confluences: ICTConfluence[];
   setups: ICTSetup[];
 }
@@ -93,7 +96,7 @@ export class MarketContextEngine {
 
     const targetStr = unswept.length > 0 ? `${unswept[0].type} @ $${unswept[0].price.toFixed(2)}` : 'None';
 
-    return {
+    const baseContext: Partial<ICTMarketContext> = {
       symbol,
       htfTimeframe,
       ltfTimeframe,
@@ -139,10 +142,85 @@ export class MarketContextEngine {
         target: targetStr,
         invalidationReason: activeSetup && activeSetup.invalidatingConditions.length > 0 ? activeSetup.invalidatingConditions[0] : 'None',
       },
+    };
 
+    const narrativeSummary = this.generateNarrativeSummary(baseContext);
+    const narrativeText = narrativeSummary.join('\n');
+
+    return {
+      ...(baseContext as ICTMarketContext),
+      narrativeSummary,
+      narrativeText,
       confluences,
       setups,
     };
   }
-}
 
+  /**
+   * Generates a concise textual natural language summary derived strictly from ICTMarketContext.
+   */
+  public generateNarrativeSummary(context: Partial<ICTMarketContext>): string[] {
+    const lines: string[] = [];
+
+    // 1. Structure & Trend
+    const trend = context.structure?.trend;
+    if (trend === 'BULLISH') lines.push('Mercado alcista.');
+    else if (trend === 'BEARISH') lines.push('Mercado bajista.');
+    else lines.push('Mercado en consolidación lateral.');
+
+    // 2. Last Structure Event
+    if (context.structure?.lastMSS && context.structure.lastMSS !== 'None') {
+      lines.push(`Último evento relevante: MSS ${context.structure.lastMSS.toLowerCase()}.`);
+    } else if (context.structure?.lastBOS && context.structure.lastBOS !== 'None') {
+      lines.push(`Último evento relevante: BOS ${context.structure.lastBOS.toLowerCase()}.`);
+    } else {
+      lines.push('Estructura sin quiebres recientes.');
+    }
+
+    // 3. Target Liquidity
+    if (context.liquidity?.nearestTarget && context.liquidity.nearestTarget !== 'None') {
+      lines.push(`Liquidez objetivo: ${context.liquidity.nearestTarget}.`);
+    } else {
+      lines.push('Sin nivel de liquidez objetivo cercano.');
+    }
+
+    // 4. PD Zone
+    const zone = context.pdArray?.zone;
+    if (zone === 'DISCOUNT') lines.push('Precio en Discount.');
+    else if (zone === 'PREMIUM') lines.push('Precio en Premium.');
+    else lines.push('Precio en Equilibrium.');
+
+    // 5. Active FVG / OB
+    const fvgs = context.pdArray?.activeFvgCount || 0;
+    const obs = context.pdArray?.activeObCount || 0;
+    if (fvgs > 0 && obs > 0) {
+      lines.push(`Existe FVG (${fvgs}) y OB (${obs}) activo.`);
+    } else if (fvgs > 0) {
+      lines.push(`Existe FVG activo.`);
+    } else if (obs > 0) {
+      lines.push(`Existe OB activo.`);
+    }
+
+    // 6. Setup Status & Missing Conditions
+    const activeSetup = context.setup;
+    if (activeSetup) {
+      const status = activeSetup.status;
+      const model = activeSetup.activeModelName;
+      if (status === 'CONFIRMED') {
+        lines.push(`Setup ${model} CONFIRMADO.`);
+      } else if (status === 'FORMING') {
+        lines.push(`Setup ${model} en FORMING.`);
+        if (activeSetup.missingConditions && activeSetup.missingConditions.length > 0) {
+          const missing = activeSetup.missingConditions[0].replace('○ ', '');
+          lines.push(`Falta: ${missing}.`);
+        }
+      } else if (status === 'INVALIDATED') {
+        lines.push(`Setup ${model} INVALIDADO.`);
+      } else {
+        lines.push(`Setup ${model} en WATCHING.`);
+      }
+    }
+
+    return lines;
+  }
+}
