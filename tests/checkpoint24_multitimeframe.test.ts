@@ -9,8 +9,6 @@ import { describe, it, expect } from 'vitest';
 import { CP24DatasetGenerator } from '../core/ict/backtest/CP24DatasetGenerator';
 import { ExecutionSimulator } from '../core/ict/backtest/ExecutionSimulator';
 import { CP21Runner } from '../core/ict/backtest/CP21Runner';
-import { VolatilityVariant, ProtocolMode } from '../core/ict/backtest/BacktestTypes';
-
 describe('Checkpoint 24 - Multi-Timeframe Regime Protocol Suite', () => {
   // 1. Pure Shadow Outcome Invariance
   it('should guarantee 100% outcome invariance across all 4 variants under PURE_SHADOW mode (ratio = 0)', () => {
@@ -81,11 +79,6 @@ describe('Checkpoint 24 - Multi-Timeframe Regime Protocol Suite', () => {
   it('should enforce balanced multi-timeframe coverage across MNQ 1m/5m/15m and NQ 1m/5m/15m', () => {
     const { dataset } = CP24DatasetGenerator.generateCP24Dataset();
 
-    const pairs = [
-      'MNQ 1m', 'MNQ 5m', 'MNQ 15m',
-      'NQ 1m', 'NQ 5m', 'NQ 15m',
-    ];
-
     for (const sym of ['MNQ', 'NQ']) {
       for (const tf of ['1m', '5m', '15m']) {
         const count = dataset.scenarios.filter((s) => s.symbol === sym && s.timeframe === tf).length;
@@ -122,7 +115,6 @@ describe('Checkpoint 24 - Multi-Timeframe Regime Protocol Suite', () => {
   it('should maintain 100% EligibilityDecision immutability at confirmation timestamp when future candles change', () => {
     const { items } = CP24DatasetGenerator.generateCP24Dataset();
     const item = items[0];
-    const simulator = new ExecutionSimulator();
 
     const origEligibility = ExecutionSimulator.evaluateEligibility(item.scenario, 'BASELINE', 'FILTERED_EXPERIMENT', 0.8);
 

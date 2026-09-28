@@ -9,7 +9,7 @@ import { describe, it, expect } from 'vitest';
 import { CP25DatasetGenerator } from '../core/ict/backtest/CP25DatasetGenerator';
 import { ExecutionSimulator } from '../core/ict/backtest/ExecutionSimulator';
 import { CP21Runner } from '../core/ict/backtest/CP21Runner';
-import { BacktestScenario, VolatilityVariant } from '../core/ict/backtest/BacktestTypes';
+import { BacktestScenario } from '../core/ict/backtest/BacktestTypes';
 
 describe('Checkpoint 25 - Structural Volatility Eligibility Audit Suite', () => {
   // 1. Dataset Independence & Hash Integrity

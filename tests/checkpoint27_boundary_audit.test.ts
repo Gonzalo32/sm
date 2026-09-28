@@ -11,7 +11,6 @@ import { describe, it, expect } from 'vitest';
 import { CP27DatasetGenerator } from '../core/ict/backtest/CP27DatasetGenerator';
 import { ExecutionSimulator } from '../core/ict/backtest/ExecutionSimulator';
 import { CP21Runner } from '../core/ict/backtest/CP21Runner';
-import { EligibilityDecision } from '../core/ict/backtest/BacktestTypes';
 
 describe('Checkpoint 27 - Eligibility Boundary & Near-Threshold Audit Suite', () => {
   // 1. Boundary Classification

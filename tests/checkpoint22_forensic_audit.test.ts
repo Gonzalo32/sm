@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { CP21DatasetGenerator } from '../core/ict/backtest/CP21DatasetGenerator';
 import { ExecutionSimulator } from '../core/ict/backtest/ExecutionSimulator';
 import { CP21Runner } from '../core/ict/backtest/CP21Runner';
-import { BacktestScenario, VolatilityVariant, ExecutionTrace } from '../core/ict/backtest/BacktestTypes';
+import { BacktestScenario, VolatilityVariant } from '../core/ict/backtest/BacktestTypes';
 
 describe('Checkpoint 22 - Forensic Audit Suite', () => {
   // 1. CP21 Reproduction & Hash Integrity
@@ -91,6 +91,7 @@ describe('Checkpoint 22 - Forensic Audit Suite', () => {
     for (const item of items) {
       const s = item.scenario;
       for (const v of variants) {
+        expect(v).toBeDefined();
         expect(s.entryPrice).toBe(s.referencePrice);
         expect(s.risk).toBe(Math.abs(s.entryPrice - s.stopPrice));
         expect(s.targetDistance).toBe(2 * s.risk);
@@ -103,9 +104,9 @@ describe('Checkpoint 22 - Forensic Audit Suite', () => {
     const { items, dataset } = CP21DatasetGenerator.generateCP21Dataset();
     const runner = new CP21Runner(items, dataset.datasetHash);
 
-    const t10 = runner.executeVariant(items, 'ROBUST_10', 0.8);
-    const t14 = runner.executeVariant(items, 'ROBUST_14', 0.8);
-    const t20 = runner.executeVariant(items, 'ROBUST_20', 0.8);
+    const t10 = runner.executeVariant(items, 'ROBUST_10', 'FILTERED_EXPERIMENT', 0.8);
+    const t14 = runner.executeVariant(items, 'ROBUST_14', 'FILTERED_EXPERIMENT', 0.8);
+    const t20 = runner.executeVariant(items, 'ROBUST_20', 'FILTERED_EXPERIMENT', 0.8);
 
     const m10 = runner.computeMetrics(t10, 'ROBUST_10');
     const m14 = runner.computeMetrics(t14, 'ROBUST_14');
@@ -149,10 +150,10 @@ describe('Checkpoint 22 - Forensic Audit Suite', () => {
     const { items, dataset } = CP21DatasetGenerator.generateCP21Dataset();
     const runner = new CP21Runner(items, dataset.datasetHash);
 
-    const baseRaw = runner.computeMetrics(runner.executeVariant(items, 'BASELINE', 0), 'BASELINE');
-    const rob10Raw = runner.computeMetrics(runner.executeVariant(items, 'ROBUST_10', 0), 'ROBUST_10');
-    const rob14Raw = runner.computeMetrics(runner.executeVariant(items, 'ROBUST_14', 0), 'ROBUST_14');
-    const rob20Raw = runner.computeMetrics(runner.executeVariant(items, 'ROBUST_20', 0), 'ROBUST_20');
+    const baseRaw = runner.computeMetrics(runner.executeVariant(items, 'BASELINE', 'PURE_SHADOW', 0), 'BASELINE');
+    const rob10Raw = runner.computeMetrics(runner.executeVariant(items, 'ROBUST_10', 'PURE_SHADOW', 0), 'ROBUST_10');
+    const rob14Raw = runner.computeMetrics(runner.executeVariant(items, 'ROBUST_14', 'PURE_SHADOW', 0), 'ROBUST_14');
+    const rob20Raw = runner.computeMetrics(runner.executeVariant(items, 'ROBUST_20', 'PURE_SHADOW', 0), 'ROBUST_20');
 
     expect(baseRaw.targetReachedCount).toBe(167);
     expect(baseRaw.stopReachedCount).toBe(333);

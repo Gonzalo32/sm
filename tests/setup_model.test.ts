@@ -7,6 +7,8 @@ import {
   MarketContextEngine,
 } from '../core/ict';
 
+import { MODEL_A_LONG, MODEL_A_SHORT } from '../core/ict/models/PredefinedModels';
+
 describe('Checkpoint 4 — ICT Setup & Confluence Conceptual Data Model Tests', () => {
   let engine: ICTEngine;
   let confluenceEngine: ConfluenceEngine;
@@ -22,7 +24,7 @@ describe('Checkpoint 4 — ICT Setup & Confluence Conceptual Data Model Tests', 
       sweepMinPenetrationPoints: 0.1,
     });
     confluenceEngine = new ConfluenceEngine();
-    setupEngine = new SetupEngine();
+    setupEngine = new SetupEngine([MODEL_A_LONG, MODEL_A_SHORT]);
     contextEngine = new MarketContextEngine();
   });
 

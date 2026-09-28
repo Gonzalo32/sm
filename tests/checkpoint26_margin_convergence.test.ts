@@ -8,8 +8,6 @@ import { describe, it, expect } from 'vitest';
 import { CP26DatasetGenerator } from '../core/ict/backtest/CP26DatasetGenerator';
 import { ExecutionSimulator } from '../core/ict/backtest/ExecutionSimulator';
 import { CP21Runner } from '../core/ict/backtest/CP21Runner';
-import { VolatilityVariant } from '../core/ict/backtest/BacktestTypes';
-
 describe('Checkpoint 26 - Eligibility Margin & Estimator Convergence Audit Suite', () => {
   // 1. Eligibility Formula & Margin Calculation
   it('should compute eligibility margin = (risk / volatility) - 0.8 and absolute margin = risk - (0.8 * volatility)', () => {
@@ -29,7 +27,6 @@ describe('Checkpoint 26 - Eligibility Margin & Estimator Convergence Audit Suite
   // 2. Threshold Equality & Floating Point Precision
   it('should evaluate threshold equality correctly with non-negative margin for eligible trades', () => {
     const { items } = CP26DatasetGenerator.generateCP26Dataset();
-    const simulator = new ExecutionSimulator();
 
     for (const item of items) {
       const dec = ExecutionSimulator.evaluateEligibility(item.scenario, 'BASELINE', 'FILTERED_EXPERIMENT', 0.8);

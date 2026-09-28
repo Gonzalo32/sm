@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CP32 — Visor Gráfico Completo de Revisión Humana (300 Casos)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --chart-h: 560px;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    h1 { margin: 0; font-size: 1.5rem; color: var(--accent); }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
+    
+    .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .btn {
+      background: #1e293b;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #334155; }
+    .btn.active { background: var(--accent); color: #0f172a; }
+    .btn-export { background: #22c55e; color: #0f172a; border: 1px solid #22c55e; font-weight: bold; }
+    .btn-export:hover { background: #16a34a; }
+    .btn-guide { background: #0284c7; color: white; border: 1px solid #0284c7; }
+    .btn-h { background: #334155; color: #f8fafc; border: 1px solid #475569; }
+    .btn-h.active { background: #38bdf8; color: #0f172a; font-weight: bold; }
+
+    .guide-box {
+      background: #090d16;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .guide-box h3 { margin-top: 0; color: var(--accent); }
+    .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; font-size: 0.88rem; }
+    .guide-item { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 6px; }
+    .guide-item strong { color: #f59e0b; }
+
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .case-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .case-title { font-size: 1.2rem; font-weight: bold; color: #ffffff; }
+    .badges { display: flex; gap: 8px; }
+    .badge {
+      background: #0284c7;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: var(--chart-h);
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      transition: height 0.3s;
+    }
+    canvas { width: 100%; height: 100%; display: block; }
+
+    .form-group {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .form-label { font-weight: 600; min-width: 120px; color: var(--accent); }
+    select, input[type="text"] {
+      background: #1e293b;
+      color: white;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    select { min-width: 240px; cursor: pointer; }
+    input[type="text"] { flex-grow: 1; min-width: 250px; }
+
+    .progress-bar {
+      background: #334155;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>CP32 — Visor Gráfico Completo del Dataset (300 Casos)</h1>
+      <div class="subtitle">Revisión Conceptual Humana Blindada · Revisor: Gonzalo</div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <span style="font-size:0.85rem; color:var(--text-muted);">Altura Gráfico:</span>
+      <button class="btn btn-h" onclick="setChartHeight('420px', this)">420px</button>
+      <button class="btn btn-h active" onclick="setChartHeight('560px', this)">560px (Default)</button>
+      <button class="btn btn-h" onclick="setChartHeight('720px', this)">720px (Alto)</button>
+      <button class="btn btn-h" onclick="setChartHeight('900px', this)">900px (Max)</button>
+      <button class="btn btn-guide" onclick="toggleGuide()">📐 Criterios CP30</button>
+      <button class="btn btn-export" onclick="exportCSV()">📥 Exportar Respuestas CSV</button>
+    </div>
+  </header>
+
+  <div id="guideBox" class="guide-box">
+    <h3>📐 Guía Rápida de Clasificación Conceptual (Especificación CP30)</h3>
+    <div class="guide-grid">
+      <div class="guide-item">
+        <strong>1. CLEAR (Claro)</strong><br>
+        La estructura (BOS/MSS, Liquidez, FVG u Order Block) se observa con claridad visual en las velas sin ninguna ambigüedad.
+      </div>
+      <div class="guide-item">
+        <strong>2. BORDERLINE (Ambiguo)</strong><br>
+        Hay indicios razonables de la estructura, pero es un caso sutil, pequeño o con cierta ambigüedad visual.
+      </div>
+      <div class="guide-item">
+        <strong>3. QUESTIONABLE (Cuestionable)</strong><br>
+        La presencia del concepto cuesta justificarla o parece forzada bajo las reglas formales de CP30.
+      </div>
+      <div class="guide-item">
+        <strong>4. NOT_PRESENT (No Presente)</strong><br>
+        El gráfico presenta consolidación o movimiento sin patrones estructurales ICT claros.
+      </div>
+      <div class="guide-item">
+        <strong>5. CONCEPTO_NO_DETERMINISTA</strong><br>
+        La situación observada no está suficientemente definida en CP30 para decidir objetivamente.
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <div style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);">
+      <span id="progressText">Progreso: 0 / 300 casos evaluados</span>
+      <span id="tandaText">Tanda 1 de 30</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="nav" id="tandaNav"></div>
+  <div id="casesContainer"></div>
+
+  <script>
+    let cases = [];
+    let evaluations = {};
+    let currentTanda = 1;
+
+    fetch('cases.json')
+      .then(res => res.json())
+      .then(data => {
+        cases = data;
+        const saved = localStorage.getItem('CP32_EVALUATIONS_300');
+        if (saved) {
+          try { evaluations = JSON.parse(saved); } catch(e) {}
+        }
+        renderNav();
+        renderTanda(1);
+        updateProgress();
+      });
+
+    function setChartHeight(h, btn) {
+      document.documentElement.style.setProperty('--chart-h', h);
+      document.querySelectorAll('.btn-h').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderTanda(currentTanda);
+    }
+
+    function toggleGuide() {
+      const g = document.getElementById('guideBox');
+      g.style.display = (g.style.display === 'none' || !g.style.display) ? 'block' : 'none';
+    }
+
+    function saveState() {
+      localStorage.setItem('CP32_EVALUATIONS_300', JSON.stringify(evaluations));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = Object.keys(evaluations).filter(k => evaluations[k].classification).length;
+      document.getElementById('progressText').innerText = `Progreso: ${count} / ${cases.length} casos evaluados (${Math.round((count/cases.length)*100 || 0)}%)`;
+      document.getElementById('progressFill').style.width = `${((count/cases.length)*100 || 0)}%`;
+    }
+
+    function renderNav() {
+      const nav = document.getElementById('tandaNav');
+      nav.innerHTML = '';
+      const totalTandas = Math.ceil(cases.length / 10);
+      for (let t = 1; t <= totalTandas; t++) {
+        const btn = document.createElement('button');
+        btn.className = 'btn' + (t === currentTanda ? ' active' : '');
+        btn.innerText = `Tanda ${t} (${(t-1)*10+1}–${Math.min(t*10, cases.length)})`;
+        btn.onclick = () => { currentTanda = t; renderNav(); renderTanda(t); };
+        nav.appendChild(btn);
+      }
+    }
+
+    function renderTanda(t) {
+      const totalTandas = Math.ceil(cases.length / 10);
+      document.getElementById('tandaText').innerText = `Tanda ${t} de ${totalTandas}`;
+      const container = document.getElementById('casesContainer');
+      container.innerHTML = '';
+      const start = (t - 1) * 10;
+      const subset = cases.slice(start, start + 10);
+
+      subset.forEach((c, idx) => {
+        const globalIdx = start + idx + 1;
+        const card = document.createElement('div');
+        card.className = 'case-card';
+
+        const evalData = evaluations[c.caseId] || { classification: '', comment: '' };
+
+        card.innerHTML = `
+          <div class="case-header">
+            <div class="case-title">#${globalIdx} — Case ID: ${c.caseId}</div>
+            <div class="badges">
+              <span class="badge">${c.symbol}</span>
+              <span class="badge">${c.timeframe}</span>
+              <span class="badge" style="background:#475569;">${c.candles.length} Velas</span>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="chart-${c.caseId}"></canvas>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-label">Clasificación:</div>
+              <select id="select-${c.caseId}" onchange="updateEval('${c.caseId}')">
+                <option value="">-- Seleccionar Clasificación --</option>
+                <option value="CLEAR" ${evalData.classification === 'CLEAR' ? 'selected' : ''}>CLEAR (Patrón claro y visible)</option>
+                <option value="BORDERLINE" ${evalData.classification === 'BORDERLINE' ? 'selected' : ''}>BORDERLINE (Patrón ambiguo o sutil)</option>
+                <option value="QUESTIONABLE" ${evalData.classification === 'QUESTIONABLE' ? 'selected' : ''}>QUESTIONABLE (Cuestionable/forzado)</option>
+                <option value="NOT_PRESENT" ${evalData.classification === 'NOT_PRESENT' ? 'selected' : ''}>NOT_PRESENT (Sin patrón ICT relevante)</option>
+                <option value="CONCEPTO_NO_DETERMINISTA" ${evalData.classification === 'CONCEPTO_NO_DETERMINISTA' ? 'selected' : ''}>CONCEPTO_NO_DETERMINISTA</option>
+              </select>
+
+              <div class="form-label" style="min-width:70px; margin-left:10px;">Nota:</div>
+              <input type="text" id="note-${c.caseId}" placeholder="Comentario u observación opcional..." value="${evalData.comment || ''}" oninput="updateEval('${c.caseId}')">
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+        setTimeout(() => drawCandlestickChart(`chart-${c.caseId}`, c), 10);
+      });
+    }
+
+    function updateEval(caseId) {
+      const select = document.getElementById(`select-${caseId}`);
+      const note = document.getElementById(`note-${caseId}`);
+      evaluations[caseId] = {
+        classification: select.value,
+        comment: note.value
+      };
+      saveState();
+    }
+
+    function drawCandlestickChart(canvasId, caseData) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+
+      canvas.width = rect.width * window.devicePixelRatio || rect.width;
+      canvas.height = rect.height * window.devicePixelRatio || rect.height;
+      ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+      const width = rect.width;
+      const height = rect.height;
+      const candles = caseData.candles;
+      if (!candles || candles.length === 0) return;
+
+      let minPrice = Infinity;
+      let maxPrice = -Infinity;
+      candles.forEach(c => {
+        if (c.low < minPrice) minPrice = c.low;
+        if (c.high > maxPrice) maxPrice = c.high;
+      });
+
+      // Tighter price range padding (3%) for maximum candle vertical expansion
+      const padding = (maxPrice - minPrice) * 0.03 || 1.0;
+      minPrice -= padding;
+      maxPrice += padding;
+
+      const chartTop = 25;
+      const chartBottom = height - 25;
+      const chartLeft = 55;
+      const chartRight = width - 65;
+      const chartHeight = chartBottom - chartTop;
+      const chartWidth = chartRight - chartLeft;
+
+      function priceToY(p) {
+        return chartBottom - ((p - minPrice) / (maxPrice - minPrice)) * chartHeight;
+      }
+
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      const gridSteps = 6;
+      for (let i = 0; i <= gridSteps; i++) {
+        const y = chartTop + (chartHeight / gridSteps) * i;
+        const priceVal = maxPrice - ((maxPrice - minPrice) / gridSteps) * i;
+        ctx.beginPath();
+        ctx.moveTo(chartLeft, y);
+        ctx.lineTo(chartRight, y);
+        ctx.stroke();
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(priceVal.toFixed(2), chartRight + 6, y + 4);
+      }
+
+      if (caseData.dealingRangeContext) {
+        const eqY = priceToY(caseData.dealingRangeContext.equilibrium);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(chartLeft, eqY);
+        ctx.lineTo(chartRight, eqY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText('EQ (50%)', chartRight + 6, eqY + 4);
+      }
+
+      const count = candles.length;
+      const stepX = chartWidth / count;
+      const candleWidth = Math.max(6, stepX * 0.65);
+
+      candles.forEach((c, i) => {
+        const x = chartLeft + i * stepX + stepX / 2;
+        const openY = priceToY(c.open);
+        const closeY = priceToY(c.close);
+        const highY = priceToY(c.high);
+        const lowY = priceToY(c.low);
+
+        const isBull = c.close >= c.open;
+        const color = isBull ? '#22c55e' : '#ef4444';
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, highY);
+        ctx.lineTo(x, lowY);
+        ctx.stroke();
+
+        const topY = Math.min(openY, closeY);
+        const bodyH = Math.max(4, Math.abs(closeY - openY));
+        ctx.fillStyle = color;
+        ctx.fillRect(x - candleWidth / 2, topY, candleWidth, bodyH);
+
+        if (i === 0 || i === Math.floor(count/2) || i === count - 1) {
+          const dateStr = new Date(c.timestamp).toISOString().slice(11, 16);
+          ctx.fillStyle = '#64748b';
+          ctx.font = '11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(dateStr, x, chartBottom + 16);
+        }
+      });
+    }
+
+    function exportCSV() {
+      let csv = 'caseId,concept,classification,comment\n';
+      const concepts = [
+        'MARKET_STRUCTURE',
+        'LIQUIDITY',
+        'DISPLACEMENT',
+        'FVG',
+        'ORDER_BLOCK',
+        'PREMIUM_DISCOUNT',
+        'MODEL_EVALUATION',
+      ];
+      cases.forEach(c => {
+        const ev = evaluations[c.caseId] || { classification: '', comment: '' };
+        const commentEsc = `"${(ev.comment || '').replace(/"/g, '""')}"`;
+        concepts.forEach(concept => {
+          csv += `${c.caseId},${concept},${ev.classification || ''},${commentEsc}\n`;
+        });
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', 'CP32_HUMAN_REVIEW_FORM.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>

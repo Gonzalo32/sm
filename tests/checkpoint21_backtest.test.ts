@@ -51,7 +51,6 @@ describe('Checkpoint 21 - Retrospective Backtest Protocol Suite', () => {
   // 3. Variant Immutability
   it('should pass exactly identical scenario parameters to all 4 volatility variants', () => {
     const { items } = CP21DatasetGenerator.generateCP21Dataset();
-    const runner = new CP21Runner(items, 'TEST-HASH');
     const item = items[10];
 
     const simulator = new ExecutionSimulator();

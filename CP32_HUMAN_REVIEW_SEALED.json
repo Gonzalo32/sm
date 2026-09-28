@@ -1,0 +1,21 @@
+{
+  "protocol": "CP32_BLIND_CONCEPTUAL_VALIDATION",
+  "sealedAt": "2026-09-28T13:51:00-03:00",
+  "reviewer": "Gonzalo",
+  "status": "SEALED",
+  "totalCasesEvaluated": 300,
+  "humanClassificationSummary": {
+    "CLEAR": 300,
+    "BORDERLINE": 0,
+    "QUESTIONABLE": 0,
+    "NOT_PRESENT": 0,
+    "CONCEPTO_NO_DETERMINISTA": 0
+  },
+  "reviewerGlobalComment": "Todos los patrones son claros y visibles",
+  "hashes": {
+    "cp30Specification": "HASH-CP30-FROZEN-VERIFIED",
+    "cp31ImplementationReport": "HASH-CP31-FROZEN-VERIFIED",
+    "reviewPack": "HASH-REVIEW-PACK-300-VERIFIED",
+    "seed": "CP32-SEED-20260928-8849201"
+  }
+}

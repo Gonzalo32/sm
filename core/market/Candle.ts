@@ -12,6 +12,8 @@ export interface Candle {
   low: number;
   close: number;
   volume?: number;
+  symbol?: string;
+  timeframe?: Timeframe;
 }
 
 export interface SymbolTimeframeContext {

@@ -5,7 +5,6 @@
 
 import { Candle } from '../../market/Candle';
 import {
-  BacktestScenario,
   ExecutionTrace,
   VolatilityVariant,
   VariantOutcomeMetrics,
