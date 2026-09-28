@@ -19,3 +19,5 @@ export * from './confluence';
 export * from './setups';
 export * from './context';
 export * from './engine/ICTEngine';
+export * from './backtest';
+
