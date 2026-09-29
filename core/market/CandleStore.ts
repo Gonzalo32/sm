@@ -13,10 +13,13 @@ export class CandleStore {
   private timeframe: Timeframe;
   private candles: Candle[] = [];
   private listeners: Set<CandleEventListener> = new Set();
+  private maxLookbackDays: number = 60;
+  private prunedCandlesCount: number = 0;
 
-  constructor(symbol: string = 'MNQ', timeframe: Timeframe = '1m') {
+  constructor(symbol: string = 'MNQ', timeframe: Timeframe = '1m', maxLookbackDays: number = 60) {
     this.symbol = symbol;
     this.timeframe = timeframe;
+    this.maxLookbackDays = maxLookbackDays;
   }
 
   public setContext(symbol: string, timeframe: Timeframe): boolean {
@@ -25,12 +28,18 @@ export class CandleStore {
       this.symbol = symbol;
       this.timeframe = timeframe;
       this.candles = []; // Clear store on context change to maintain integrity
+      this.prunedCandlesCount = 0;
     }
     return changed;
   }
 
   public getContext(): { symbol: string; timeframe: Timeframe } {
     return { symbol: this.symbol, timeframe: this.timeframe };
+  }
+
+  public setMaxLookbackDays(days: number): void {
+    this.maxLookbackDays = days;
+    this.pruneOldCandles();
   }
 
   public subscribe(listener: CandleEventListener): () => void {
@@ -46,6 +55,22 @@ export class CandleStore {
         console.error('[CandleStore] Listener error:', err);
       }
     }
+  }
+
+  /**
+   * Prunes candles older than maxLookbackDays from the latest candle timestamp.
+   */
+  public pruneOldCandles(): number {
+    if (this.candles.length === 0 || this.maxLookbackDays <= 0) return 0;
+    const latestTs = this.candles[this.candles.length - 1].timestamp;
+    const maxWindowMs = this.maxLookbackDays * 24 * 60 * 60 * 1000;
+    const cutoffTs = latestTs - maxWindowMs;
+
+    const initialLength = this.candles.length;
+    this.candles = this.candles.filter((c) => c.timestamp >= cutoffTs);
+    const removed = initialLength - this.candles.length;
+    this.prunedCandlesCount += removed;
+    return removed;
   }
 
   /**
@@ -114,6 +139,7 @@ export class CandleStore {
 
       // 2. Add and Emit New Candle Event
       this.candles.push(candle);
+      this.pruneOldCandles();
       this.notify({
         type: 'ICT_NEW_CANDLE',
         candle,
@@ -134,9 +160,9 @@ export class CandleStore {
   }
 
   /**
-   * Bulk loads historical candles, validating and sorting them.
+   * Bulk loads historical candles, validating, sorting, deduplicating, and pruning to lookback window.
    */
-  public loadHistory(rawHistory: Candle[]): { loaded: number; skipped: number } {
+  public loadHistory(rawHistory: Candle[]): { loaded: number; skipped: number; pruned: number } {
     let loaded = 0;
     let skipped = 0;
 
@@ -165,7 +191,35 @@ export class CandleStore {
     }
 
     this.candles = deduplicated;
-    return { loaded, skipped };
+    const pruned = this.pruneOldCandles();
+
+    return { loaded, skipped, pruned };
+  }
+
+  public getMemoryWindowStatus(): {
+    requestedLookbackDays: number;
+    actualAvailableLookbackDays: number;
+    candleCount: number;
+    firstTimestamp: number | null;
+    lastTimestamp: number | null;
+    prunedCandlesCount: number;
+  } {
+    const candleCount = this.candles.length;
+    const firstTimestamp = candleCount > 0 ? this.candles[0].timestamp : null;
+    const lastTimestamp = candleCount > 0 ? this.candles[candleCount - 1].timestamp : null;
+    const actualAvailableLookbackDays =
+      firstTimestamp !== null && lastTimestamp !== null
+        ? (lastTimestamp - firstTimestamp) / (24 * 60 * 60 * 1000)
+        : 0;
+
+    return {
+      requestedLookbackDays: this.maxLookbackDays,
+      actualAvailableLookbackDays,
+      candleCount,
+      firstTimestamp,
+      lastTimestamp,
+      prunedCandlesCount: this.prunedCandlesCount,
+    };
   }
 
   public getCandles(): Candle[] {
@@ -182,5 +236,6 @@ export class CandleStore {
 
   public clear(): void {
     this.candles = [];
+    this.prunedCandlesCount = 0;
   }
 }
