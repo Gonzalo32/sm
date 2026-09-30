@@ -5,6 +5,7 @@
  */
 
 import { CandleStore } from '../../core/market/CandleStore';
+import { MarketDataAdapter } from '../../core/market/MarketDataAdapter';
 import { Candle, Timeframe } from '../../core/market/Candle';
 import { ICTEngine, ICTEngineResult } from '../../core/ict/engine/ICTEngine';
 import { ConfluenceEngine } from '../../core/ict/confluence/ConfluenceEngine';
@@ -33,6 +34,7 @@ export class ICTPipelineCoordinator {
   private debugMode: boolean = true;
 
   private store: CandleStore;
+  private adapter: MarketDataAdapter;
   private replayEngine: ReplayEngine;
   private ictEngine: ICTEngine;
   private confluenceEngine: ConfluenceEngine;
@@ -45,13 +47,20 @@ export class ICTPipelineCoordinator {
   constructor(
     symbol: string = 'MNQ',
     timeframe: Timeframe = '1m',
-    options?: { hud?: ICTHUD; renderer?: CanvasRenderer; debug?: boolean }
+    options?: { hud?: ICTHUD; renderer?: CanvasRenderer; debug?: boolean; adapter?: MarketDataAdapter }
   ) {
     this.symbol = symbol;
     this.timeframe = timeframe;
     this.debugMode = options?.debug ?? true;
 
     this.store = new CandleStore(symbol, timeframe);
+    this.adapter =
+      options?.adapter ||
+      new MarketDataAdapter(
+        { source: 'TradeSea_WS', instrument: symbol as any, timeframe: timeframe as any },
+        this.store
+      );
+
     this.replayEngine = new ReplayEngine(symbol, timeframe);
     this.ictEngine = new ICTEngine();
     this.confluenceEngine = new ConfluenceEngine();
@@ -82,6 +91,10 @@ export class ICTPipelineCoordinator {
     return this.replayEngine;
   }
 
+  public getAdapter(): MarketDataAdapter {
+    return this.adapter;
+  }
+
   public setContext(symbol: string, timeframe: Timeframe): void {
     if (this.symbol === symbol && this.timeframe === timeframe) return;
 
@@ -92,6 +105,10 @@ export class ICTPipelineCoordinator {
     this.symbol = symbol;
     this.timeframe = timeframe;
     this.store = new CandleStore(symbol, timeframe);
+    this.adapter = new MarketDataAdapter(
+      { source: 'TradeSea_WS', instrument: symbol as any, timeframe: timeframe as any },
+      this.store
+    );
     this.ictEngine.resetProgressiveBuffer();
 
     if (this.renderer) {
@@ -113,13 +130,13 @@ export class ICTPipelineCoordinator {
 
   public ingestCandle(candle: Candle): PipelineEvaluationResult {
     this.mode = 'LIVE';
-    this.store.ingestCandle(candle);
+    this.adapter.ingestRealtimeCandle(candle);
     return this.reevaluate();
   }
 
   public ingestCandles(candles: Candle[]): PipelineEvaluationResult {
     this.mode = 'LIVE';
-    this.store.loadHistory(candles);
+    this.adapter.loadHistoricalWindow(candles);
     return this.reevaluate();
   }
 
