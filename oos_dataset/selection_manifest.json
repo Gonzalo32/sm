@@ -1,0 +1,26 @@
+{
+  "dataset_id": "OOS_VALIDATION_DATASET_V1",
+  "selection_protocol": "PRE_REGISTERED_STRATIFIED_GRID",
+  "total_cases_extracted": 2,
+  "minimum_temporal_separation_candles": 20,
+  "detector_blindness_verified": true,
+  "calibration_contamination_verified": false,
+  "cases": [
+    {
+      "case_id": "CASE-OOS-001",
+      "instrument": "NQ",
+      "timeframe": "5m",
+      "start_timestamp": 1779128100000,
+      "end_timestamp": 1779129300000,
+      "selection_rule": "PRE_REGISTERED_TIMESTAMP_GRID"
+    },
+    {
+      "case_id": "CASE-OOS-002",
+      "instrument": "NQ",
+      "timeframe": "5m",
+      "start_timestamp": 1779129600000,
+      "end_timestamp": 1779130800000,
+      "selection_rule": "PRE_REGISTERED_TIMESTAMP_GRID"
+    }
+  ]
+}

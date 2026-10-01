@@ -1,0 +1,76 @@
+{
+  "checkpoint": "CP33.7.1",
+  "classification": "SOURCE_AUDIT_DATA",
+  "provider": "Databento",
+  "dataset": "GLBX.MDP3",
+  "venue": "CME",
+  "physical_contracts": {
+    "NQ": 3,
+    "MNQ": 3,
+    "total": 6
+  },
+  "base_timeframe": "1m",
+  "derived_timeframes": [
+    "5m",
+    "15m",
+    "1H"
+  ],
+  "historical_capability": {
+    "30d": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "90d": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "180d": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "1y": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "3y": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "5y": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "7y": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    },
+    "10y": {
+      "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+      "empirically_acquired": "NOT_TESTED",
+      "artifact_verified": false
+    }
+  },
+  "databento_semantics": {
+    "schema": "ohlcv-1m",
+    "empty_interval_handling": "OMITTED_NO_TRADE_BARS",
+    "record_count_rule": "RECORD_COUNT != MINUTE_GRID_COUNT"
+  },
+  "rollover": {
+    "individual_contract": "NOT_APPLICABLE",
+    "continuous_series": "NOT_IMPLEMENTED",
+    "candidate_future_policy": "UNADJUSTED_VOLUME_ROLL"
+  },
+  "reproducibility": "PARAMETER_REPRODUCIBLE",
+  "independence": "CONFIRMED",
+  "license_status": "CONFIRMED_FOR_INTERNAL_VALIDATION",
+  "redistribution": "RESTRICTED",
+  "oos_separation_confirmed": true,
+  "production_logic_modified": false
+}

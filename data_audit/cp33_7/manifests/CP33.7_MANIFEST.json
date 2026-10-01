@@ -1,0 +1,93 @@
+{
+  "checkpoint": "CP33.7",
+  "classification": "SOURCE_AUDIT_DATA",
+  "provider": "Databento",
+  "dataset": "GLBX.MDP3",
+  "venue": "CME",
+  "nq_contracts_count": 3,
+  "mnq_contracts_count": 3,
+  "total_contracts_count": 6,
+  "base_timeframe": "1m",
+  "derived_timeframes": [
+    "5m",
+    "15m",
+    "1H"
+  ],
+  "historical_capability_assessment": {
+    "tier_a_30d": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "tier_b_90d": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "tier_c_180d": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "tier_d_1y": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "tier_e_multi_year": "DOCUMENTED_PROVIDER_CAPABILITY (10+ Yrs NQ, 7+ Yrs MNQ)"
+  },
+  "raw_contract_price_policy": "IMMUTABLE_UNADJUSTED",
+  "future_continuous_rollover_policy": "UNADJUSTED_VOLUME_ROLL",
+  "reproducibility": "PARAMETER_REPRODUCIBLE",
+  "independence": "CONFIRMED",
+  "license_status": "CONFIRMED_FOR_INTERNAL_VALIDATION",
+  "redistribution": "RESTRICTED",
+  "oos_separation_confirmed": true,
+  "production_logic_modified": false,
+  "contracts": [
+    {
+      "symbol": "NQ",
+      "contract": "NQZ25",
+      "instrument_id": 10398,
+      "raw_sha256": "f03b0059f16db2b49ab50db4c6cb07b3962eeda53700c77dbb6d07982fe98e63",
+      "normalized_sha256": "19c1a4ccfdc48fddf36c720c3e1e18c4a2ab974026eaab6772f0d7ff39834577",
+      "derived_5m_sha256": "823b31c593783cb3a7830640fef70cf5253186554ea5cb8d716058b0de87c313",
+      "derived_15m_sha256": "434923ea8c9345b441648d78f1e973607a4455324178bfe524dcc5308cd64032",
+      "derived_1h_sha256": "13e16eb65e38b82da924b44d76bacfbfb2f3e806474a88689a90384122e7de9f"
+    },
+    {
+      "symbol": "NQ",
+      "contract": "NQH26",
+      "instrument_id": 10425,
+      "raw_sha256": "90b4a412c3ff742f97362da11229fc8f8f7dd2c33edcc83219c2b765f67240a6",
+      "normalized_sha256": "b9530b1292c0145a80e785229563d69e28853e51b241e1356658be393eec5878",
+      "derived_5m_sha256": "0e192b0e4f8ff9e7c10391766834fa0e4694b7212446120aa2294b75d10b3707",
+      "derived_15m_sha256": "1d7fe00aaf595e83e68f363179ae1199c86854d9fa9c31284654355b6aa9f834",
+      "derived_1h_sha256": "d3c9ada31fa3c81dd4e338c36160afd3fad5e0bb09f690e7794fb2495ecb7ef0"
+    },
+    {
+      "symbol": "NQ",
+      "contract": "NQM26",
+      "instrument_id": 10460,
+      "raw_sha256": "02b7f408e29b7b4681a2bc8d1a100e4adf474690a2260b2e9000f9527d6f1f69",
+      "normalized_sha256": "8a0038726d9b398367cd08b358df4d05227b2b8d7424827c08f4710304b39bcf",
+      "derived_5m_sha256": "f1084aa3640d18c1a50cf25e364ad2d8a320dfb900380bf7040b8b7e2d81eb1b",
+      "derived_15m_sha256": "1a1faca7c35d4ce116b68b3820c9b1f4b6131d6fa26d37f984a6db7f518ea828",
+      "derived_1h_sha256": "cbbbda4dec950bae2d66eeb742e63da69757bfc5159dfeab45bf8713f05c88c3"
+    },
+    {
+      "symbol": "MNQ",
+      "contract": "MNQZ25",
+      "instrument_id": 20510,
+      "raw_sha256": "e82034ee2511e3058187f95408ed93ff135457dd8cb3b156dd564b6d308f4eb4",
+      "normalized_sha256": "7045f943f7564c43599eaa378680d0f54958b551d67ddb4ba4254a6372d2ae16",
+      "derived_5m_sha256": "f306e632cf47a478edee78432442e019a94818a066219f98e8ad23ded778b08d",
+      "derived_15m_sha256": "bafea1672195bff9590bb0d3447c23d3c28bb2aad917dec802cf04ef6bd2823b",
+      "derived_1h_sha256": "a40c1cd217fc078fe311b4d05c3ccb69fbb5822115a4890a8c9a828cb42aacf1"
+    },
+    {
+      "symbol": "MNQ",
+      "contract": "MNQH26",
+      "instrument_id": 20550,
+      "raw_sha256": "997083360c0c8bc3fc7a062f1bad5886b31b19c0325d6098c1eec6c8538714a5",
+      "normalized_sha256": "e8bca0c5d052e29fc91c0fa8b5f7fd4080dacd56618390ef79ccd24949985b64",
+      "derived_5m_sha256": "f868f9e473a7e8c539dad45a4950d9466c244774292938a3d31202e84d01bfcc",
+      "derived_15m_sha256": "9b8e9b58438a0e141a2b44a5053f6ed7558196cae64bfa2d66914afa1f91c5f6",
+      "derived_1h_sha256": "edcd64d2b725de53fa8bb56d9eb99e4817dc09d0da0a7033ab5cb9a681789e5b"
+    },
+    {
+      "symbol": "MNQ",
+      "contract": "MNQM26",
+      "instrument_id": 20590,
+      "raw_sha256": "7526b241c4cf10e9d9e82e70b4d6cadf123f201f43692c4a18355011191e1df8",
+      "normalized_sha256": "b53bfea1bf7d34a864a3237c4e495ad6cbb06cb9dc33c97af9247e25b35dd424",
+      "derived_5m_sha256": "58891e2ffa5b2eb03cc4adbe47711463e163ea43f0f1bfe234c1a5311d615176",
+      "derived_15m_sha256": "40061ae43e4cf6283681589d91945be0f86628269532d3a3b48dd656d679cdb5",
+      "derived_1h_sha256": "2ed5dc7c9442636915afc7e83191ac4a737e041d2b0657e7f2c9c020b45df9c7"
+    }
+  ]
+}

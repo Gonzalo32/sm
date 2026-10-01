@@ -1,0 +1,95 @@
+{
+  "source": "CME Globex Official Schedule (Rulebook Chapter 5)",
+  "session_structure": "Sunday 18:00 ET to Friday 17:00 ET with daily 17:00-18:00 ET maintenance pause",
+  "dst_awareness": "DST transitions shift UTC offsets (EDT UTC-4 / EST UTC-5). Session boundaries in local ET remain fixed.",
+  "models": {
+    "30d": {
+      "calendar_days": 30,
+      "trading_days": 21,
+      "holidays_estimated": 0,
+      "model_a_theoretical_calendar_grid": 43200,
+      "model_b_tradable_session_minutes": 28980,
+      "model_b_maintenance_minutes": 1260,
+      "model_b_holiday_minutes": 0,
+      "projected_records_nq": 28980,
+      "projected_records_mnq": 28980
+    },
+    "90d": {
+      "calendar_days": 90,
+      "trading_days": 64,
+      "holidays_estimated": 2,
+      "model_a_theoretical_calendar_grid": 129600,
+      "model_b_tradable_session_minutes": 85560,
+      "model_b_maintenance_minutes": 3840,
+      "model_b_holiday_minutes": 2760,
+      "projected_records_nq": 85560,
+      "projected_records_mnq": 85560
+    },
+    "180d": {
+      "calendar_days": 180,
+      "trading_days": 128,
+      "holidays_estimated": 4,
+      "model_a_theoretical_calendar_grid": 259200,
+      "model_b_tradable_session_minutes": 171120,
+      "model_b_maintenance_minutes": 7680,
+      "model_b_holiday_minutes": 5520,
+      "projected_records_nq": 171120,
+      "projected_records_mnq": 171120
+    },
+    "1y": {
+      "calendar_days": 365,
+      "trading_days": 260,
+      "holidays_estimated": 10,
+      "model_a_theoretical_calendar_grid": 525600,
+      "model_b_tradable_session_minutes": 345000,
+      "model_b_maintenance_minutes": 15600,
+      "model_b_holiday_minutes": 13800,
+      "projected_records_nq": 345000,
+      "projected_records_mnq": 345000
+    },
+    "3y": {
+      "calendar_days": 1095,
+      "trading_days": 782,
+      "holidays_estimated": 30,
+      "model_a_theoretical_calendar_grid": 1576800,
+      "model_b_tradable_session_minutes": 1037760,
+      "model_b_maintenance_minutes": 46920,
+      "model_b_holiday_minutes": 41400,
+      "projected_records_nq": 1037760,
+      "projected_records_mnq": 1037760
+    },
+    "5y": {
+      "calendar_days": 1825,
+      "trading_days": 1303,
+      "holidays_estimated": 50,
+      "model_a_theoretical_calendar_grid": 2628000,
+      "model_b_tradable_session_minutes": 1729140,
+      "model_b_maintenance_minutes": 78180,
+      "model_b_holiday_minutes": 69000,
+      "projected_records_nq": 1729140,
+      "projected_records_mnq": 1729140
+    },
+    "7y": {
+      "calendar_days": 2555,
+      "trading_days": 1825,
+      "holidays_estimated": 70,
+      "model_a_theoretical_calendar_grid": 3679200,
+      "model_b_tradable_session_minutes": 2421900,
+      "model_b_maintenance_minutes": 109500,
+      "model_b_holiday_minutes": 96600,
+      "projected_records_nq": 2421900,
+      "projected_records_mnq": 2421900
+    },
+    "10y": {
+      "calendar_days": 3650,
+      "trading_days": 2607,
+      "holidays_estimated": 100,
+      "model_a_theoretical_calendar_grid": 5256000,
+      "model_b_tradable_session_minutes": 3459660,
+      "model_b_maintenance_minutes": 156420,
+      "model_b_holiday_minutes": 138000,
+      "projected_records_nq": 3459660,
+      "projected_records_mnq": 3459660
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "30d": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "90d": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "180d": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "1y": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "3y": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "5y": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "7y": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  },
+  "10y": {
+    "provider_capability": "DOCUMENTED_PROVIDER_CAPABILITY",
+    "empirically_acquired": "NOT_TESTED",
+    "artifact_verified": false
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "pricing_model": "Databento Historical Data Pay-As-You-Go / Volume-based",
+  "unit_of_billing": "Gigabytes (GB) uncompressed data transfer or flat schema query fee",
+  "price_per_gb_usd": 0.04,
+  "subscription_requirement": "Databento Active Metered Account",
+  "cost_status": "DOCUMENTED_PRICE_STRUCTURE",
+  "measured_bytes_per_record": {
+    "raw_json": 281,
+    "normalized_json": 457,
+    "derived_5m_json": 457,
+    "derived_15m_json": 457,
+    "derived_1h_json": 457
+  },
+  "horizon_projections": {
+    "30d": {
+      "session_minutes": 28980,
+      "projected_records": 28980,
+      "storage_bytes": {
+        "raw": 8143380,
+        "normalized_1m": 13243860,
+        "derived_5m": 2648772,
+        "derived_15m": 882924,
+        "derived_1h": 220731
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "90d": {
+      "session_minutes": 85560,
+      "projected_records": 85560,
+      "storage_bytes": {
+        "raw": 24042360,
+        "normalized_1m": 39100920,
+        "derived_5m": 7820184,
+        "derived_15m": 2606728,
+        "derived_1h": 651682
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "180d": {
+      "session_minutes": 171120,
+      "projected_records": 171120,
+      "storage_bytes": {
+        "raw": 48084720,
+        "normalized_1m": 78201840,
+        "derived_5m": 15640368,
+        "derived_15m": 5213456,
+        "derived_1h": 1303364
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "1y": {
+      "session_minutes": 345000,
+      "projected_records": 345000,
+      "storage_bytes": {
+        "raw": 96945000,
+        "normalized_1m": 157665000,
+        "derived_5m": 31533000,
+        "derived_15m": 10511000,
+        "derived_1h": 2627750
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "3y": {
+      "session_minutes": 1037760,
+      "projected_records": 1037760,
+      "storage_bytes": {
+        "raw": 291610560,
+        "normalized_1m": 474256320,
+        "derived_5m": 94851264,
+        "derived_15m": 31617088,
+        "derived_1h": 7904272
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "5y": {
+      "session_minutes": 1729140,
+      "projected_records": 1729140,
+      "storage_bytes": {
+        "raw": 485888340,
+        "normalized_1m": 790216980,
+        "derived_5m": 158043396,
+        "derived_15m": 52681132,
+        "derived_1h": 13170283
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "7y": {
+      "session_minutes": 2421900,
+      "projected_records": 2421900,
+      "storage_bytes": {
+        "raw": 680553900,
+        "normalized_1m": 1106808300,
+        "derived_5m": 221361660,
+        "derived_15m": 73787220,
+        "derived_1h": 18446805
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    },
+    "10y": {
+      "session_minutes": 3459660,
+      "projected_records": 3459660,
+      "storage_bytes": {
+        "raw": 972164460,
+        "normalized_1m": 1581064620,
+        "derived_5m": 316212924,
+        "derived_15m": 105404308,
+        "derived_1h": 26351077
+      },
+      "data_acquisition_cost_usd": 0.1,
+      "storage_cost_usd": 0,
+      "cost_status": "PROJECTED"
+    }
+  }
+}

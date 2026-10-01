@@ -1,0 +1,53 @@
+{
+  "checkpoint": "CP33.6.1",
+  "classification": "SOURCE_AUDIT_SAMPLE",
+  "provider": "Databento",
+  "dataset": "GLBX.MDP3",
+  "venue": "CME",
+  "nq": {
+    "acquired": true,
+    "symbol": "NQ",
+    "contract": "NQH26",
+    "instrument_id": 10425,
+    "start_utc": "2026-03-15T18:00:00.000Z",
+    "end_utc": "2026-03-16T18:59:00.000Z",
+    "bar_count": 1440,
+    "raw_sha256": "9641da3502cb413c56e6fdecb4eb21bab0d5e00c3092e32b96fc887a7a00c8b3",
+    "normalized_sha256": "4c28cd718584e8e359d7b7a19fd2ebe4697393dc03d45339f6cfd4fb8e1ebb3d",
+    "derived_5m_sha256": "437bde67a6ad8eec8a547c85f4c9ca9891a68eade70fe4860cc7c8e74b9db538",
+    "derived_15m_sha256": "01e4aa24bb0bce3aba5e68a01022f1b1cf0fc61041554760ea2a4e746ff265c7",
+    "derived_1h_sha256": "ff6f742094c7580d240d9e4c030978734d091a4cc0861edfff364e685fcb3619",
+    "gap_count": 1,
+    "gap_classifications": [
+      {
+        "previous_timestamp": "2026-03-16T16:59:00.000Z",
+        "next_timestamp": "2026-03-16T18:00:00.000Z",
+        "gap_minutes": 61,
+        "classification": "UNEXPECTED_DATA_GAP",
+        "evidence": "Gap of 61 minutes between 2026-03-16T16:59:00.000Z and 2026-03-16T18:00:00.000Z"
+      }
+    ]
+  },
+  "mnq": {
+    "acquired": true,
+    "symbol": "MNQ",
+    "contract": "MNQH26",
+    "instrument_id": 20550,
+    "start_utc": "2026-03-15T18:00:00.000Z",
+    "end_utc": "2026-03-16T18:59:00.000Z",
+    "bar_count": 1440,
+    "raw_sha256": "2214ce5adb8dad3a738059c5fd8ff4a0aba26c5438b707556a71c27cae135d88",
+    "normalized_sha256": "310da5668c226218bc2ec8b21c6c10df0f8f1aa53e3d9ccb2d780b4b67bc6355",
+    "status": "CONFIRMED_PHYSICALLY_ACQUIRED"
+  },
+  "timestamp_semantics": "START_OF_BAR",
+  "timezone": "UTC",
+  "rollover_method_individual_contract": "NOT_APPLICABLE",
+  "future_continuous_rollover_policy": "UNADJUSTED_VOLUME_ROLL",
+  "reproducibility": "PARAMETER_REPRODUCIBLE",
+  "independence": "CONFIRMED",
+  "license_status": "CONFIRMED_FOR_INTERNAL_VALIDATION",
+  "redistribution": "RESTRICTED",
+  "oos_separation_confirmed": true,
+  "production_logic_modified": false
+}

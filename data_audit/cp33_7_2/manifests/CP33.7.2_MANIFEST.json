@@ -1,0 +1,33 @@
+{
+  "checkpoint": "CP33.7.2",
+  "classification": "SOURCE_AUDIT_DATA",
+  "provider": "Databento",
+  "dataset": "GLBX.MDP3",
+  "venue": "CME",
+  "session_model": {
+    "model_a": "THEORETICAL_CALENDAR_GRID",
+    "model_b": "CME_CALENDAR_AWARE_SESSION_GRID",
+    "model_c": "OBSERVED_SAMPLE_DENSITY"
+  },
+  "density": {
+    "nq": {
+      "density": 1,
+      "status": "OBSERVED_SAMPLE_DENSITY"
+    },
+    "mnq": {
+      "density": 1,
+      "status": "OBSERVED_SAMPLE_DENSITY"
+    }
+  },
+  "rollover": {
+    "individual_contract": "NOT_APPLICABLE",
+    "continuous_series": "NOT_IMPLEMENTED",
+    "candidate_future_policy": "UNADJUSTED_VOLUME_ROLL"
+  },
+  "reproducibility": "PARAMETER_REPRODUCIBLE",
+  "independence": "CONFIRMED",
+  "license_status": "CONFIRMED_FOR_INTERNAL_VALIDATION",
+  "redistribution": "RESTRICTED",
+  "oos_separation_confirmed": true,
+  "production_logic_modified": false
+}

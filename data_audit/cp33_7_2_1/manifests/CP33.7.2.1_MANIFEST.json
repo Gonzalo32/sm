@@ -1,0 +1,120 @@
+{
+  "checkpoint": "CP33.7.2.1",
+  "classification": "SOURCE_AUDIT_DATA",
+  "provider": "Databento",
+  "dataset": "GLBX.MDP3",
+  "venue": "CME",
+  "measured_physical_contracts": 6,
+  "measured_storage": [
+    {
+      "symbol": "NQ",
+      "contract": "NQZ25",
+      "observed_records": 1440,
+      "elapsed_minutes": 1440,
+      "sample_density": 1,
+      "raw_size_bytes": 404262,
+      "normalized_size_bytes": 655012,
+      "raw_sha256": "f03b0059f16db2b49ab50db4c6cb07b3962eeda53700c77dbb6d07982fe98e63",
+      "normalized_sha256": "19c1a4ccfdc48fddf36c720c3e1e18c4a2ab974026eaab6772f0d7ff39834577",
+      "status": "MEASURED_STORAGE"
+    },
+    {
+      "symbol": "NQ",
+      "contract": "NQH26",
+      "observed_records": 1440,
+      "elapsed_minutes": 1440,
+      "sample_density": 1,
+      "raw_size_bytes": 404262,
+      "normalized_size_bytes": 655012,
+      "raw_sha256": "90b4a412c3ff742f97362da11229fc8f8f7dd2c33edcc83219c2b765f67240a6",
+      "normalized_sha256": "b9530b1292c0145a80e785229563d69e28853e51b241e1356658be393eec5878",
+      "status": "MEASURED_STORAGE"
+    },
+    {
+      "symbol": "NQ",
+      "contract": "NQM26",
+      "observed_records": 1440,
+      "elapsed_minutes": 1440,
+      "sample_density": 1,
+      "raw_size_bytes": 404262,
+      "normalized_size_bytes": 655012,
+      "raw_sha256": "02b7f408e29b7b4681a2bc8d1a100e4adf474690a2260b2e9000f9527d6f1f69",
+      "normalized_sha256": "8a0038726d9b398367cd08b358df4d05227b2b8d7424827c08f4710304b39bcf",
+      "status": "MEASURED_STORAGE"
+    },
+    {
+      "symbol": "MNQ",
+      "contract": "MNQZ25",
+      "observed_records": 1440,
+      "elapsed_minutes": 1440,
+      "sample_density": 1,
+      "raw_size_bytes": 404262,
+      "normalized_size_bytes": 657892,
+      "raw_sha256": "e82034ee2511e3058187f95408ed93ff135457dd8cb3b156dd564b6d308f4eb4",
+      "normalized_sha256": "7045f943f7564c43599eaa378680d0f54958b551d67ddb4ba4254a6372d2ae16",
+      "status": "MEASURED_STORAGE"
+    },
+    {
+      "symbol": "MNQ",
+      "contract": "MNQH26",
+      "observed_records": 1440,
+      "elapsed_minutes": 1440,
+      "sample_density": 1,
+      "raw_size_bytes": 404262,
+      "normalized_size_bytes": 657892,
+      "raw_sha256": "997083360c0c8bc3fc7a062f1bad5886b31b19c0325d6098c1eec6c8538714a5",
+      "normalized_sha256": "e8bca0c5d052e29fc91c0fa8b5f7fd4080dacd56618390ef79ccd24949985b64",
+      "status": "MEASURED_STORAGE"
+    },
+    {
+      "symbol": "MNQ",
+      "contract": "MNQM26",
+      "observed_records": 1440,
+      "elapsed_minutes": 1440,
+      "sample_density": 1,
+      "raw_size_bytes": 404262,
+      "normalized_size_bytes": 657892,
+      "raw_sha256": "7526b241c4cf10e9d9e82e70b4d6cadf123f201f43692c4a18355011191e1df8",
+      "normalized_sha256": "b53bfea1bf7d34a864a3237c4e495ad6cbb06cb9dc33c97af9247e25b35dd424",
+      "status": "MEASURED_STORAGE"
+    }
+  ],
+  "model_c_density": {
+    "nq_sample_density": 1,
+    "mnq_sample_density": 1,
+    "sample_scope": "OBSERVED_SAMPLE_DENSITY (6 Physical 24h CP33.7 Datasets)",
+    "extrapolation_formula": "Illustrative Projection at Observed Sample Density",
+    "extrapolation_status": "MODEL_C_EXTRAPOLATION_STATUS = NOT_VALIDATED",
+    "epistemic_note": "Density 1.000 is verified ONLY for the six 24-hour physical samples. It is NOT validated or guaranteed for multi-month or multi-year continuous history."
+  },
+  "model_b_projection": {
+    "status": "PASS",
+    "projection_type": "CALENDAR_PARAMETRIC_PROJECTION",
+    "date_specific_cme_calendar": "NOT_VALIDATED_DAY_BY_DAY",
+    "epistemic_note": "Model B 30d/90d/180d/1y counts represent parametric calendar projections based on standard CME Globex 23h session rules, not a day-by-day CME holiday log traversal."
+  },
+  "cost_basis": {
+    "pricing_basis": "Databento $0.04/GB uncompressed data fee structure",
+    "cost_model_status": "COST_MODEL_STATUS = PROJECTED_WITH_DOCUMENTED_PRICING_BASIS",
+    "usd_values_classification": "PROJECTED",
+    "epistemic_note": "USD amounts are projected estimates derived from documented Databento data transfer rates; actual billing depends on exact query parameters, uncompressed size, and user tier."
+  },
+  "classifications": {
+    "observed": "6 Physical CP33.7 Datasets",
+    "measured": "Measured Byte Sizes and Bar Counts from CP33.7 Files",
+    "projected": "Multi-Horizon Storage and Cost Estimates (30d–10y)",
+    "not_validated": "Model C Multi-Year Extrapolation and Day-by-Day Calendar Traversal",
+    "documented_provider_capability": "Multi-Year Historical Depth (10+ Yrs NQ / 7+ Yrs MNQ)"
+  },
+  "rollover": {
+    "individual_contract": "NOT_APPLICABLE",
+    "continuous_series": "NOT_IMPLEMENTED",
+    "candidate_future_policy": "UNADJUSTED_VOLUME_ROLL"
+  },
+  "reproducibility": "PARAMETER_REPRODUCIBLE",
+  "independence": "CONFIRMED",
+  "license_status": "CONFIRMED_FOR_INTERNAL_VALIDATION",
+  "redistribution": "RESTRICTED",
+  "oos_separation_confirmed": true,
+  "production_logic_modified": false
+}

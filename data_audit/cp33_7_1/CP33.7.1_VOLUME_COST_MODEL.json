@@ -1,0 +1,131 @@
+{
+  "bytes_per_record": {
+    "raw_json": 160,
+    "normalized_json": 220,
+    "derived_5m_json": 220,
+    "derived_15m_json": 220,
+    "derived_1h_json": 220
+  },
+  "models": {
+    "30d": {
+      "total_days": 30,
+      "trading_days": 21,
+      "model_a_continuous_grid_records": 43200,
+      "model_b_session_adjusted_records": 28980,
+      "storage_bytes": {
+        "raw_json": 4636800,
+        "normalized_json": 6375600,
+        "derived_5m_json": 1275120,
+        "derived_15m_json": 425040,
+        "derived_1h_json": 106260
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "90d": {
+      "total_days": 90,
+      "trading_days": 64,
+      "model_a_continuous_grid_records": 129600,
+      "model_b_session_adjusted_records": 88320,
+      "storage_bytes": {
+        "raw_json": 14131200,
+        "normalized_json": 19430400,
+        "derived_5m_json": 3886080,
+        "derived_15m_json": 1295360,
+        "derived_1h_json": 323840
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "180d": {
+      "total_days": 180,
+      "trading_days": 128,
+      "model_a_continuous_grid_records": 259200,
+      "model_b_session_adjusted_records": 176640,
+      "storage_bytes": {
+        "raw_json": 28262400,
+        "normalized_json": 38860800,
+        "derived_5m_json": 7772160,
+        "derived_15m_json": 2590720,
+        "derived_1h_json": 647680
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "1y": {
+      "total_days": 365,
+      "trading_days": 260,
+      "model_a_continuous_grid_records": 525600,
+      "model_b_session_adjusted_records": 358800,
+      "storage_bytes": {
+        "raw_json": 57408000,
+        "normalized_json": 78936000,
+        "derived_5m_json": 15787200,
+        "derived_15m_json": 5262400,
+        "derived_1h_json": 1315600
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "3y": {
+      "total_days": 1095,
+      "trading_days": 782,
+      "model_a_continuous_grid_records": 1576800,
+      "model_b_session_adjusted_records": 1079160,
+      "storage_bytes": {
+        "raw_json": 172665600,
+        "normalized_json": 237415200,
+        "derived_5m_json": 47483040,
+        "derived_15m_json": 15827680,
+        "derived_1h_json": 3956920
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "5y": {
+      "total_days": 1825,
+      "trading_days": 1303,
+      "model_a_continuous_grid_records": 2628000,
+      "model_b_session_adjusted_records": 1798140,
+      "storage_bytes": {
+        "raw_json": 287702400,
+        "normalized_json": 395590800,
+        "derived_5m_json": 79118160,
+        "derived_15m_json": 26372720,
+        "derived_1h_json": 6593180
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "7y": {
+      "total_days": 2555,
+      "trading_days": 1825,
+      "model_a_continuous_grid_records": 3679200,
+      "model_b_session_adjusted_records": 2518500,
+      "storage_bytes": {
+        "raw_json": 402960000,
+        "normalized_json": 554070000,
+        "derived_5m_json": 110814000,
+        "derived_15m_json": 36938000,
+        "derived_1h_json": 9234500
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    },
+    "10y": {
+      "total_days": 3650,
+      "trading_days": 2607,
+      "model_a_continuous_grid_records": 5256000,
+      "model_b_session_adjusted_records": 3597660,
+      "storage_bytes": {
+        "raw_json": 575625600,
+        "normalized_json": 791485200,
+        "derived_5m_json": 158297040,
+        "derived_15m_json": 52765680,
+        "derived_1h_json": 13191420
+      },
+      "estimated_data_cost_usd": 0.1,
+      "cost_status": "PROJECTED_COST"
+    }
+  }
+}

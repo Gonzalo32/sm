@@ -1,0 +1,9 @@
+{
+  "nq_sample_density": 1,
+  "mnq_sample_density": 1,
+  "combined_sample_density": 1,
+  "classification": "OBSERVED_SAMPLE_DENSITY",
+  "sample_size_contracts": 6,
+  "total_observed_records": 8640,
+  "note": "Databento ohlcv-1m omits zero-trade minutes. Sample datasets show 1.00 density during high-liquidity sample sessions."
+}

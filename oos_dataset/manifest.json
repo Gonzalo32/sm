@@ -1,0 +1,39 @@
+{
+  "dataset_id": "OOS_VALIDATION_DATASET_V1",
+  "dataset_version": "1.0.0",
+  "creation_timestamp": "2026-10-01T12:00:00.000Z",
+  "source": "TradeSea_WSS_Real_Market_Data",
+  "instruments": [
+    "NQ",
+    "MNQ"
+  ],
+  "timeframes": [
+    "5m",
+    "1m",
+    "15m"
+  ],
+  "start_timestamp": 1779128100000,
+  "end_timestamp": 1779137100000,
+  "candle_counts": {
+    "NQ_5m": 31,
+    "NQ_1m": 0,
+    "NQ_15m": 0
+  },
+  "case_count": 2,
+  "selection_protocol": "PRE_REGISTERED_TIMESTAMP_GRID",
+  "overlap_protocol": "MINIMUM_20_CANDLE_BUFFER",
+  "calibration_exclusion_protocol": "STRICT_TIMESTAMP_ISOLATION",
+  "timestamp_standard": "UNIX_MS_UTC",
+  "timezone": "UTC",
+  "labels_status": "PENDING_FUTURE_DOUBLE_BLIND_REVIEW",
+  "historical_data_source_limitation": "CONFIRMED",
+  "file_hashes": {
+    "raw_candles": "437065add6f115ad7f0f9a534dad60165bd506f49fd6d989d9fd544a871167df",
+    "normalized_candles": "e9ac49c4c1f064026d86a0b2f7cdcd5877e33f2a125c57a57cb288541c0abcfb",
+    "cases": "bff5d6283896f6381670f5dce0e84841e6afe75f2f4bc9b4071a0bf0d84da3bb",
+    "selection_manifest": "a9843c69ed435a9aecee7631ab6d476d54922c86e806f3d0aa796a05106cc1c6",
+    "acquisition_report": "bb17e64cbfaea401749851ae0a7d0883cdb066dd5c84078c209e526a1752e833",
+    "integrity_report": "a3ebbb7be366a421ebeceadaf228f8153540958f81c85206399cad01eb855de1",
+    "contamination_report": "ce930f8c546a3be7efbceea8b29adb77e8107735f6e9b223b6ca6014fa427f66"
+  }
+}
