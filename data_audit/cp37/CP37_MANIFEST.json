@@ -1,0 +1,17 @@
+{
+  "checkpoint": "CP37",
+  "production_ict_logic_modified": false,
+  "parameters_modified": false,
+  "oos_dataset_modified": false,
+  "cp33_7_datasets_modified": false,
+  "mtf_context_tested": true,
+  "causality_rules_tested": true,
+  "anti_lookahead_tested": true,
+  "symbol_isolation_tested": true,
+  "timeframe_isolation_tested": true,
+  "reconnect_tested": true,
+  "hud_integration_tested": true,
+  "canvas_integration_tested": true,
+  "validity_window_status": "NOT_DEFINED",
+  "execution_timestamp": "2026-10-02T14:35:53.964Z"
+}

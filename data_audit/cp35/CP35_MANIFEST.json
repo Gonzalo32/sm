@@ -1,0 +1,16 @@
+{
+  "checkpoint": "CP35",
+  "production_ict_logic_modified": false,
+  "parameters_modified": false,
+  "oos_dataset_modified": false,
+  "cp33_7_datasets_modified": false,
+  "candidate_context_tested": true,
+  "anti_lookahead_tested": true,
+  "reconnect_tested": true,
+  "no_context_case_tested": true,
+  "multiple_contexts_tested": true,
+  "hud_integration_tested": true,
+  "canvas_integration_tested": true,
+  "expiration_rules_status": "NOT_DEFINED",
+  "execution_timestamp": "2026-10-02T13:16:27.500Z"
+}

@@ -1,0 +1,59 @@
+{
+  "contract_name": "CandidateContextNeutralContract",
+  "version": "1.0.0",
+  "description": "Consolidated neutral candidate context structure derived from verified ICT events",
+  "allowed_status_values": [
+    "NO_CONTEXT",
+    "CONTEXT_FORMING",
+    "CONTEXT_CONFIRMED",
+    "CONTEXT_EXPIRED"
+  ],
+  "expiration_rules_status": "NOT_DEFINED",
+  "forbidden_trading_terms": [
+    "BUY",
+    "SELL",
+    "LONG",
+    "SHORT",
+    "ENTRY",
+    "STOP_LOSS",
+    "TAKE_PROFIT",
+    "RR",
+    "WIN_RATE",
+    "PROFIT",
+    "LOSS"
+  ],
+  "schema": {
+    "id": "string (e.g. ctx_MNQ_1m_1700000000000)",
+    "symbol": "string (e.g. MNQ, NQ)",
+    "timeframe": "string (e.g. 1m, 5m, 15m)",
+    "eventTimestamp": "number (Epoch MS)",
+    "confirmationTimestamp": "number | null (Epoch MS)",
+    "structure": {
+      "trend": "string (BULLISH | BEARISH | SIDEWAYS)",
+      "lastBOS": "string (optional)",
+      "lastMSS": "string (optional)"
+    },
+    "liquidity": {
+      "bslCount": "number",
+      "sslCount": "number",
+      "lastSweep": "string (optional)"
+    },
+    "displacement": {
+      "state": "string (PRESENT | ABSENT)",
+      "bodyRatio": "number",
+      "rangeMultiplier": "number"
+    },
+    "fvg": {
+      "activeFvgCount": "number",
+      "lastFvgStatus": "string (optional)"
+    },
+    "pdArray": {
+      "zone": "string (PREMIUM | DISCOUNT | EQUILIBRIUM)",
+      "equilibrium": "number"
+    },
+    "supportingEvents": "Array<string> (Traceable event logs)",
+    "sourceCandleTimestamps": "Array<number> (Timestamps of source candles)",
+    "status": "string (NO_CONTEXT | CONTEXT_FORMING | CONTEXT_CONFIRMED | CONTEXT_EXPIRED)",
+    "expirationStatus": "string (NOT_DEFINED | EXPIRED)"
+  }
+}

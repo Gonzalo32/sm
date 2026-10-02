@@ -1,0 +1,61 @@
+{
+  "contract_name": "VisualIntelligenceChartUXContract",
+  "version": "1.0.0",
+  "description": "5-Level Visual Hierarchy & VisualObject Contract for TradeSea Chart Overlay",
+  "visual_hierarchy": {
+    "level_1_structure": [
+      "BOS",
+      "MSS",
+      "SWING_HIGH",
+      "SWING_LOW"
+    ],
+    "level_2_liquidity": [
+      "BSL",
+      "SSL",
+      "LIQUIDITY_SWEEP"
+    ],
+    "level_3_displacement": [
+      "DISPLACEMENT"
+    ],
+    "level_4_inefficiency": [
+      "FVG",
+      "ORDER_BLOCK"
+    ],
+    "level_5_context": [
+      "CANDIDATE_CONTEXT_BADGE"
+    ]
+  },
+  "allowed_visual_types": [
+    "MARKER",
+    "LINE",
+    "RECTANGLE",
+    "TEXT_LABEL"
+  ],
+  "forbidden_terms": [
+    "BUY",
+    "SELL",
+    "LONG",
+    "SHORT",
+    "ENTRY",
+    "STOP_LOSS",
+    "TAKE_PROFIT",
+    "RR",
+    "WIN_RATE",
+    "PROFIT",
+    "LOSS"
+  ],
+  "schema": {
+    "id": "string (Unique visual object identifier)",
+    "type": "string ('MARKER' | 'LINE' | 'RECTANGLE')",
+    "symbol": "string ('MNQ', 'NQ')",
+    "timeframe": "string ('1m', '5m', '15m')",
+    "eventTimestamp": "number (Epoch MS)",
+    "confirmationTimestamp": "number | null (Epoch MS)",
+    "priceMin": "number (optional)",
+    "priceMax": "number (optional)",
+    "sourceEventIds": "Array<string> (Traceable event IDs)",
+    "sourceCandleTimestamps": "Array<number> (Source candle timestamps)",
+    "lifecycle": "string ('CREATED' | 'UPDATED' | 'CONFIRMED' | 'MITIGATED' | 'REMOVED')",
+    "label": "string (Descriptive visual text, e.g. 'BOS (BULLISH)', 'FVG ACTIVE')"
+  }
+}

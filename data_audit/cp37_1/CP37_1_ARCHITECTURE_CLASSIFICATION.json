@@ -1,0 +1,16 @@
+{
+  "component": "MultiTimeframeContextEngine",
+  "location": "core/ict/context/MultiTimeframeContextEngine.ts",
+  "architecturalClassification": "CONTEXT_ORCHESTRATION_LAYER",
+  "reasons": [
+    "Does not execute or introduce any ICT detectors (BOS, MSS, FVG, Displacement, Liquidity, PD Array).",
+    "Consumes existing CandidateContext payloads and ICT events.",
+    "Orchestrates multi-timeframe relationships (15m -> 5m, 15m -> 1m, 5m -> 1m) and verifies anti-lookahead temporal causality (HTF.confirmationTimestamp <= LTF.eventTimestamp).",
+    "Core detection logic in core/ict/ (structure, fvg, displacement, liquidity, pdarrays, models) remains 100% frozen."
+  ],
+  "detectorDuplication": false,
+  "productionICTLogicModified": false,
+  "gitTrackedBeforeCP37": false,
+  "creationCheckpoint": "CP37",
+  "layerType": "CONTEXT_ORCHESTRATION_LAYER"
+}

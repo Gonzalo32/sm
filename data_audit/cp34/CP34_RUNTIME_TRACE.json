@@ -1,0 +1,133 @@
+{
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "total_steps": 4,
+  "trace": [
+    {
+      "step": 1,
+      "input_candle": {
+        "timestamp": 1700000000000,
+        "open": 18000,
+        "high": 18010,
+        "low": 17990,
+        "close": 18005,
+        "volume": 100
+      },
+      "store_candle_count": 1,
+      "pipeline_mode": "LIVE",
+      "engine_events_count": 0,
+      "latest_events": [],
+      "market_context": {
+        "symbol": "MNQ",
+        "timeframe": "1m",
+        "trend": "SIDEWAYS",
+        "pdZone": "PREMIUM",
+        "displacementState": "ABSENT"
+      },
+      "visuals_generated": 0,
+      "execution_time_ms": 4
+    },
+    {
+      "step": 2,
+      "input_candle": {
+        "timestamp": 1700000060000,
+        "open": 18005,
+        "high": 18035,
+        "low": 18000,
+        "close": 18030,
+        "volume": 200
+      },
+      "store_candle_count": 2,
+      "pipeline_mode": "LIVE",
+      "engine_events_count": 0,
+      "latest_events": [],
+      "market_context": {
+        "symbol": "MNQ",
+        "timeframe": "1m",
+        "trend": "SIDEWAYS",
+        "pdZone": "PREMIUM",
+        "displacementState": "ABSENT"
+      },
+      "visuals_generated": 0,
+      "execution_time_ms": 1
+    },
+    {
+      "step": 3,
+      "input_candle": {
+        "timestamp": 1700000120000,
+        "open": 18030,
+        "high": 18060,
+        "low": 18025,
+        "close": 18055,
+        "volume": 250
+      },
+      "store_candle_count": 3,
+      "pipeline_mode": "LIVE",
+      "engine_events_count": 1,
+      "latest_events": [
+        {
+          "type": "FVG_CREATED",
+          "timestamp": 1700000120000,
+          "confirmationTimestamp": 1700000120000
+        }
+      ],
+      "market_context": {
+        "symbol": "MNQ",
+        "timeframe": "1m",
+        "trend": "SIDEWAYS",
+        "pdZone": "PREMIUM",
+        "displacementState": "ABSENT"
+      },
+      "visuals_generated": 1,
+      "execution_time_ms": 0
+    },
+    {
+      "step": 4,
+      "input_candle": {
+        "timestamp": 1700000180000,
+        "open": 18055,
+        "high": 18080,
+        "low": 18050,
+        "close": 18075,
+        "volume": 300
+      },
+      "store_candle_count": 4,
+      "pipeline_mode": "LIVE",
+      "engine_events_count": 2,
+      "latest_events": [
+        {
+          "type": "FVG_CREATED",
+          "timestamp": 1700000120000,
+          "confirmationTimestamp": 1700000120000
+        },
+        {
+          "type": "FVG_CREATED",
+          "timestamp": 1700000180000,
+          "confirmationTimestamp": 1700000180000
+        }
+      ],
+      "market_context": {
+        "symbol": "MNQ",
+        "timeframe": "1m",
+        "trend": "SIDEWAYS",
+        "pdZone": "PREMIUM",
+        "displacementState": "ABSENT"
+      },
+      "visuals_generated": 2,
+      "execution_time_ms": 0
+    }
+  ],
+  "reconnect_test": {
+    "initial_status": "CONNECTED",
+    "simulated_disconnect_status": "DISCONNECTED",
+    "missing_candles_submitted": 2,
+    "reconnect_result": {
+      "success": true,
+      "status": "RECONNECTED",
+      "loadedHistoryCount": 2,
+      "skippedCount": 0
+    },
+    "final_status": "CONNECTED",
+    "store_final_candle_count": 5
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "checkpoint": "CP37",
+  "causality_rule": "HTF.confirmationTimestamp <= LTF.eventTimestamp",
+  "test_cases": [
+    {
+      "id": "CASE-01",
+      "description": "HTF confTs (1015) <= LTF evTs (1020)",
+      "htfConfTs": 1015,
+      "ltfEvTs": 1020,
+      "expectedCausal": true,
+      "expectedStatus": "PASS"
+    },
+    {
+      "id": "CASE-02",
+      "description": "Boundary condition HTF confTs (1015) === LTF evTs (1015)",
+      "htfConfTs": 1015,
+      "ltfEvTs": 1015,
+      "expectedCausal": true,
+      "expectedStatus": "PASS"
+    },
+    {
+      "id": "CASE-03",
+      "description": "Lookahead attempt HTF confTs (1029) > LTF evTs (1020)",
+      "htfConfTs": 1029,
+      "ltfEvTs": 1020,
+      "expectedCausal": false,
+      "expectedStatus": "REJECT"
+    },
+    {
+      "id": "CASE-04",
+      "description": "Unconfirmed HTF bar confTs = null",
+      "htfConfTs": null,
+      "ltfEvTs": 1020,
+      "expectedCausal": false,
+      "expectedStatus": "REJECT"
+    },
+    {
+      "id": "CASE-05",
+      "description": "Symbol mismatch MNQ (15m) -> NQ (5m)",
+      "htfSymbol": "MNQ",
+      "ltfSymbol": "NQ",
+      "expectedCausal": false,
+      "expectedStatus": "REJECT"
+    },
+    {
+      "id": "CASE-06",
+      "description": "Reverse direction 1m -> 5m",
+      "htfTf": "1m",
+      "ltfTf": "5m",
+      "expectedCausal": false,
+      "expectedStatus": "REJECT"
+    }
+  ]
+}

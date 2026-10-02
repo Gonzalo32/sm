@@ -1,0 +1,206 @@
+{
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "total_steps": 6,
+  "trace": [
+    {
+      "step": 1,
+      "input_candle": {
+        "timestamp": 1700000000000,
+        "open": 18000,
+        "high": 18005,
+        "low": 17998,
+        "close": 18002,
+        "volume": 100
+      },
+      "total_visuals_generated": 0,
+      "visual_types_breakdown": {
+        "markers": 0,
+        "lines": 0,
+        "rectangles": 0
+      },
+      "visual_objects_sample": [],
+      "execution_time_ms": 2
+    },
+    {
+      "step": 2,
+      "input_candle": {
+        "timestamp": 1700000060000,
+        "open": 18002,
+        "high": 18020,
+        "low": 17995,
+        "close": 18015,
+        "volume": 120
+      },
+      "total_visuals_generated": 0,
+      "visual_types_breakdown": {
+        "markers": 0,
+        "lines": 0,
+        "rectangles": 0
+      },
+      "visual_objects_sample": [],
+      "execution_time_ms": 0
+    },
+    {
+      "step": 3,
+      "input_candle": {
+        "timestamp": 1700000120000,
+        "open": 18015,
+        "high": 18025,
+        "low": 18010,
+        "close": 18020,
+        "volume": 150
+      },
+      "total_visuals_generated": 2,
+      "visual_types_breakdown": {
+        "markers": 1,
+        "lines": 0,
+        "rectangles": 1
+      },
+      "visual_objects_sample": [
+        {
+          "id": "VIS-FVG-BULL-MNQ-1m-1700000060000",
+          "type": "RECTANGLE",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "FVG BULLISH (ACTIVE)"
+        },
+        {
+          "id": "VIS-ctx_MNQ_1m_1700000120000",
+          "type": "MARKER",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "ICT CONTEXT: CONTEXT_FORMING"
+        }
+      ],
+      "execution_time_ms": 0
+    },
+    {
+      "step": 4,
+      "input_candle": {
+        "timestamp": 1700000180000,
+        "open": 18020,
+        "high": 18022,
+        "low": 18005,
+        "close": 18010,
+        "volume": 110
+      },
+      "total_visuals_generated": 1,
+      "visual_types_breakdown": {
+        "markers": 0,
+        "lines": 0,
+        "rectangles": 1
+      },
+      "visual_objects_sample": [
+        {
+          "id": "VIS-FVG-BULL-MNQ-1m-1700000060000",
+          "type": "RECTANGLE",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "FVG BULLISH (FULLY_MITIGATED)"
+        }
+      ],
+      "execution_time_ms": 0
+    },
+    {
+      "step": 5,
+      "input_candle": {
+        "timestamp": 1700000240000,
+        "open": 18010,
+        "high": 18015,
+        "low": 17990,
+        "close": 17995,
+        "volume": 130
+      },
+      "total_visuals_generated": 3,
+      "visual_types_breakdown": {
+        "markers": 1,
+        "lines": 1,
+        "rectangles": 1
+      },
+      "visual_objects_sample": [
+        {
+          "id": "VIS-SH-MNQ-1m-1700000120000",
+          "type": "MARKER",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "SH"
+        },
+        {
+          "id": "VIS-BSL-MNQ-1m-1700000120000",
+          "type": "LINE",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "BSL (SWING_HIGH)"
+        },
+        {
+          "id": "VIS-FVG-BULL-MNQ-1m-1700000060000",
+          "type": "RECTANGLE",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "FVG BULLISH (FULLY_MITIGATED)"
+        }
+      ],
+      "execution_time_ms": 0
+    },
+    {
+      "step": 6,
+      "input_candle": {
+        "timestamp": 1700000300000,
+        "open": 17995,
+        "high": 18055,
+        "low": 17990,
+        "close": 18050,
+        "volume": 300
+      },
+      "total_visuals_generated": 7,
+      "visual_types_breakdown": {
+        "markers": 4,
+        "lines": 2,
+        "rectangles": 1
+      },
+      "visual_objects_sample": [
+        {
+          "id": "VIS-SH-MNQ-1m-1700000120000",
+          "type": "MARKER",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "SH"
+        },
+        {
+          "id": "VIS-BOS-5-18050",
+          "type": "LINE",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "BOS (BULLISH)"
+        },
+        {
+          "id": "VIS-SWEEP-BSL-BSL-MNQ-1m-1700000120000-1700000300000",
+          "type": "MARKER",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "SWEEP (BSL)"
+        },
+        {
+          "id": "VIS-DISP-MNQ-1m-1700000300000",
+          "type": "MARKER",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "DISP (BULL 0.85)"
+        },
+        {
+          "id": "VIS-BSL-MNQ-1m-1700000120000",
+          "type": "LINE",
+          "symbol": "MNQ",
+          "timeframe": "1m",
+          "label": "BSL (SWING_HIGH)"
+        }
+      ],
+      "execution_time_ms": 1
+    }
+  ],
+  "performance_summary": {
+    "average_execution_time_ms": 0.5,
+    "max_visual_objects_limit": 100
+  }
+}

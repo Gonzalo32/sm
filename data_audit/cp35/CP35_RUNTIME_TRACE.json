@@ -1,0 +1,150 @@
+{
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "total_steps": 6,
+  "trace": [
+    {
+      "step": 1,
+      "input_candle": {
+        "timestamp": 1700000000000,
+        "open": 18000,
+        "high": 18005,
+        "low": 17998,
+        "close": 18002,
+        "volume": 100
+      },
+      "candidate_context_id": "ctx_MNQ_1m_empty",
+      "candidate_context_status": "NO_CONTEXT",
+      "event_timestamp": 1790946987506,
+      "confirmation_timestamp": 1790946987506,
+      "supporting_events_count": 0,
+      "supporting_events": [],
+      "source_timestamps": []
+    },
+    {
+      "step": 2,
+      "input_candle": {
+        "timestamp": 1700000060000,
+        "open": 18002,
+        "high": 18020,
+        "low": 17995,
+        "close": 18015,
+        "volume": 120
+      },
+      "candidate_context_id": "ctx_MNQ_1m_empty",
+      "candidate_context_status": "NO_CONTEXT",
+      "event_timestamp": 1790946987507,
+      "confirmation_timestamp": 1790946987507,
+      "supporting_events_count": 0,
+      "supporting_events": [],
+      "source_timestamps": []
+    },
+    {
+      "step": 3,
+      "input_candle": {
+        "timestamp": 1700000120000,
+        "open": 18015,
+        "high": 18025,
+        "low": 18010,
+        "close": 18020,
+        "volume": 150
+      },
+      "candidate_context_id": "ctx_MNQ_1m_1700000120000",
+      "candidate_context_status": "CONTEXT_FORMING",
+      "event_timestamp": 1700000120000,
+      "confirmation_timestamp": 1700000120000,
+      "supporting_events_count": 1,
+      "supporting_events": [
+        "FVG_CREATED @ 1700000120000 (Confirmed: 1700000120000)"
+      ],
+      "source_timestamps": [
+        1700000120000
+      ]
+    },
+    {
+      "step": 4,
+      "input_candle": {
+        "timestamp": 1700000180000,
+        "open": 18020,
+        "high": 18022,
+        "low": 18005,
+        "close": 18010,
+        "volume": 110
+      },
+      "candidate_context_id": "ctx_MNQ_1m_1700000120000",
+      "candidate_context_status": "NO_CONTEXT",
+      "event_timestamp": 1700000120000,
+      "confirmation_timestamp": 1700000180000,
+      "supporting_events_count": 2,
+      "supporting_events": [
+        "FVG_CREATED @ 1700000120000 (Confirmed: 1700000120000)",
+        "FVG_FILLED @ 1700000180000 (Confirmed: 1700000180000)"
+      ],
+      "source_timestamps": [
+        1700000120000,
+        1700000180000
+      ]
+    },
+    {
+      "step": 5,
+      "input_candle": {
+        "timestamp": 1700000240000,
+        "open": 18010,
+        "high": 18015,
+        "low": 17990,
+        "close": 17995,
+        "volume": 130
+      },
+      "candidate_context_id": "ctx_MNQ_1m_1700000120000",
+      "candidate_context_status": "NO_CONTEXT",
+      "event_timestamp": 1700000120000,
+      "confirmation_timestamp": 1700000240000,
+      "supporting_events_count": 4,
+      "supporting_events": [
+        "FVG_CREATED @ 1700000120000 (Confirmed: 1700000120000)",
+        "FVG_FILLED @ 1700000180000 (Confirmed: 1700000180000)",
+        "SWING_HIGH @ 1700000120000 (Confirmed: 1700000240000)",
+        "BSL @ 1700000120000 (Confirmed: 1700000240000)"
+      ],
+      "source_timestamps": [
+        1700000120000,
+        1700000180000
+      ]
+    },
+    {
+      "step": 6,
+      "input_candle": {
+        "timestamp": 1700000300000,
+        "open": 17995,
+        "high": 18055,
+        "low": 17990,
+        "close": 18050,
+        "volume": 300
+      },
+      "candidate_context_id": "ctx_MNQ_1m_1700000120000",
+      "candidate_context_status": "CONTEXT_CONFIRMED",
+      "event_timestamp": 1700000120000,
+      "confirmation_timestamp": 1700000300000,
+      "supporting_events_count": 7,
+      "supporting_events": [
+        "FVG_CREATED @ 1700000120000 (Confirmed: 1700000120000)",
+        "FVG_FILLED @ 1700000180000 (Confirmed: 1700000180000)",
+        "SWING_HIGH @ 1700000120000 (Confirmed: 1700000240000)",
+        "BSL @ 1700000120000 (Confirmed: 1700000240000)",
+        "BOS @ 1700000300000 (Confirmed: 1700000300000)",
+        "LIQUIDITY_SWEEP @ 1700000300000 (Confirmed: 1700000300000)",
+        "DISPLACEMENT @ 1700000300000 (Confirmed: 1700000300000)"
+      ],
+      "source_timestamps": [
+        1700000120000,
+        1700000180000,
+        1700000300000
+      ]
+    }
+  ],
+  "multi_context_isolation_sample": {
+    "context_mnq_1m_id": "ctx_MNQ_1m_1700000120000",
+    "context_nq_5m_id": "ctx_NQ_5m_empty",
+    "isolation_maintained": true
+  }
+}

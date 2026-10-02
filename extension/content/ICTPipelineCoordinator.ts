@@ -18,9 +18,14 @@ import { ICTHUD } from '../visual/ICTHUD';
 import { CanvasRenderer } from '../visual/CanvasRenderer';
 import { VisualObject } from '../visual/VisualTypes';
 
+import { CandidateContextEngine, CandidateContext } from '../../core/ict/context/CandidateContextEngine';
+import { MultiTimeframeContextEngine, MultiTimeframeContext } from '../../core/ict/context/MultiTimeframeContextEngine';
+
 export interface PipelineEvaluationResult {
   engineResult: ICTEngineResult;
   marketContext: ICTMarketContext;
+  candidateContext: CandidateContext;
+  mtfContext?: MultiTimeframeContext;
   visuals: VisualObject[];
   executionTimeMs: number;
 }
@@ -40,6 +45,8 @@ export class ICTPipelineCoordinator {
   private confluenceEngine: ConfluenceEngine;
   private setupEngine: SetupEngine;
   private contextEngine: MarketContextEngine;
+  private candidateEngine: CandidateContextEngine;
+  private mtfEngine: MultiTimeframeContextEngine;
   private visualAdapter: VisualAdapter;
   private hud: ICTHUD | null = null;
   private renderer: CanvasRenderer | null = null;
@@ -66,6 +73,8 @@ export class ICTPipelineCoordinator {
     this.confluenceEngine = new ConfluenceEngine();
     this.setupEngine = new SetupEngine();
     this.contextEngine = new MarketContextEngine();
+    this.candidateEngine = new CandidateContextEngine();
+    this.mtfEngine = new MultiTimeframeContextEngine();
     this.visualAdapter = new VisualAdapter();
 
     this.hud = options?.hud || null;
@@ -128,16 +137,20 @@ export class ICTPipelineCoordinator {
     return this.store;
   }
 
-  public ingestCandle(candle: Candle): PipelineEvaluationResult {
-    this.mode = 'LIVE';
-    this.adapter.ingestRealtimeCandle(candle);
-    return this.reevaluate();
+  public getMTFEngine(): MultiTimeframeContextEngine {
+    return this.mtfEngine;
   }
 
-  public ingestCandles(candles: Candle[]): PipelineEvaluationResult {
+  public ingestCandle(candle: Candle, htfCandidateContext?: CandidateContext): PipelineEvaluationResult {
+    this.mode = 'LIVE';
+    this.adapter.ingestRealtimeCandle(candle);
+    return this.reevaluate(htfCandidateContext);
+  }
+
+  public ingestCandles(candles: Candle[], htfCandidateContext?: CandidateContext): PipelineEvaluationResult {
     this.mode = 'LIVE';
     this.adapter.loadHistoricalWindow(candles);
-    return this.reevaluate();
+    return this.reevaluate(htfCandidateContext);
   }
 
   public loadReplayDataset(candles: Candle[], symbol?: string, timeframe?: Timeframe): ReplayState {
@@ -147,16 +160,20 @@ export class ICTPipelineCoordinator {
     return this.replayEngine.loadDataset(candles, this.symbol, this.timeframe);
   }
 
-  public reevaluate(): PipelineEvaluationResult {
+  public reevaluate(htfCandidateContext?: CandidateContext): PipelineEvaluationResult {
     const candles = this.store.getCandles();
-    return this.evaluateSlice(candles);
+    return this.evaluateSlice(candles, undefined, htfCandidateContext);
   }
 
   /**
    * Shared Domain Logic Processor: Evaluates any given slice of candles.
    * Guarantees 100% equivalence between LIVE stream and REPLAY step.
    */
-  public evaluateSlice(candles: Candle[], replayState?: ReplayState): PipelineEvaluationResult {
+  public evaluateSlice(
+    candles: Candle[],
+    replayState?: ReplayState,
+    htfCandidateContext?: CandidateContext
+  ): PipelineEvaluationResult {
     const startTime = performance.now();
 
     // 1. Process ICT Engine on candle slice strictly available up to current index
@@ -169,11 +186,18 @@ export class ICTPipelineCoordinator {
     // 3. Process Setup Engine
     const setups = this.setupEngine.evaluateSetups(state, events, confluences);
 
-    // 4. Build Market Context
+    // 4. Build Market Context & Candidate Context
     const marketContext = this.contextEngine.buildContext(state, events, confluences, setups);
+    const candidateContext = this.candidateEngine.buildCandidateContext(state, events);
 
-    // 5. Adapt Visuals
-    const visuals = this.visualAdapter.adaptStateToVisuals(state, events);
+    // 5. Evaluate Multi-Timeframe Context if HTF candidate context supplied
+    let mtfContext: MultiTimeframeContext | undefined = undefined;
+    if (htfCandidateContext) {
+      mtfContext = this.mtfEngine.evaluateMTFContext(htfCandidateContext, candidateContext);
+    }
+
+    // 6. Adapt Visuals
+    const visuals = this.visualAdapter.adaptStateToVisuals(state, events, candidateContext);
 
     const executionTimeMs = Math.round(performance.now() - startTime);
 
@@ -184,6 +208,8 @@ export class ICTPipelineCoordinator {
         executionTimeMs,
         fps: 60,
         replayState,
+        candidateContext,
+        mtfContext,
       });
     }
 
@@ -202,6 +228,8 @@ export class ICTPipelineCoordinator {
     return {
       engineResult,
       marketContext,
+      candidateContext,
+      mtfContext,
       visuals,
       executionTimeMs,
     };

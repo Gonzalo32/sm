@@ -8,18 +8,20 @@ import { ICTMarketState } from '../../core/ict/types/MarketState';
 import { ICTEvent } from '../../core/ict/types/ICTEvent';
 import { VisualObject, VisualAdapterConfig, DEFAULT_VISUAL_CONFIG } from './VisualTypes';
 
-export class VisualAdapter {
-  private config: VisualAdapterConfig;
+import { CandidateContext } from '../../core/ict/context/CandidateContextEngine';
 
-  constructor(config: Partial<VisualAdapterConfig> = {}) {
-    this.config = { ...DEFAULT_VISUAL_CONFIG, ...config };
+export class VisualAdapter {
+  private config: VisualAdapterConfig & { maxVisibleObjects?: number };
+
+  constructor(config: Partial<VisualAdapterConfig & { maxVisibleObjects?: number }> = {}) {
+    this.config = { maxVisibleObjects: 100, ...DEFAULT_VISUAL_CONFIG, ...config };
   }
 
   /**
    * Adapts ICTMarketState snapshot and events array into renderable VisualObjects.
    */
-  public adaptStateToVisuals(state: ICTMarketState, events: ICTEvent[]): VisualObject[] {
-    const visuals: VisualObject[] = [];
+  public adaptStateToVisuals(state: ICTMarketState, events: ICTEvent[], candidateContext?: CandidateContext): VisualObject[] {
+    let visuals: VisualObject[] = [];
     const colors = this.config.colorScheme;
     const { symbol, timeframe } = state;
 
@@ -134,7 +136,7 @@ export class VisualAdapter {
         timeframe,
         price: lvl.price,
         startCandleIndex: lvl.swings[0]?.candleIndex || 0,
-        endCandleIndex: lvl.sweptByCandleIndex, // Stop extending if swept
+        endCandleIndex: lvl.sweptByCandleIndex,
         startTimestamp: lvl.swings[0]?.timestamp || 0,
         endTimestamp: lvl.sweptTimestamp,
         lineStyle: lvl.swept ? 'DOTTED' : 'SOLID',
@@ -192,6 +194,30 @@ export class VisualAdapter {
         label: `OB ${ob.type} [${ob.status}]`,
         zIndex: 6,
       });
+    }
+
+    // 6. CandidateContext -> Level 5 Visual Context Badge
+    if (candidateContext && (candidateContext.status === 'CONTEXT_FORMING' || candidateContext.status === 'CONTEXT_CONFIRMED')) {
+      const isConfirmed = candidateContext.status === 'CONTEXT_CONFIRMED';
+      visuals.push({
+        id: `VIS-${candidateContext.id}`,
+        type: 'MARKER',
+        symbol,
+        timeframe,
+        shape: 'CIRCLE',
+        candleIndex: Math.max(0, state.lastCandleIndex),
+        timestamp: candidateContext.eventTimestamp,
+        price: candidateContext.pdArray?.equilibrium || 0,
+        color: isConfirmed ? '#4ade80' : '#facc15',
+        label: `ICT CONTEXT: ${candidateContext.status}`,
+        zIndex: 50,
+      });
+    }
+
+    // Presentation Capping: limit visual render object count without altering underlying logical history
+    const maxVis = this.config.maxVisibleObjects || 100;
+    if (visuals.length > maxVis) {
+      visuals = visuals.slice(visuals.length - maxVis);
     }
 
     return visuals;

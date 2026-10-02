@@ -1,0 +1,72 @@
+{
+  "contract_name": "ICTEngineRealtimeOutputContract",
+  "version": "1.0.0",
+  "description": "Descriptive and contextual realtime events emitted by ICTEngine without operational trading signals",
+  "allowed_event_types": [
+    "STRUCTURE_UPDATE",
+    "BOS_CONFIRMED",
+    "MSS_CONFIRMED",
+    "FVG_DETECTED",
+    "FVG_MITIGATION",
+    "LIQUIDITY_EVENT",
+    "PD_ARRAY_CONTEXT",
+    "CANDIDATE_CONTEXT",
+    "NO_EVENT"
+  ],
+  "forbidden_operational_terms": [
+    "BUY",
+    "SELL",
+    "ENTRY",
+    "LONG",
+    "SHORT",
+    "SL",
+    "TP",
+    "RR",
+    "WIN_RATE",
+    "PROFIT",
+    "LOSS"
+  ],
+  "event_schema": {
+    "symbol": "string (e.g., MNQ, NQ)",
+    "timeframe": "string (e.g., 1m, 5m, 15m)",
+    "eventTimestamp": "number (Epoch MS when event condition occurred)",
+    "confirmationTimestamp": "number | null (Epoch MS when event condition confirmed at candle close)",
+    "eventType": "string (One of allowed_event_types)",
+    "candleReferences": "Array<number> (Timestamps of relevant candles)",
+    "snapshotContext": "object (Snapshot of trend, liquidity, displacement, pdArray)"
+  },
+  "candidate_context_schema": {
+    "symbol": "string",
+    "timeframe": "string",
+    "eventTimestamp": "number",
+    "confirmationTimestamp": "number | null",
+    "structureContext": {
+      "trend": "string (BULLISH | BEARISH | SIDEWAYS)",
+      "lastBOS": "string",
+      "lastMSS": "string"
+    },
+    "liquidityContext": {
+      "bslCount": "number",
+      "sslCount": "number",
+      "lastSweep": "string"
+    },
+    "displacementContext": {
+      "state": "string (PRESENT | ABSENT)",
+      "bodyRatio": "number",
+      "rangeMultiplier": "number"
+    },
+    "fvgContext": {
+      "activeFvgCount": "number",
+      "lastFvgStatus": "string"
+    },
+    "pdArrayContext": {
+      "zone": "string (PREMIUM | DISCOUNT | EQUILIBRIUM)",
+      "equilibrium": "number"
+    },
+    "unintegratedFields": {
+      "orderFlowBias": "NOT_YET_INTEGRATED",
+      "macroRegime": "NOT_YET_INTEGRATED",
+      "optimalTradeEntry": "NOT_YET_INTEGRATED"
+    }
+  }
+}

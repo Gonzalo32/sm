@@ -1,0 +1,66 @@
+{
+  "contract_name": "MultiTimeframeContextContract",
+  "version": "1.0.0",
+  "description": "HTF to LTF causal context propagation contract (15m -> 5m, 15m -> 1m, 5m -> 1m)",
+  "allowed_directions": [
+    "15m -> 5m",
+    "15m -> 1m",
+    "5m -> 1m"
+  ],
+  "forbidden_directions": [
+    "1m -> 5m",
+    "1m -> 15m",
+    "5m -> 15m",
+    "same -> same"
+  ],
+  "forbidden_trading_terms": [
+    "BUY",
+    "SELL",
+    "LONG",
+    "SHORT",
+    "ENTRY",
+    "STOP_LOSS",
+    "TAKE_PROFIT",
+    "RR",
+    "WIN_RATE",
+    "PROFIT",
+    "LOSS"
+  ],
+  "causality_rule": "HTF.confirmationTimestamp != null AND HTF.confirmationTimestamp <= LTF.eventTimestamp",
+  "schema": {
+    "id": "string (Unique MTF context ID)",
+    "symbol": "string ('NQ', 'MNQ')",
+    "targetTimeframe": "string ('1m', '5m')",
+    "sourceTimeframe": "string ('15m', '5m')",
+    "eventTimestamp": "number (Epoch MS)",
+    "confirmationTimestamp": "number | null (Epoch MS)",
+    "sourceEventIds": "Array<string> (Traceable HTF event IDs)",
+    "sourceCandleTimestamps": "Array<number> (Source candle timestamps)",
+    "structure": {
+      "trend": "string",
+      "bos": "string",
+      "mss": "string"
+    },
+    "liquidity": {
+      "bslCount": "number",
+      "sslCount": "number",
+      "sweep": "string"
+    },
+    "displacement": {
+      "state": "string",
+      "bodyRatio": "number",
+      "rangeMultiplier": "number"
+    },
+    "fvg": {
+      "activeCount": "number",
+      "lastStatus": "string"
+    },
+    "pdArray": {
+      "zone": "string",
+      "equilibrium": "number"
+    },
+    "status": "string ('NO_CONTEXT' | 'AVAILABLE' | 'CONFIRMED' | 'STALE')",
+    "causal": "boolean",
+    "validityWindow": "string ('NOT_DEFINED')"
+  }
+}

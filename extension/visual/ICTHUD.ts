@@ -6,6 +6,8 @@
 
 import { ICTMarketContext } from '../../core/ict/context/MarketContextEngine';
 import { ReplayState } from '../../core/ict/replay/ReplayTypes';
+import { CandidateContext } from '../../core/ict/context/CandidateContextEngine';
+import { MultiTimeframeContext } from '../../core/ict/context/MultiTimeframeContextEngine';
 
 export interface EventAuditDetail {
   type: string;
@@ -106,6 +108,8 @@ export class ICTHUD {
       replayState?: ReplayState;
       validationCase?: any;
       validationMetrics?: any;
+      candidateContext?: CandidateContext;
+      mtfContext?: MultiTimeframeContext;
     }
   ): void {
     if (!this.container || !this.isVisible) return;

@@ -1,0 +1,23 @@
+{
+  "checkpoint": "CP37.1",
+  "timestamp": "2026-10-02T11:56:00-03:00",
+  "status": "PASS",
+  "reconciliation": {
+    "testFilesBaseline": 81,
+    "testFilesCurrent": 82,
+    "testsBaseline": 904,
+    "testsCurrent": 924,
+    "cp37TestsIncludedInGlobalSuite": true,
+    "productionICTLogicModified": "NO",
+    "parametersModified": "NO",
+    "datasetsModified": "NO",
+    "oosModified": "NO"
+  },
+  "artifacts": [
+    "data_audit/cp37_1/CP37_1_AUDIT.md",
+    "data_audit/cp37_1/CP37_1_FINAL_STATUS.md",
+    "data_audit/cp37_1/CP37_1_TEST_RECONCILIATION.json",
+    "data_audit/cp37_1/CP37_1_ARCHITECTURE_CLASSIFICATION.json",
+    "data_audit/cp37_1/CP37_1_MANIFEST.json"
+  ]
+}

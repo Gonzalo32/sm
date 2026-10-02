@@ -1,0 +1,21 @@
+{
+  "checkpoint": "CP36",
+  "production_ict_logic_modified": false,
+  "parameters_modified": false,
+  "oos_dataset_modified": false,
+  "cp33_7_datasets_modified": false,
+  "visual_hierarchy_tested": true,
+  "fvg_visualization_tested": true,
+  "bos_mss_visualization_tested": true,
+  "liquidity_visualization_tested": true,
+  "displacement_visualization_tested": true,
+  "context_visual_badge_tested": true,
+  "event_inspector_tested": true,
+  "visual_deduplication_tested": true,
+  "presentation_capping_tested": true,
+  "coordinate_translator_zoom_scroll_tested": true,
+  "symbol_isolation_tested": true,
+  "timeframe_isolation_tested": true,
+  "performance_benchmarked": true,
+  "execution_timestamp": "2026-10-02T13:42:07.780Z"
+}

@@ -1,0 +1,27 @@
+{
+  "baselineCP36": {
+    "testFiles": 81,
+    "totalTests": 904
+  },
+  "addedByCP37": {
+    "testFiles": [
+      "tests/checkpoint37_mtf_context.test.ts"
+    ],
+    "testFilesCount": 1,
+    "testsCount": 20
+  },
+  "currentCP37_1": {
+    "testFiles": 82,
+    "totalTests": 924
+  },
+  "vitestDiscovery": {
+    "command": "npx vitest run",
+    "checkpoint37TestFile": "tests/checkpoint37_mtf_context.test.ts",
+    "executedInGlobalSuite": true,
+    "testFilesDiscovered": 82,
+    "testsDiscovered": 924,
+    "status": "PASS"
+  },
+  "discrepancyExplanation": "In CP37 report, '81 test files, 904 tests' was listed referencing the CP36 baseline before CP37 test discovery was counted. Vitest CLI confirms CP37 added 1 test file (checkpoint37_mtf_context.test.ts) with 20 tests, bringing the active project total from 81/904 to 82/924.",
+  "cp37TestsIncludedInGlobalSuite": true
+}

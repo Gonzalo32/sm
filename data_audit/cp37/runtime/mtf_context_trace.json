@@ -1,0 +1,74 @@
+{
+  "symbol": "NQ",
+  "target_timeframe": "1m",
+  "source_timeframe": "15m",
+  "total_steps": 3,
+  "trace": [
+    {
+      "step": 1,
+      "input_candle": {
+        "timestamp": 1700000900000,
+        "open": 18030,
+        "high": 18040,
+        "low": 18025,
+        "close": 18035,
+        "volume": 100
+      },
+      "ltf_symbol": "NQ",
+      "ltf_timeframe": "1m",
+      "htf_source_timeframe": "15m",
+      "htf_confirmation_timestamp": 1700000900000,
+      "ltf_event_timestamp": 1790951753973,
+      "causal_check_passed": true,
+      "mtf_context_status": "AVAILABLE",
+      "source_event_ids": [
+        "ctx_NQ_15m_1700000000000",
+        "BOS BULLISH @ 1700000000000"
+      ]
+    },
+    {
+      "step": 2,
+      "input_candle": {
+        "timestamp": 1700000960000,
+        "open": 18035,
+        "high": 18055,
+        "low": 18030,
+        "close": 18050,
+        "volume": 150
+      },
+      "ltf_symbol": "NQ",
+      "ltf_timeframe": "1m",
+      "htf_source_timeframe": "15m",
+      "htf_confirmation_timestamp": 1700000900000,
+      "ltf_event_timestamp": 1790951753974,
+      "causal_check_passed": true,
+      "mtf_context_status": "AVAILABLE",
+      "source_event_ids": [
+        "ctx_NQ_15m_1700000000000",
+        "BOS BULLISH @ 1700000000000"
+      ]
+    },
+    {
+      "step": 3,
+      "input_candle": {
+        "timestamp": 1700001020000,
+        "open": 18050,
+        "high": 18075,
+        "low": 18045,
+        "close": 18070,
+        "volume": 200
+      },
+      "ltf_symbol": "NQ",
+      "ltf_timeframe": "1m",
+      "htf_source_timeframe": "15m",
+      "htf_confirmation_timestamp": 1700000900000,
+      "ltf_event_timestamp": 1700001020000,
+      "causal_check_passed": true,
+      "mtf_context_status": "AVAILABLE",
+      "source_event_ids": [
+        "ctx_NQ_15m_1700000000000",
+        "BOS BULLISH @ 1700000000000"
+      ]
+    }
+  ]
+}
