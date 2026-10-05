@@ -1,0 +1,41 @@
+{
+  "checkpoint": "CP40",
+  "timestamp": "2026-10-05T09:34:00-03:00",
+  "status": "PASS",
+  "baselineCommit": "57acd4c",
+  "finalCommit": "57acd4c",
+  "branch": "main",
+  "freezeAudit": {
+    "productionICTLogicModified": "NO",
+    "parametersModified": "NO",
+    "datasetsModified": "NO",
+    "oosDatasetModified": "NO",
+    "historicalDownload": "NO"
+  },
+  "testSuite": {
+    "testFiles": 84,
+    "totalTests": 957,
+    "passed": 957,
+    "failed": 0,
+    "cp40TestFile": "tests/checkpoint40_causal_lineage.test.ts",
+    "cp40TestsCount": 15
+  },
+  "buildStatus": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "status": "SUCCESS"
+  },
+  "artifacts": [
+    "data_audit/cp40/CP40_AUDIT_REPORT.md",
+    "data_audit/cp40/CP40_FINAL_STATUS.md",
+    "data_audit/cp40/CP40_GIT_INTEGRITY.md",
+    "data_audit/cp40/CP40_CAUSAL_TRACE.md",
+    "data_audit/cp40/CP40_EVENT_LINEAGE.md",
+    "data_audit/cp40/CP40_CANDIDATE_LINEAGE.md",
+    "data_audit/cp40/CP40_MTF_LINEAGE.md",
+    "data_audit/cp40/CP40_VISUAL_LINEAGE.md",
+    "data_audit/cp40/CP40_LINEAGE_MATRIX.md",
+    "data_audit/cp40/CP40_LINEAGE_GAPS.md",
+    "data_audit/cp40/CP40_MANIFEST.json"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "checkpoint": "CP47",
+  "title": "Resource Ownership, Cleanup & Long-Run Stability Audit",
+  "status": "PASS",
+  "timestamp": "2026-10-05T11:52:00-03:00",
+  "baseline_commit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "short_commit": "57acd4c",
+  "branch": "main",
+  "test_metrics": {
+    "test_files_before": 90,
+    "tests_before": 1038,
+    "test_files_after": 91,
+    "tests_after": 1050,
+    "passed": 1050,
+    "failed": 0,
+    "skipped": 0,
+    "build_status": "SUCCESS"
+  },
+  "constraints": {
+    "production_ict_logic_modified": "NO",
+    "parameters_modified": "NO",
+    "models_modified": "NO",
+    "datasets_modified": "NO",
+    "oos_modified": "NO",
+    "historical_download": "NO"
+  },
+  "resource_categories": {
+    "total": 18,
+    "verified": 18,
+    "partial": 0,
+    "not_tested": 0
+  },
+  "violations": {
+    "ownership_violations": 0,
+    "cleanup_violations": 0,
+    "duplicate_resource_violations": 0,
+    "stale_callback_violations": 0,
+    "unbounded_growth_violations": 0,
+    "cross_context_resource_violations": 0,
+    "orphan_resource_violations": 0,
+    "interrupted_cleanup_violations": 0
+  },
+  "long_run_stability": {
+    "cycles": 10,
+    "growth_status": "STABLE",
+    "heap_profiling": "NOT_PERFORMED"
+  },
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 4
+  },
+  "artifacts": [
+    "CP47_AUDIT_REPORT.md",
+    "CP47_FINAL_STATUS.md",
+    "CP47_RESOURCE_INVENTORY.md",
+    "CP47_OWNERSHIP_MATRIX.md",
+    "CP47_LISTENER_AUDIT.md",
+    "CP47_SUBSCRIPTION_AUDIT.md",
+    "CP47_ASYNC_RESOURCE_AUDIT.md",
+    "CP47_CALLBACK_STALENESS_AUDIT.md",
+    "CP47_COLLECTION_GROWTH_AUDIT.md",
+    "CP47_DERIVED_CLEANUP_AUDIT.md",
+    "CP47_VISUAL_RESOURCE_AUDIT.md",
+    "CP47_RESET_CLEANUP_AUDIT.md",
+    "CP47_RECONNECT_CLEANUP_AUDIT.md",
+    "CP47_LONG_RUN_CYCLE_AUDIT.md",
+    "CP47_GROWTH_ANALYSIS.md",
+    "CP47_RESOURCE_SENTINEL_AUDIT.md",
+    "CP47_INTERRUPTED_CLEANUP_AUDIT.md",
+    "CP47_CP43_CP44_RECONCILIATION.md",
+    "CP47_FINDINGS.md",
+    "CP47_GIT_INTEGRITY.md",
+    "CP47_MANIFEST.json"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "checkpoint": "CP41",
+  "timestamp": "2026-10-05T09:44:30-03:00",
+  "status": "PASS",
+  "baselineCommit": "57acd4c",
+  "finalCommit": "57acd4c",
+  "branch": "main",
+  "freezeAudit": {
+    "productionICTLogicModified": "NO",
+    "parametersModified": "NO",
+    "modelsModified": "NO",
+    "datasetsModified": "NO",
+    "oosDatasetModified": "NO",
+    "historicalDownload": "NO"
+  },
+  "testSuite": {
+    "testFiles": 85,
+    "totalTests": 967,
+    "passed": 967,
+    "failed": 0,
+    "cp41TestFile": "tests/checkpoint41_adversarial_lineage.test.ts",
+    "cp41TestsCount": 10
+  },
+  "buildStatus": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "status": "SUCCESS"
+  },
+  "artifacts": [
+    "data_audit/cp41/CP41_AUDIT_REPORT.md",
+    "data_audit/cp41/CP41_FINAL_STATUS.md",
+    "data_audit/cp41/CP41_CP40_TEST_REVIEW.md",
+    "data_audit/cp41/CP41_EVENT_COLLISION_AUDIT.md",
+    "data_audit/cp41/CP41_MTF_ADVERSARIAL_CASES.md",
+    "data_audit/cp41/CP41_TRACE_RECONSTRUCTION.md",
+    "data_audit/cp41/CP41_SOURCE_PROVENANCE.md",
+    "data_audit/cp41/CP41_LINEAGE_FINDINGS.md",
+    "data_audit/cp41/CP41_GIT_INTEGRITY.md",
+    "data_audit/cp41/CP41_MANIFEST.json"
+  ]
+}

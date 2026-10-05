@@ -1,0 +1,66 @@
+{
+  "checkpoint": "CP47.1",
+  "title": "State Equivalence & Resource Evidence Reconciliation",
+  "status": "PASS",
+  "cp47_final_status": "CLOSED",
+  "timestamp": "2026-10-05T12:03:00-03:00",
+  "baseline_commit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "short_commit": "57acd4c",
+  "branch": "main",
+  "test_metrics": {
+    "test_files_before": 91,
+    "tests_before": 1050,
+    "test_files_after": 92,
+    "tests_after": 1054,
+    "passed": 1054,
+    "failed": 0,
+    "skipped": 0,
+    "build_status": "SUCCESS"
+  },
+  "constraints": {
+    "production_ict_logic_modified": "NO",
+    "parameters_modified": "NO",
+    "models_modified": "NO",
+    "datasets_modified": "NO",
+    "oos_modified": "NO",
+    "historical_download": "NO"
+  },
+  "state_equivalence": {
+    "status": "PASS",
+    "canonical_hash_match": true,
+    "reference_inequality_reconciled": true
+  },
+  "resource_categories": {
+    "total": 18,
+    "verified": 18,
+    "partial": 0,
+    "not_tested": 0
+  },
+  "violations": {
+    "ownership_violations": 0,
+    "cleanup_violations": 0,
+    "stale_callback_violations": 0,
+    "unbounded_growth_violations": 0,
+    "orphan_resource_violations": 0
+  },
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 4
+  },
+  "artifacts": [
+    "CP47_1_AUDIT_REPORT.md",
+    "CP47_1_FINAL_STATUS.md",
+    "CP47_1_STATE_EQUIVALENCE.md",
+    "CP47_1_CANONICAL_STATE.md",
+    "CP47_1_STATE_HASH.md",
+    "CP47_1_RESOURCE_RECONCILIATION.md",
+    "CP47_1_R01_R18_MATRIX.md",
+    "CP47_1_CP47_EVIDENCE_RECONCILIATION.md",
+    "CP47_1_FINDINGS.md",
+    "CP47_1_GIT_INTEGRITY.md",
+    "CP47_1_MANIFEST.json"
+  ]
+}

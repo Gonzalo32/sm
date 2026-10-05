@@ -1,0 +1,69 @@
+{
+  "checkpoint": "CP46",
+  "title": "Input Completeness & Partial-Information Integrity Audit",
+  "status": "PASS",
+  "timestamp": "2026-10-05T11:28:00-03:00",
+  "baseline_commit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "short_commit": "57acd4c",
+  "branch": "main",
+  "test_metrics": {
+    "test_files_before": 89,
+    "tests_before": 1025,
+    "test_files_after": 90,
+    "tests_after": 1038,
+    "passed": 1038,
+    "failed": 0,
+    "skipped": 0,
+    "build_status": "SUCCESS"
+  },
+  "constraints": {
+    "production_ict_logic_modified": "NO",
+    "parameters_modified": "NO",
+    "models_modified": "NO",
+    "datasets_modified": "NO",
+    "oos_modified": "NO",
+    "historical_download": "NO"
+  },
+  "completeness_contracts": {
+    "total": 5,
+    "verified": 5,
+    "partial": 0,
+    "not_defined": 0
+  },
+  "violations": {
+    "partial_state_violations": 0,
+    "premature_derivation_violations": 0,
+    "stale_state_violations": 0,
+    "replacement_violations": 0,
+    "temporal_completeness_violations": 0,
+    "mtf_partial_state_violations": 0,
+    "visual_partial_state_violations": 0,
+    "identity_violations": 0
+  },
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 4
+  },
+  "artifacts": [
+    "CP46_AUDIT_REPORT.md",
+    "CP46_FINAL_STATUS.md",
+    "CP46_COMPLETENESS_MODEL.md",
+    "CP46_PARTIAL_CANDLE_AUDIT.md",
+    "CP46_EVENT_COMPLETENESS_AUDIT.md",
+    "CP46_MISSING_DATA_AUDIT.md",
+    "CP46_STALE_DATA_AUDIT.md",
+    "CP46_REPLACEMENT_AUDIT.md",
+    "CP46_TEMPORAL_COMPLETENESS_AUDIT.md",
+    "CP46_MTF_PARTIAL_STATE_AUDIT.md",
+    "CP46_VISUAL_PARTIAL_STATE_AUDIT.md",
+    "CP46_ERROR_VS_INCOMPLETE_AUDIT.md",
+    "CP46_COMPOUND_SEQUENCE_AUDIT.md",
+    "CP46_DETERMINISM_AUDIT.md",
+    "CP46_FINDINGS.md",
+    "CP46_GIT_INTEGRITY.md",
+    "CP46_MANIFEST.json"
+  ]
+}

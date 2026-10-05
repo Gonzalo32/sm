@@ -1,0 +1,70 @@
+{
+  "checkpoint": "CP47.2",
+  "title": "Resource Category Applicability & Evidence Reconciliation",
+  "status": "PASS",
+  "cp47_1_status": "PASS",
+  "cp47_final_status": "CLOSED",
+  "timestamp": "2026-10-05T12:15:00-03:00",
+  "baseline_commit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "short_commit": "57acd4c",
+  "branch": "main",
+  "test_metrics": {
+    "test_files_before": 92,
+    "tests_before": 1054,
+    "test_files_after": 93,
+    "tests_after": 1059,
+    "passed": 1059,
+    "failed": 0,
+    "skipped": 0,
+    "build_status": "SUCCESS"
+  },
+  "constraints": {
+    "production_code_modified": "NO",
+    "production_ict_logic_modified": "NO",
+    "parameters_modified": "NO",
+    "models_modified": "NO",
+    "datasets_modified": "NO",
+    "oos_modified": "NO",
+    "historical_download": "NO"
+  },
+  "reconciled_categories": {
+    "r03_status": "NOT_APPLICABLE",
+    "r06_status": "NOT_APPLICABLE",
+    "r07_status": "NOT_APPLICABLE",
+    "r18_status": "NOT_APPLICABLE"
+  },
+  "resource_categories_summary": {
+    "total": 18,
+    "verified": 14,
+    "not_applicable": 4,
+    "partial": 0,
+    "not_tested": 0
+  },
+  "violations": {
+    "new_resource_defects": 0,
+    "ownership_violations": 0,
+    "cleanup_violations": 0,
+    "accumulation_violations": 0
+  },
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 4
+  },
+  "artifacts": [
+    "CP47_2_AUDIT_REPORT.md",
+    "CP47_2_FINAL_STATUS.md",
+    "CP47_2_RESOURCE_CATEGORY_MATRIX.md",
+    "CP47_2_R03_SUBSCRIPTIONS.md",
+    "CP47_2_R06_OBSERVER_REGISTRATIONS.md",
+    "CP47_2_R07_EVENTEMITTER.md",
+    "CP47_2_R18_ASYNC_HANDLES.md",
+    "CP47_2_CP47_RECONCILIATION.md",
+    "CP47_2_CP47_1_RECONCILIATION.md",
+    "CP47_2_FINDINGS.md",
+    "CP47_2_GIT_INTEGRITY.md",
+    "CP47_2_MANIFEST.json"
+  ]
+}
