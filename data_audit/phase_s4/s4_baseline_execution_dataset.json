@@ -1,0 +1,28 @@
+[
+  {
+    "baselineId": "BASE-NQ-5m-1700000240000-H1",
+    "symbol": "NQ",
+    "timeframe": "5m",
+    "horizon": "H1",
+    "timestamp": 1700000240000,
+    "referencePrice": 18110.0,
+    "mfePoints": 12.0,
+    "maePoints": 10.0,
+    "finalMovePoints": 2.0,
+    "sessionId": "SESSION-NY-OPEN-001",
+    "samplingMethod": "UNCONDITIONAL_MATCHED_TIMESTAMP_NON_SIGNAL_OBSERVATIONS"
+  },
+  {
+    "baselineId": "BASE-MNQ-1m-1700000180000-H1",
+    "symbol": "MNQ",
+    "timeframe": "1m",
+    "horizon": "H1",
+    "timestamp": 1700000180000,
+    "referencePrice": 18125.0,
+    "mfePoints": 8.0,
+    "maePoints": 8.0,
+    "finalMovePoints": 0.0,
+    "sessionId": "SESSION-NY-OPEN-001",
+    "samplingMethod": "UNCONDITIONAL_MATCHED_TIMESTAMP_NON_SIGNAL_OBSERVATIONS"
+  }
+]

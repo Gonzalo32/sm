@@ -1,0 +1,47 @@
+[
+  {
+    "predictiveId": "PRED-SIG-MODEL_A-NQ-5m-1700000240000-H1",
+    "signalId": "SIG-MODEL_A-NQ-5m-1700000240000",
+    "symbol": "NQ",
+    "timeframe": "5m",
+    "model": "MODEL_A",
+    "direction": "LONG",
+    "horizon": "H1",
+    "confirmationTimestamp": 1700000240000,
+    "referencePrice": 18110.0,
+    "mfePoints": 30.0,
+    "maePoints": 5.0,
+    "finalMovePoints": 25.0,
+    "outcomeState": "FAVORABLE",
+    "isOverlapping": false,
+    "sessionId": "SESSION-NY-OPEN-001",
+    "provenance": {
+      "candidateContextId": "ctx_NQ_5m_1700000000000",
+      "sourceEventIds": ["EVT-SWEEP-1700000120000", "EVT-MSS-1700000180000", "EVT-FVG-1700000180000"],
+      "mtfContextId": "mtf_NQ_15m_to_5m_1700000120000"
+    }
+  },
+  {
+    "predictiveId": "PRED-SIG-MODEL_B-MNQ-1m-1700000180000-H1",
+    "signalId": "SIG-MODEL_B-MNQ-1m-1700000180000",
+    "symbol": "MNQ",
+    "timeframe": "1m",
+    "model": "MODEL_B",
+    "direction": "LONG",
+    "horizon": "H1",
+    "confirmationTimestamp": 1700000180000,
+    "referencePrice": 18125.0,
+    "mfePoints": 25.0,
+    "maePoints": 5.0,
+    "finalMovePoints": 20.0,
+    "outcomeState": "FAVORABLE",
+    "isOverlapping": true,
+    "overlapGroupId": "GRP-OVERLAP-MNQ-101",
+    "sessionId": "SESSION-NY-OPEN-001",
+    "provenance": {
+      "candidateContextId": "ctx_MNQ_1m_1700000000000",
+      "sourceEventIds": ["EVT-SWEEP-1700000060000", "EVT-DISP-1700000120000", "EVT-FVG-1700000120000"],
+      "mtfContextId": "mtf_MNQ_5m_to_1m_1700000060000"
+    }
+  }
+]

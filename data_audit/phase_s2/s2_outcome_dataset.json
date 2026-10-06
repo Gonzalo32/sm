@@ -1,0 +1,77 @@
+[
+  {
+    "outcomeId": "OUTCOME-SIG-MODEL_A-NQ-5m-1700000240000-H1",
+    "signalId": "SIG-MODEL_A-NQ-5m-1700000240000",
+    "symbol": "NQ",
+    "timeframe": "5m",
+    "model": "MODEL_A",
+    "direction": "LONG",
+    "horizon": "H1",
+    "horizonCandleCount": 1,
+    "confirmationTimestamp": 1700000240000,
+    "outcomeWindowStartTimestamp": 1700000300000,
+    "outcomeWindowEndTimestamp": 1700000300000,
+    "referencePrice": 18110.0,
+    "maxHorizonPrice": 18140.0,
+    "minHorizonPrice": 18105.0,
+    "endHorizonPrice": 18135.0,
+    "outcomeState": "FAVORABLE",
+    "priceDeltaPoints": 30.0,
+    "provenance": {
+      "candidateContextId": "ctx_NQ_5m_1700000000000",
+      "sourceEventIds": ["EVT-SWEEP-1700000120000", "EVT-MSS-1700000180000", "EVT-FVG-1700000180000"],
+      "mtfContextId": "mtf_NQ_15m_to_5m_1700000120000"
+    },
+    "validationStatus": "VALID"
+  },
+  {
+    "outcomeId": "OUTCOME-SIG-MODEL_B-MNQ-1m-1700000180000-H1",
+    "signalId": "SIG-MODEL_B-MNQ-1m-1700000180000",
+    "symbol": "MNQ",
+    "timeframe": "1m",
+    "model": "MODEL_B",
+    "direction": "LONG",
+    "horizon": "H1",
+    "horizonCandleCount": 1,
+    "confirmationTimestamp": 1700000180000,
+    "outcomeWindowStartTimestamp": 1700000240000,
+    "outcomeWindowEndTimestamp": 1700000240000,
+    "referencePrice": 18125.0,
+    "maxHorizonPrice": 18150.0,
+    "minHorizonPrice": 18120.0,
+    "endHorizonPrice": 18145.0,
+    "outcomeState": "FAVORABLE",
+    "priceDeltaPoints": 25.0,
+    "provenance": {
+      "candidateContextId": "ctx_MNQ_1m_1700000000000",
+      "sourceEventIds": ["EVT-SWEEP-1700000060000", "EVT-DISP-1700000120000", "EVT-FVG-1700000120000"],
+      "mtfContextId": "mtf_MNQ_5m_to_1m_1700000060000"
+    },
+    "validationStatus": "VALID"
+  },
+  {
+    "outcomeId": "OUTCOME-SIG-NO_SIGNAL-MNQ-15m-1700000120000-H1",
+    "signalId": "SIG-NO_SIGNAL-MNQ-15m-1700000120000",
+    "symbol": "MNQ",
+    "timeframe": "15m",
+    "model": "UNATTRIBUTED",
+    "direction": "NEUTRAL",
+    "horizon": "H1",
+    "horizonCandleCount": 1,
+    "confirmationTimestamp": 1700000120000,
+    "outcomeWindowStartTimestamp": 1700000120000,
+    "outcomeWindowEndTimestamp": 1700000120000,
+    "referencePrice": 18002.0,
+    "maxHorizonPrice": 18002.0,
+    "minHorizonPrice": 18002.0,
+    "endHorizonPrice": 18002.0,
+    "outcomeState": "INSUFFICIENT_DATA",
+    "priceDeltaPoints": 0.0,
+    "provenance": {
+      "candidateContextId": "ctx_MNQ_15m_empty_1700000120000",
+      "sourceEventIds": [],
+      "mtfContextId": "mtf_rejected_MNQ_15m_to_15m_1700000120000"
+    },
+    "validationStatus": "VALID"
+  }
+]
