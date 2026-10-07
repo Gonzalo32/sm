@@ -1,0 +1,32 @@
+{
+  "auditMetadata": {
+    "phase": "S8.8",
+    "scope": "INDEPENDENT_OUT_OF_SAMPLE_REAL_MARKET_VALIDATION_AUDIT",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "coreIctDiffLines": 0,
+    "s8_8_status": "PASS_WITH_BOUNDED_SCOPE",
+    "s8_8_oos_classification": "INDEPENDENT_OOS_VALIDATION",
+    "oosSampleLimited": true,
+    "oosStatisticalPower": "INSUFFICIENT_FOR_FINAL_LIVE_DEPLOYMENT"
+  },
+  "oosDistribution": {
+    "tradeCount": 50,
+    "winCount": 43,
+    "lossCount": 7,
+    "neutralCount": 0,
+    "winRate": 0.86,
+    "lossRate": 0.14,
+    "neutralRate": 0,
+    "grossMean": 9.68,
+    "grossMedian": 8.25,
+    "netMean": 8.68,
+    "netMedian": 7.25,
+    "stdDevNet": 7.75,
+    "meanMFE": 12.34,
+    "meanMAE": -2.4,
+    "totalNetPoints": 434,
+    "maxDrawdownPoints": 4.75,
+    "maxWinStreak": 9,
+    "maxLossStreak": 2
+  }
+}

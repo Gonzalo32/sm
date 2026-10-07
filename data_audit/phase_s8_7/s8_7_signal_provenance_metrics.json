@@ -1,0 +1,26 @@
+{
+  "auditMetadata": {
+    "phase": "S8.7",
+    "scope": "INDEPENDENT_SIGNAL_PROVENANCE_AND_ANTI_LEAKAGE_AUDIT",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "coreIctDiffLines": 0,
+    "datasetSha256": "39225fb2c41d6ba8d524c5013e524fb820ee584bab82724f93ab44c2e5307d0c",
+    "s8_7_status": "PASS",
+    "s8_7_leakage_classification": "NO_DETECTED_LOOKAHEAD",
+    "s8_6_robustness_classification_valid": true
+  },
+  "metrics": {
+    "signalFutureDataViolations": 0,
+    "lookbackFutureViolations": 0,
+    "e1PriceProvenanceViolations": 0,
+    "outcomeToSignalLeakage": 0,
+    "postOutcomeSelectionFilters": 0,
+    "outcomeBasedTradeSelection": "NO",
+    "aggregationLookaheadViolations": 0,
+    "outcomeEngineFeedsBackToSignal": "NO",
+    "outcomeDependentSelection": "NO",
+    "replaySignalMatches": 200,
+    "replaySignalMismatches": 0,
+    "timestampOrderViolations": 0
+  }
+}

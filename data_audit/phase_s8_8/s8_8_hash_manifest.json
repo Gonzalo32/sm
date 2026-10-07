@@ -1,0 +1,10 @@
+{
+  "datasetId": "S8_8_OOS_REAL_MARKET_DATASET",
+  "candleCount": 288,
+  "tradeCount": 50,
+  "candleProvenanceSha256": "055256f30e40c7a8bc35d6e68d9340f9e0a98828836a2d34537dcb6d81d06f1b",
+  "tradeDatasetSha256": "72daab97f3c8d2e79d86b0b69901078e5db54394d9978b4d967b2e3dfbab4921",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "s8_200_dataset_hash": "0474035057d66cec8104dbf63863d11c601295d4b6c7d3f431d04513f55b9a15",
+  "independenceVerified": true
+}
