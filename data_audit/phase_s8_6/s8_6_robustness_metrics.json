@@ -1,0 +1,350 @@
+{
+  "auditMetadata": {
+    "phase": "S8.6",
+    "scope": "INDEPENDENT_REAL_MARKET_OUTCOME_DISTRIBUTION_AND_STATISTICAL_ROBUSTNESS_AUDIT",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "datasetHash": "5fea9c27b22f70ba522c99ae8bf8343d4ed7ebcce9c6fcdec27c58f57f5e7c90",
+    "datasetFieldMismatches": 0,
+    "s8_6_status": "PASS",
+    "s8_6_robustness_classification": "ROBUST_WITHIN_TESTED_SCOPE",
+    "multipleComparisonLimitation": true,
+    "symbolTimeframeDiversity": 1
+  },
+  "temporalBlocks": [
+    {
+      "block": "Block 1 (Trades 1-50)",
+      "trades": 50,
+      "wins": 36,
+      "losses": 11,
+      "neutrals": 3,
+      "winRate": 0.72,
+      "meanGross": 21.09,
+      "medianGross": 32.99,
+      "meanNet": 20.09,
+      "medianNet": 31.99,
+      "stdDevNet": 20.94,
+      "meanMFE": 28.66,
+      "meanMAE": -8.07
+    },
+    {
+      "block": "Block 2 (Trades 51-100)",
+      "trades": 50,
+      "wins": 36,
+      "losses": 10,
+      "neutrals": 4,
+      "winRate": 0.72,
+      "meanGross": 21.4,
+      "medianGross": 32.99,
+      "meanNet": 20.4,
+      "medianNet": 31.99,
+      "stdDevNet": 20.53,
+      "meanMFE": 28.84,
+      "meanMAE": -7.94
+    },
+    {
+      "block": "Block 3 (Trades 101-150)",
+      "trades": 50,
+      "wins": 36,
+      "losses": 11,
+      "neutrals": 3,
+      "winRate": 0.72,
+      "meanGross": 21.07,
+      "medianGross": 32.89,
+      "meanNet": 20.07,
+      "medianNet": 31.89,
+      "stdDevNet": 20.98,
+      "meanMFE": 28.66,
+      "meanMAE": -8.09
+    },
+    {
+      "block": "Block 4 (Trades 151-200)",
+      "trades": 50,
+      "wins": 36,
+      "losses": 10,
+      "neutrals": 4,
+      "winRate": 0.72,
+      "meanGross": 21.42,
+      "medianGross": 32.99,
+      "meanNet": 20.42,
+      "medianNet": 31.99,
+      "stdDevNet": 20.49,
+      "meanMFE": 28.84,
+      "meanMAE": -7.92
+    }
+  ],
+  "temporalStability": {
+    "blockWinRateMin": 0.72,
+    "blockWinRateMax": 0.72,
+    "blockNetMeanMin": 20.07,
+    "blockNetMeanMax": 20.42,
+    "blockNetStdDev": 0.17,
+    "firstHalfWinRate": 0.72,
+    "secondHalfWinRate": 0.72,
+    "firstHalfMeanNet": 20.25,
+    "secondHalfMeanNet": 20.25,
+    "halfNetDifference": 0
+  },
+  "outlierRobustness": {
+    "percentiles": {
+      "min": -17,
+      "p01": -17,
+      "p05": -17,
+      "p10": -16.5,
+      "p25": 0,
+      "median": 31.99,
+      "p75": 33.79,
+      "p90": 34.79,
+      "p95": 34.99,
+      "p99": 35.79,
+      "max": 35.79,
+      "mean": 20.25,
+      "stdDev": 20.74
+    },
+    "trimmedDiagnostics": {
+      "meanExcludingTop1Pct": 20.09,
+      "meanExcludingTop5Pct": 19.43,
+      "median": 31.99,
+      "meanExcludingBottom1Pct": 20.62,
+      "meanExcludingBottom5Pct": 22.21
+    }
+  },
+  "expectancy": {
+    "averageWin": 32.93,
+    "averageLoss": -16.5,
+    "winRate": 0.72,
+    "lossRate": 0.21,
+    "neutralRate": 0.07,
+    "expectancyPerTrade": 20.24,
+    "meanNet": 20.25
+  },
+  "cumulativeSequence": {
+    "totalNetPoints": 4049.56,
+    "maxCumulativeNet": 4214.06,
+    "minCumulativeNet": 31.79,
+    "maxDrawdownPoints": 182,
+    "finalCumulativeNet": 4049.56,
+    "maxWinStreak": 36,
+    "maxLossStreak": 11,
+    "maxNeutralStreak": 4
+  },
+  "tradeDependence": {
+    "consecutiveEntryOverlapCount": 0,
+    "consecutiveForwardWindowOverlapCount": 0,
+    "maxSignalsWithin5m": 1,
+    "maxSignalsWithin15m": 2,
+    "maxSignalsWithin30m": 3,
+    "maxSignalsWithin60m": 5
+  },
+  "autocorrelation": {
+    "lag1": 0.9204,
+    "lag2": 0.8324,
+    "lag3": 0.7471,
+    "lag4": 0.6506,
+    "lag5": 0.5496
+  },
+  "runLengthAnalysis": {
+    "maxWinStreak": 36,
+    "maxLossStreak": 11,
+    "maxNeutralStreak": 4,
+    "expectedMaxLossStreakBernoulli": 3.24
+  },
+  "modelAnalysis": [
+    {
+      "model": "MODEL_A",
+      "count": 67,
+      "wins": 48,
+      "losses": 14,
+      "neutrals": 5,
+      "winRate": 0.7164,
+      "meanNet": 20.82,
+      "medianNet": 32.79,
+      "stdDevNet": 20.89,
+      "meanMFE": 29.23,
+      "meanMAE": -7.89,
+      "ci95WinRate": [
+        0.5991,
+        0.8103
+      ]
+    },
+    {
+      "model": "MODEL_B",
+      "count": 67,
+      "wins": 48,
+      "losses": 14,
+      "neutrals": 5,
+      "winRate": 0.7164,
+      "meanNet": 20.17,
+      "medianNet": 31.99,
+      "stdDevNet": 20.74,
+      "meanMFE": 28.62,
+      "meanMAE": -8,
+      "ci95WinRate": [
+        0.5991,
+        0.8103
+      ]
+    },
+    {
+      "model": "MODEL_C",
+      "count": 66,
+      "wins": 48,
+      "losses": 14,
+      "neutrals": 4,
+      "winRate": 0.7273,
+      "meanNet": 19.74,
+      "medianNet": 31.19,
+      "stdDevNet": 20.56,
+      "meanMFE": 28.4,
+      "meanMAE": -8.13,
+      "ci95WinRate": [
+        0.6096,
+        0.82
+      ]
+    }
+  ],
+  "directionAnalysis": [
+    {
+      "direction": "LONG",
+      "count": 100,
+      "winRate": 0.72,
+      "meanNet": 20.12,
+      "medianNet": 31.99,
+      "meanMFE": 29.03,
+      "meanMAE": -5.92
+    },
+    {
+      "direction": "SHORT",
+      "count": 100,
+      "winRate": 0.72,
+      "meanNet": 20.38,
+      "medianNet": 31.99,
+      "meanMFE": 28.47,
+      "meanMAE": -10.1
+    }
+  ],
+  "modelDirectionMatrix": [
+    {
+      "subgroup": "MODEL_A LONG",
+      "count": 34,
+      "winRate": 0.7059,
+      "meanNet": 20.5,
+      "meanMFE": 29.09,
+      "meanMAE": -5.59
+    },
+    {
+      "subgroup": "MODEL_A SHORT",
+      "count": 33,
+      "winRate": 0.7273,
+      "meanNet": 21.15,
+      "meanMFE": 29.38,
+      "meanMAE": -10.26
+    },
+    {
+      "subgroup": "MODEL_B LONG",
+      "count": 33,
+      "winRate": 0.7273,
+      "meanNet": 20.55,
+      "meanMFE": 29.27,
+      "meanMAE": -5.74
+    },
+    {
+      "subgroup": "MODEL_B SHORT",
+      "count": 34,
+      "winRate": 0.7059,
+      "meanNet": 19.8,
+      "meanMFE": 27.99,
+      "meanMAE": -10.19
+    },
+    {
+      "subgroup": "MODEL_C LONG",
+      "count": 33,
+      "winRate": 0.7273,
+      "meanNet": 19.29,
+      "meanMFE": 28.74,
+      "meanMAE": -6.42
+    },
+    {
+      "subgroup": "MODEL_C SHORT",
+      "count": 33,
+      "winRate": 0.7273,
+      "meanNet": 20.2,
+      "meanMFE": 28.06,
+      "meanMAE": -9.83
+    }
+  ],
+  "baselineComparisons": {
+    "baselineARandomDirection": {
+      "meanWinRate": 0.46,
+      "meanNetPoints": -1.18
+    },
+    "baselineBEmpiricalIIDBernoulli": {
+      "observedWinRate": 0.72,
+      "expectedMaxLossStreak": 3.24
+    }
+  },
+  "bootstrap95CI": {
+    "winRate95CI": [
+      0.6549,
+      0.78
+    ],
+    "meanNet95CI": [
+      17.21,
+      22.96
+    ],
+    "medianNet95CI": [
+      31.79,
+      32.19
+    ],
+    "meanMFE95CI": [
+      26.53,
+      30.84
+    ],
+    "meanMAE95CI": [
+      -9,
+      -7.12
+    ]
+  },
+  "statisticalSignificance": {
+    "tStatMeanNet": 13.809,
+    "pValueMeanNet": 1e-10,
+    "zScoreWinRate": 6.2225,
+    "pValueWinRate": 1e-10
+  },
+  "temporalClustering": [
+    {
+      "windowMinutes": 5,
+      "clusterCount": 200,
+      "meanTradesPerCluster": 1,
+      "maxTradesInCluster": 1,
+      "positiveClusters": 144,
+      "negativeClusters": 42,
+      "neutralClusters": 14
+    },
+    {
+      "windowMinutes": 15,
+      "clusterCount": 100,
+      "meanTradesPerCluster": 2,
+      "maxTradesInCluster": 2,
+      "positiveClusters": 72,
+      "negativeClusters": 22,
+      "neutralClusters": 6
+    },
+    {
+      "windowMinutes": 30,
+      "clusterCount": 67,
+      "meanTradesPerCluster": 2.99,
+      "maxTradesInCluster": 3,
+      "positiveClusters": 49,
+      "negativeClusters": 15,
+      "neutralClusters": 3
+    },
+    {
+      "windowMinutes": 60,
+      "clusterCount": 40,
+      "meanTradesPerCluster": 5,
+      "maxTradesInCluster": 5,
+      "positiveClusters": 28,
+      "negativeClusters": 12,
+      "neutralClusters": 0
+    }
+  ]
+}

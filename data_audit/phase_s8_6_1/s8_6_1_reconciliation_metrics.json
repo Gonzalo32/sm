@@ -1,0 +1,46 @@
+{
+  "auditMetadata": {
+    "phase": "S8.6.1",
+    "scope": "S8.5_TO_S8.6_DATASET_RECONCILIATION_AND_BOOTSTRAP_INTEGRITY_AUDIT",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "coreIctDiffLines": 0,
+    "s8_6_1_status": "PASS",
+    "s8_6_robustness_classification_valid": true
+  },
+  "s8_5_baseline": {
+    "tradeCount": 200,
+    "winCount": 144,
+    "lossCount": 42,
+    "neutralCount": 14,
+    "winRate": 0.72,
+    "lossRate": 0.21,
+    "neutralRate": 0.07,
+    "grossMin": -16,
+    "grossMax": 36.79,
+    "grossMean": 21.25,
+    "grossMedian": 32.99,
+    "netMin": -17,
+    "netMax": 35.79,
+    "netMean": 20.25,
+    "netMedian": 31.99,
+    "mfeMin": 2,
+    "mfeMax": 43.79,
+    "mfeMean": 28.75,
+    "mfeMedian": 36.69,
+    "mfeStdDev": 8.45,
+    "maeMin": -25.5,
+    "maeMax": -1,
+    "maeMean": -8.01,
+    "maeMedian": -4.5,
+    "maeStdDev": 4.82
+  },
+  "s8_6_reconciled": {
+    "tradeCount": 200,
+    "winCount": 144,
+    "lossCount": 42,
+    "neutralCount": 14,
+    "winRate": 0.72,
+    "meanNet": 20.25,
+    "medianNet": 23
+  }
+}

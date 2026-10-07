@@ -1,0 +1,28 @@
+{
+  "auditMetadata": {
+    "phase": "S8.1",
+    "scope": "S8_MILESTONE_50_TO_S8_MILESTONE_100",
+    "incrementalN": 52,
+    "blockATrades": 52,
+    "blockBTrades": 52,
+    "totalTrades": 104,
+    "temporalSeparationVerified": true,
+    "duplicateCount": 0
+  },
+  "incrementalSummary": {
+    "blockB": {
+      "tradeRange": "trades 53–104",
+      "startTimestamp": 1779193200000,
+      "endTimestamp": 1779279300000,
+      "executedTradeCount": 52,
+      "grossMeanPoints": 21.45,
+      "netMeanPoints": 20.45,
+      "netMeanUSD": 40.90,
+      "favorableRate": 0.7308,
+      "adverseRate": 0.1923,
+      "neutralRate": 0.0769,
+      "profitFactor": 3.58,
+      "maxDrawdownUSD": 48.60
+    }
+  }
+}

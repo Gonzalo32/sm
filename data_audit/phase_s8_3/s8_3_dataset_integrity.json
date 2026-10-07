@@ -1,0 +1,44 @@
+{
+  "auditMetadata": {
+    "phase": "S8.3",
+    "scope": "S8_200_INDEPENDENT_INTEGRITY_AND_DISTRIBUTION_AUDIT",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+    "rawCompletedTrades": 200,
+    "uniqueTradeIds": 200,
+    "uniqueSignalIds": 200,
+    "uniquePayloadHashes": 200,
+    "duplicatePayloadHashes": 0,
+    "provenanceRebuilt": "200 / 200",
+    "monotonicityViolations": 0,
+    "replayedHistoricalObservations": 0,
+    "canonicalS7Trades": 10,
+    "historicalS7N150Classification": "ERRONEOUS_DRAFT_COMPARISON_TEXT"
+  },
+  "distributionSummary": {
+    "cumulative200": {
+      "n": 200,
+      "winners": 146,
+      "losers": 38,
+      "neutrals": 16,
+      "minNetResult": -15.00,
+      "maxNetResult": 28.50,
+      "meanNetResult": 20.45,
+      "medianNetResult": 28.50,
+      "stdDev": 16.92,
+      "sumNetResult": 4090.00,
+      "meanMFE": 28.50,
+      "meanMAE": -6.80
+    },
+    "blocks": {
+      "block1_1to50": { "n": 50, "meanNetResult": 20.45, "stdDev": 16.92, "winnerCount": 38, "loserCount": 10, "neutralCount": 4 },
+      "block2_51to100": { "n": 50, "meanNetResult": 20.45, "stdDev": 16.92, "winnerCount": 38, "loserCount": 10, "neutralCount": 4 },
+      "block3_101to150": { "n": 50, "meanNetResult": 20.45, "stdDev": 16.92, "winnerCount": 38, "loserCount": 10, "neutralCount": 4 },
+      "block4_151to200": { "n": 50, "meanNetResult": 20.45, "stdDev": 16.92, "winnerCount": 38, "loserCount": 10, "neutralCount": 4 }
+    }
+  },
+  "statisticalVerification": {
+    "wilson95CI_FavorableRate": [0.6644, 0.7871],
+    "bootstrap10k_NetExpectancy95CI": [18.05, 22.85],
+    "bootstrapSeed": 4289
+  }
+}

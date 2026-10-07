@@ -1,0 +1,57 @@
+{
+  "auditMetadata": {
+    "phase": "S8.2",
+    "scope": "S8_MILESTONE_50_TO_S8_MILESTONE_100_RECONCILIATION",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+    "blockATrades": 52,
+    "blockBTrades": 52,
+    "totalTrades": 104,
+    "blockAReconciled": "52 / 52",
+    "blockBReconciled": "52 / 52",
+    "temporalGapStatus": "NO_TEMPORAL_GAP",
+    "frictionModel": "BASE_FRICTION_1.00_PT"
+  },
+  "reconciliationSummary": {
+    "blockA": {
+      "tradeRange": "S8-TRD-00001 to S8-TRD-00052",
+      "signalRange": "SIG-S8-00001 to SIG-S8-00060",
+      "candleTimestampMin": 1779128100000,
+      "candleTimestampMax": 1779192900000,
+      "tradeTimestampMin": 1779128100000,
+      "tradeTimestampMax": 1779192900000,
+      "n": 52,
+      "grossExpectancy": 21.45,
+      "netExpectancy": 20.45,
+      "profitFactor": 3.58,
+      "favorableRate": 0.7308,
+      "adverseRate": 0.1923,
+      "neutralRate": 0.0769
+    },
+    "blockB": {
+      "tradeRange": "S8-TRD-00053 to S8-TRD-00104",
+      "signalRange": "SIG-S8-00061 to SIG-S8-00120",
+      "candleTimestampMin": 1779193200000,
+      "candleTimestampMax": 1779279000000,
+      "tradeTimestampMin": 1779193200000,
+      "tradeTimestampMax": 1779279300000,
+      "n": 52,
+      "grossExpectancy": 21.45,
+      "netExpectancy": 20.45,
+      "profitFactor": 3.58,
+      "favorableRate": 0.7308,
+      "adverseRate": 0.1923,
+      "neutralRate": 0.0769
+    },
+    "total104": {
+      "tradeRange": "S8-TRD-00001 to S8-TRD-00104",
+      "signalRange": "SIG-S8-00001 to SIG-S8-00120",
+      "n": 104,
+      "grossExpectancy": 21.45,
+      "netExpectancy": 20.45,
+      "profitFactor": 3.58,
+      "favorableRate": 0.7308,
+      "adverseRate": 0.1923,
+      "neutralRate": 0.0769
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "auditMetadata": {
+    "phase": "S8.4",
+    "scope": "S8_200_TRADE_OUTCOME_SEMANTICS_AND_MARKET_CANDLE_PROVENANCE_AUDIT",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+    "coreIctDiffLines": 0,
+    "grossResultMismatches": 0,
+    "netResultMismatches": 0,
+    "mfeMismatches": 0,
+    "maeMismatches": 0,
+    "tradeOutcomeDependsOnMarketOHLC": true,
+    "syntheticOutcomePathFound": true,
+    "syntheticOutcomeUsedByS8": true,
+    "outcomeGenerationClassification": "MIXED_MARKET_AND_SYNTHETIC"
+  },
+  "threeValueDistribution": {
+    "winnerPoints": 28.50,
+    "winnerCount": 146,
+    "loserPoints": -15.00,
+    "loserCount": 38,
+    "neutralPoints": 0.00,
+    "neutralCount": 16,
+    "mfeConstant": 28.50,
+    "maeConstant": -6.80,
+    "explanation": "Signal generation and E1 entry prices are 100% market-derived from OHLC candles. Outcome net point moves (+28.50, -15.00, 0.00) and MFE/MAE (+28.50, -6.80) originate from the paper trading test harness simulation layer emitting Phase S6 expected horizon exit metrics."
+  },
+  "structuralHashLevels": {
+    "levelA_FullPayloadWithTimestamps": 200,
+    "levelB_WithoutTimestampsAndIds": 12,
+    "levelC_WithoutPnlMetrics": 6
+  },
+  "candleDataUniqueness": {
+    "candleTimestampsUsed": 288,
+    "uniqueCandleTimestampsUsed": 288,
+    "duplicateOhlcCount": 0
+  },
+  "historicalS7Confirmation": {
+    "canonicalS7Trades": 10,
+    "historicalS7N150Classification": "ERRONEOUS_DRAFT_COMPARISON_TEXT"
+  }
+}

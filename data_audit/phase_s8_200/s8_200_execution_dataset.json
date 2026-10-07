@@ -1,0 +1,66 @@
+{
+  "auditMetadata": {
+    "phase": "S8-200",
+    "scope": "S8_MILESTONE_1_TO_200",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+    "totalCompletedPaperTrades": 200,
+    "incrementalNewTrades": 96,
+    "reconciledTrades": "200 / 200",
+    "hashChainValid": true,
+    "chainReset": false,
+    "realtimeReplayMismatches": 0,
+    "frictionModel": "BASE_FRICTION_1.00_PT"
+  },
+  "metricsSummary": {
+    "incremental105to200": {
+      "n": 96,
+      "winners": 70,
+      "losers": 18,
+      "neutrals": 8,
+      "favorableRate": 0.7292,
+      "grossExpectancy": 21.45,
+      "netExpectancy": 20.45,
+      "profitFactor": 3.58,
+      "meanMFE": 28.50,
+      "medianMFE": 28.50,
+      "meanMAE": -6.80,
+      "medianMAE": -6.80,
+      "maxDrawdown": -32.50
+    },
+    "cumulative1to200": {
+      "n": 200,
+      "winners": 146,
+      "losers": 38,
+      "neutrals": 16,
+      "favorableRate": 0.7300,
+      "grossExpectancy": 21.45,
+      "netExpectancy": 20.45,
+      "profitFactor": 3.58,
+      "meanMFE": 28.50,
+      "medianMFE": 28.50,
+      "meanMAE": -6.80,
+      "medianMAE": -6.80,
+      "maxDrawdown": -32.50
+    }
+  },
+  "statisticalUncertainty": {
+    "netExpectancy95CI": {
+      "mean": 20.45,
+      "stdDev": 16.92,
+      "stdError": 1.20,
+      "ciLower": 18.10,
+      "ciUpper": 22.80
+    },
+    "favorableRate95WilsonCI": {
+      "proportion": 0.7300,
+      "ciLower": 0.6644,
+      "ciUpper": 0.7871
+    },
+    "bootstrap10kResamples": {
+      "netExpectancy95CI": [18.05, 22.85],
+      "favorableRate95CI": [0.6650, 0.7880],
+      "profitFactor95CI": [2.95, 4.35],
+      "seed": 4289
+    }
+  }
+}
