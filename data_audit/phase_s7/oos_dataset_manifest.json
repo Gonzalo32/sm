@@ -1,0 +1,19 @@
+{
+  "datasetId": "OOS_VALIDATION_DATASET_V1",
+  "datasetVersion": "1.0.0",
+  "sealingTimestamp": "2026-10-01T12:00:00.000Z",
+  "source": "TradeSea_WSS_Real_Market_Data",
+  "instruments": ["NQ", "MNQ"],
+  "timeframes": ["5m"],
+  "startTimestamp": 1779128100000,
+  "endTimestamp": 1779137100000,
+  "candleCount": 31,
+  "provenanceClassification": "GENUINE_OOS",
+  "relationshipToS1S6": "STRICT_CHRONOLOGICAL_ISOLATION_ZERO_OVERLAP",
+  "fileHashes": {
+    "raw_candles": "437065add6f115ad7f0f9a534dad60165bd506f49fd6d989d9fd544a871167df",
+    "normalized_candles": "e9ac49c4c1f064026d86a0b2f7cdcd5877e33f2a125c57a57cb288541c0abcfb",
+    "cases": "bff5d6283896f6381670f5dce0e84841e6afe75f2f4bc9b4071a0bf0d84da3bb"
+  },
+  "contaminationStatus": "ZERO_OVERLAP_PASS"
+}

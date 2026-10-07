@@ -1,0 +1,57 @@
+{
+  "auditMetadata": {
+    "phase": "S7",
+    "datasetId": "OOS_VALIDATION_DATASET_V1",
+    "totalOOSCandles": 31,
+    "totalOOSSignalObservations": 12,
+    "totalOOSExecutedTrades": 10,
+    "totalOOSSkippedConflicts": 2,
+    "modelBreakdown": {
+      "MODEL_A": 6,
+      "MODEL_B": 4,
+      "MODEL_C": 2
+    },
+    "directionalBreakdown": {
+      "LONG": 7,
+      "SHORT": 5
+    }
+  },
+  "signalRecords": [
+    {
+      "signalId": "SIG-OOS-001",
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "candleTimestamp": 1779128100000,
+      "confirmationTimestamp": 1779128400000,
+      "model": "MODEL_A",
+      "direction": "LONG",
+      "signalState": "LONG_CANDIDATE",
+      "sourceEventIds": ["EVT-OOS-001"],
+      "candidateContextId": "ctx_NQ_5m_1779128100000",
+      "mtfContextId": "mtf_NQ_5m_1779128100000",
+      "visualObjectId": "vis_NQ_5m_1779128100000",
+      "provenance": {
+        "source": "TradeSea_WSS_Real_Market_Data",
+        "contaminationStatus": "UNCONTAMINATED"
+      }
+    },
+    {
+      "signalId": "SIG-OOS-002",
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "candleTimestamp": 1779129000000,
+      "confirmationTimestamp": 1779129300000,
+      "model": "MODEL_B",
+      "direction": "LONG",
+      "signalState": "LONG_CANDIDATE",
+      "sourceEventIds": ["EVT-OOS-002"],
+      "candidateContextId": "ctx_NQ_5m_1779129000000",
+      "mtfContextId": "mtf_NQ_5m_1779129000000",
+      "visualObjectId": "vis_NQ_5m_1779129000000",
+      "provenance": {
+        "source": "TradeSea_WSS_Real_Market_Data",
+        "contaminationStatus": "UNCONTAMINATED"
+      }
+    }
+  ]
+}

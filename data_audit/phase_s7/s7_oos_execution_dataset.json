@@ -1,0 +1,61 @@
+{
+  "auditMetadata": {
+    "phase": "S7",
+    "datasetId": "OOS_VALIDATION_DATASET_V1",
+    "totalOOSExecutedTrades": 10,
+    "totalOOSSkippedConflicts": 2
+  },
+  "executionSummary": [
+    {
+      "dimensionKey": "NQ_5m_MODEL_A_LONG_E1_X1_H1_BASE",
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "model": "MODEL_A",
+      "direction": "LONG",
+      "entryRule": "E1_CONFIRMATION_CLOSE",
+      "exitRule": "X1_H1",
+      "frictionLevel": "BASE_FRICTION",
+      "executedTradeCount": 5,
+      "grossMeanPoints": 26.80,
+      "netMeanPoints": 25.80,
+      "netMeanUSD": 516.00,
+      "favorableRate": 0.8000,
+      "maxDrawdownUSD": 48.60,
+      "economicRobustness": "ECONOMICALLY_POSITIVE"
+    },
+    {
+      "dimensionKey": "NQ_5m_MODEL_B_LONG_E1_X1_H1_BASE",
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "model": "MODEL_B",
+      "direction": "LONG",
+      "entryRule": "E1_CONFIRMATION_CLOSE",
+      "exitRule": "X1_H1",
+      "frictionLevel": "BASE_FRICTION",
+      "executedTradeCount": 3,
+      "grossMeanPoints": 20.50,
+      "netMeanPoints": 19.50,
+      "netMeanUSD": 390.00,
+      "favorableRate": 0.6667,
+      "maxDrawdownUSD": 42.00,
+      "economicRobustness": "ECONOMICALLY_POSITIVE"
+    },
+    {
+      "dimensionKey": "NQ_5m_MODEL_C_SHORT_E1_X1_H1_BASE",
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "model": "MODEL_C",
+      "direction": "SHORT",
+      "entryRule": "E1_CONFIRMATION_CLOSE",
+      "exitRule": "X1_H1",
+      "frictionLevel": "BASE_FRICTION",
+      "executedTradeCount": 2,
+      "grossMeanPoints": 16.50,
+      "netMeanPoints": 15.50,
+      "netMeanUSD": 310.00,
+      "favorableRate": 0.5000,
+      "maxDrawdownUSD": 35.00,
+      "economicRobustness": "ECONOMICALLY_POSITIVE"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "manifestId": "S8_REALTIME_MARKET_DATA_MANIFEST_V1",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+  "source": "TradeSea_WSS_Realtime_Stream",
+  "endpoint": "wss://app.tradesea.ai/ws",
+  "symbols": ["NQ", "MNQ"],
+  "timeframes": ["5m"],
+  "startTimestamp": 1779128100000,
+  "endTimestamp": 1779149700000,
+  "totalRealtimeCandles": 72,
+  "dataIntegrityStatus": "VALID_ZERO_GAP_ZERO_DUPLICATE",
+  "reconnectEvents": 0,
+  "discontinuityEvents": 0
+}

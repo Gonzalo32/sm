@@ -1,0 +1,66 @@
+{
+  "auditMetadata": {
+    "phase": "S8",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+    "totalCompletedPaperTrades": 26,
+    "totalPendingPaperTrades": 0,
+    "totalSkippedConflicts": 4,
+    "frictionScenario": "BASE_FRICTION"
+  },
+  "executionSummary": [
+    {
+      "dimensionKey": "MNQ_5m_MODEL_A_LONG_E1_X1_H1_BASE",
+      "symbol": "MNQ",
+      "timeframe": "5m",
+      "model": "MODEL_A",
+      "direction": "LONG",
+      "entryRule": "E1_CONFIRMATION_CLOSE",
+      "exitRule": "X1_H1",
+      "frictionLevel": "BASE_FRICTION",
+      "executedTradeCount": 13,
+      "grossMeanPoints": 27.50,
+      "netMeanPoints": 26.50,
+      "netMeanUSD": 51.76,
+      "favorableRate": 0.7692,
+      "maxDrawdownUSD": 48.60,
+      "profitFactor": 3.82,
+      "economicRobustness": "ECONOMICALLY_POSITIVE"
+    },
+    {
+      "dimensionKey": "MNQ_5m_MODEL_B_LONG_E1_X1_H1_BASE",
+      "symbol": "MNQ",
+      "timeframe": "5m",
+      "model": "MODEL_B",
+      "direction": "LONG",
+      "entryRule": "E1_CONFIRMATION_CLOSE",
+      "exitRule": "X1_H1",
+      "frictionLevel": "BASE_FRICTION",
+      "executedTradeCount": 9,
+      "grossMeanPoints": 20.80,
+      "netMeanPoints": 19.80,
+      "netMeanUSD": 38.36,
+      "favorableRate": 0.7778,
+      "maxDrawdownUSD": 42.00,
+      "profitFactor": 3.15,
+      "economicRobustness": "ECONOMICALLY_POSITIVE"
+    },
+    {
+      "dimensionKey": "MNQ_5m_MODEL_C_SHORT_E1_X1_H1_BASE",
+      "symbol": "MNQ",
+      "timeframe": "5m",
+      "model": "MODEL_C",
+      "direction": "SHORT",
+      "entryRule": "E1_CONFIRMATION_CLOSE",
+      "exitRule": "X1_H1",
+      "frictionLevel": "BASE_FRICTION",
+      "executedTradeCount": 4,
+      "grossMeanPoints": 16.20,
+      "netMeanPoints": 15.20,
+      "netMeanUSD": 29.16,
+      "favorableRate": 0.5000,
+      "maxDrawdownUSD": 35.00,
+      "profitFactor": 2.45,
+      "economicRobustness": "ECONOMICALLY_POSITIVE"
+    }
+  ]
+}

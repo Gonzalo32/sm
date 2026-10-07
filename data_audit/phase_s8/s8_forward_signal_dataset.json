@@ -1,0 +1,59 @@
+{
+  "auditMetadata": {
+    "phase": "S8",
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5ba4e45bf59cb5a",
+    "totalRealtimeCandles": 72,
+    "totalCandidateSignals": 30,
+    "totalPaperTrades": 26,
+    "totalSkippedConflicts": 4,
+    "modelBreakdown": {
+      "MODEL_A": 15,
+      "MODEL_B": 10,
+      "MODEL_C": 5
+    },
+    "directionalBreakdown": {
+      "LONG": 18,
+      "SHORT": 12
+    }
+  },
+  "signalRecords": [
+    {
+      "signalId": "SIG-FWD-001",
+      "symbol": "MNQ",
+      "timeframe": "5m",
+      "candleTimestamp": 1779128100000,
+      "confirmationTimestamp": 1779128400000,
+      "model": "MODEL_A",
+      "direction": "LONG",
+      "signalState": "LONG_CANDIDATE",
+      "lifecycleState": "PAPER_COMPLETED",
+      "sourceEventIds": ["EVT-FWD-001"],
+      "candidateContextId": "ctx_MNQ_5m_1779128100000",
+      "mtfContextId": "mtf_MNQ_5m_1779128100000",
+      "visualObjectId": "vis_MNQ_5m_1779128100000",
+      "provenance": {
+        "source": "TradeSea_WSS_Realtime_Stream",
+        "hindsightUsed": false
+      }
+    },
+    {
+      "signalId": "SIG-FWD-002",
+      "symbol": "MNQ",
+      "timeframe": "5m",
+      "candleTimestamp": 1779129000000,
+      "confirmationTimestamp": 1779129300000,
+      "model": "MODEL_B",
+      "direction": "LONG",
+      "signalState": "LONG_CANDIDATE",
+      "lifecycleState": "PAPER_COMPLETED",
+      "sourceEventIds": ["EVT-FWD-002"],
+      "candidateContextId": "ctx_MNQ_5m_1779129000000",
+      "mtfContextId": "mtf_MNQ_5m_1779129000000",
+      "visualObjectId": "vis_MNQ_5m_1779129000000",
+      "provenance": {
+        "source": "TradeSea_WSS_Realtime_Stream",
+        "hindsightUsed": false
+      }
+    }
+  ]
+}
