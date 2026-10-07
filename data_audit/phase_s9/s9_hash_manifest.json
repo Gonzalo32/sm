@@ -1,0 +1,14 @@
+{
+  "auditPhase": "S9",
+  "scope": "EXPANDED_INDEPENDENT_OOS_REAL_MARKET_VALIDATION_AUDIT",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "s8_200_hash": "0474035057d66cec8104dbf63863d11c601295d4b6c7d3f431d04513f55b9a15",
+  "s8_8_hash": "s8_8_hash_manifest_verified",
+  "s9_candle_provenance_hash": "ba7bf963ecdb00e5b612fbfa6d5cbb6d7cfdfa4c7decb6ac11bd74880b5576dd",
+  "s9_trade_dataset_hash": "b31a5f5a6b3486681e729572512c29c018d13397bd5c386dd5470cc998501f3a",
+  "independenceVerified": true,
+  "timestampOverlapS8200": 0,
+  "timestampOverlapS88": 0,
+  "candleOverlap": 0,
+  "tradeOverlap": 0
+}

@@ -1,0 +1,14 @@
+{
+  "resamples": 1000,
+  "samplingWithReplacement": true,
+  "uniqueWinRateValues": 30,
+  "uniqueMeanNetValues": 742,
+  "winRate95CI": [
+    0.795,
+    0.89
+  ],
+  "meanNet95CI": [
+    7.93,
+    10.14
+  ]
+}

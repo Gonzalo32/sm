@@ -1,0 +1,27 @@
+{
+  "N": 200,
+  "wins": 169,
+  "losses": 31,
+  "neutrals": 0,
+  "winRate": 0.845,
+  "lossRate": 0.155,
+  "neutralRate": 0,
+  "meanGross": 10.03,
+  "medianGross": 8.5,
+  "stdGross": 8,
+  "meanNet": 9.03,
+  "medianNet": 7.5,
+  "stdNet": 8,
+  "totalNetPoints": 1805.25,
+  "meanMFE": 12.68,
+  "medianMFE": 11,
+  "meanMAE": -2.52,
+  "medianMAE": -2.5,
+  "maxDrawdownPoints": 8.25,
+  "maxWinStreak": 9,
+  "maxLossStreak": 2,
+  "winRate95CI": [
+    0.7884,
+    0.8886
+  ]
+}
