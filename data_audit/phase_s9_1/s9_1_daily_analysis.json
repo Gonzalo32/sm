@@ -1,0 +1,19 @@
+{
+  "numberOfTradingDays": 5,
+  "meanTradesPerDay": 90,
+  "medianTradesPerDay": 96,
+  "maximumTradesPerDay": 132,
+  "distribution": {
+    "day1": 0,
+    "day2": 0,
+    "day3": 0,
+    "day4": 0,
+    "day5Plus": 5
+  },
+  "dailyPerformance": {
+    "positiveDays": 5,
+    "negativeDays": 0,
+    "meanDayNet": 1257.76,
+    "medianDayNet": 1204.75
+  }
+}

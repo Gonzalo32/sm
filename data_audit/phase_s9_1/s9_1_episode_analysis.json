@@ -1,0 +1,25 @@
+{
+  "s8_200_episodes": 1,
+  "s8_8_episodes": 1,
+  "s9_episodes": 1,
+  "combined_episodes": 2,
+  "meanTradesPerEpisode": 225,
+  "medianTradesPerEpisode": 225,
+  "maxTradesPerEpisode": 250,
+  "sizeDistribution": {
+    "size1": 0,
+    "size2": 0,
+    "size3": 0,
+    "size4": 0,
+    "size5Plus": 2
+  },
+  "episodeExpectancy": {
+    "positiveEpisodes": 2,
+    "negativeEpisodes": 0,
+    "neutralEpisodes": 0,
+    "episodeWinRate": 1,
+    "meanEpisodeNet": 3144.4,
+    "medianEpisodeNet": 3144.4,
+    "stdEpisodeNet": 1280.08
+  }
+}

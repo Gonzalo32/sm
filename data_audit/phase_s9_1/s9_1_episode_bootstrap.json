@@ -1,0 +1,12 @@
+{
+  "iterations": 1000,
+  "seed": 42,
+  "samplingUnit": "episode",
+  "samplingWithReplacement": true,
+  "uniqueBootstrapValues": 3,
+  "episodeBootstrapMeanNetCI95": [
+    8.96,
+    20.25
+  ],
+  "reproducible": true
+}

@@ -1,0 +1,20 @@
+{
+  "LONG": {
+    "tradeCount": 226,
+    "episodeCount": 2,
+    "meanTradesPerEpisode": 113,
+    "winRate": 0.7832,
+    "meanNet": 13.83,
+    "medianNet": 13,
+    "stdNet": 16.23
+  },
+  "SHORT": {
+    "tradeCount": 224,
+    "episodeCount": 2,
+    "meanTradesPerEpisode": 112,
+    "winRate": 0.7991,
+    "meanNet": 14.12,
+    "medianNet": 13.88,
+    "stdNet": 15.95
+  }
+}

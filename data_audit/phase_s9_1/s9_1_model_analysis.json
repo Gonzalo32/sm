@@ -1,0 +1,23 @@
+{
+  "MODEL_A": {
+    "tradeCount": 150,
+    "winRate": 0.78,
+    "meanNet": 14.26,
+    "medianNet": 14,
+    "stdNet": 16.32
+  },
+  "MODEL_B": {
+    "tradeCount": 150,
+    "winRate": 0.7933,
+    "meanNet": 14.01,
+    "medianNet": 12.88,
+    "stdNet": 16.09
+  },
+  "MODEL_C": {
+    "tradeCount": 150,
+    "winRate": 0.8,
+    "meanNet": 13.66,
+    "medianNet": 13,
+    "stdNet": 15.9
+  }
+}

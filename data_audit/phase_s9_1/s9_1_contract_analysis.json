@@ -1,0 +1,18 @@
+{
+  "NQZ25": {
+    "tradeCount": 200,
+    "sampleProportion": 0.4444,
+    "winRate": 0.845,
+    "meanNet": 9.03,
+    "medianNet": 7.5,
+    "stdNet": 8.02
+  },
+  "MNQZ25": {
+    "tradeCount": 250,
+    "sampleProportion": 0.5556,
+    "winRate": 0.748,
+    "meanNet": 17.93,
+    "medianNet": 30.99,
+    "stdNet": 19.47
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "s8_200": {
+    "tradeCount": 200,
+    "firstTimestamp": 1779128100000,
+    "lastTimestamp": 1779307200000,
+    "contracts": [
+      "MNQZ25"
+    ],
+    "models": [
+      "MODEL_A",
+      "MODEL_B",
+      "MODEL_C"
+    ],
+    "directions": [
+      "LONG",
+      "SHORT"
+    ]
+  },
+  "s8_8": {
+    "tradeCount": 50,
+    "firstTimestamp": 1764617700000,
+    "lastTimestamp": 1764632400000,
+    "contracts": [
+      "MNQZ25"
+    ],
+    "models": [
+      "MODEL_C",
+      "MODEL_A",
+      "MODEL_B"
+    ],
+    "directions": [
+      "LONG",
+      "SHORT"
+    ]
+  },
+  "s9": {
+    "tradeCount": 200,
+    "firstTimestamp": 1764613200000,
+    "lastTimestamp": 1764672900000,
+    "contracts": [
+      "NQZ25"
+    ],
+    "models": [
+      "MODEL_C",
+      "MODEL_B",
+      "MODEL_A"
+    ],
+    "directions": [
+      "LONG",
+      "SHORT"
+    ]
+  },
+  "combined": {
+    "tradeCount": 450,
+    "warning": "COMBINED_INDEPENDENT_SAMPLE_WARNING = YES",
+    "duplicateTradeIds": 0,
+    "duplicateSignalTimestamps": 0,
+    "invalidTradeRecords": 0
+  }
+}

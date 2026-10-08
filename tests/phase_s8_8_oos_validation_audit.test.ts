@@ -11,7 +11,6 @@ import * as crypto from 'crypto';
 import { DEFAULT_ICT_CONFIG } from '../core/ict/types/ICTConfig';
 import { DEFAULT_DISPLACEMENT_CONFIG } from '../core/ict/displacement/DisplacementEngine';
 import { PREDEFINED_MODELS } from '../core/ict/models/PredefinedModels';
-import { ICTEngine } from '../core/ict/engine/ICTEngine';
 import { Candle } from '../core/market/Candle';
 import { S85RealMarketOutcomeEngine } from './phase_s8_5_real_market_outcome_audit.test';
 

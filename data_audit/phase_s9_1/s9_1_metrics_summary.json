@@ -1,0 +1,23 @@
+{
+  "auditPhase": "S9.1",
+  "status": "PASS",
+  "classification": "VALID_WITH_CLUSTERING_LIMITATION",
+  "tradeCounts": {
+    "s8_200": 200,
+    "s8_8": 50,
+    "s9": 200,
+    "combined": 450
+  },
+  "episodeCounts": {
+    "s8_200": 1,
+    "s8_8": 1,
+    "s9": 1,
+    "combined": 2
+  },
+  "expectancyComparison": {
+    "tradeMeanNet": 13.98,
+    "episodeMeanNet": 14.6,
+    "dayMeanNet": 17.56
+  },
+  "liveTradingAuthorized": "NO"
+}

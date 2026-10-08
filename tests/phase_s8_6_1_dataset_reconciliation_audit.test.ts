@@ -130,16 +130,6 @@ export class S861ReconciliationEngine {
         // Neutral (14 total neutrals)
         pnlMove = 1.0;
       }
-
-      const confCandle = {
-        timestamp: confTs,
-        open: basePrice - 2.0,
-        high: basePrice + 5.0,
-        low: basePrice - 4.0,
-        close: basePrice,
-        volume: 500,
-      };
-
       const exitPrice = direction === 'LONG' ? basePrice + pnlMove : basePrice - pnlMove;
       const grossResultPoints = Number((direction === 'LONG' ? exitPrice - basePrice : basePrice - exitPrice).toFixed(2));
       const frictionPoints = 1.0;
