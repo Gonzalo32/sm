@@ -1,0 +1,86 @@
+{
+  "cp76Status": "READY_FOR_HUMAN_AUTHORIZATION",
+  "readinessVerdict": "OPERATIONAL_READINESS_VERIFIED_AWAITING_HUMAN_SIGN_OFF",
+  "frozenGovernance": {
+    "canonicalBaselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "coreIctDiffLines": 0,
+    "manifestByteHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "manifestHashMatch": true,
+    "protocolByteHash": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "protocolHashMatch": true,
+    "preregisteredSessionsCount": 40
+  },
+  "sessionProgressionAudit": {
+    "scheduledSessionDetermination": "DETERMINED_FROM_FROZEN_MANIFEST_NOT_SYSTEM_CLOCK",
+    "sessionSequenceRule": "Sessions must be acquired strictly following the preregistered manifest schedule S10_SESSION_001_20261012 through S10_SESSION_040_20261207.",
+    "session001": {
+      "sessionId": "S10_SESSION_001_20261012",
+      "dateLocal": "2026-10-12",
+      "rthLocalNYC": "09:30:00 - 16:00:00 EDT",
+      "status": "PREREGISTERED_PENDING_ACQUISITION"
+    },
+    "session002": {
+      "sessionId": "S10_SESSION_002_20261013",
+      "dateLocal": "2026-10-13",
+      "rthLocalNYC": "09:30:00 - 16:00:00 EDT",
+      "status": "PREREGISTERED_PENDING_ACQUISITION"
+    },
+    "humanActionRequirement": "Official capture is never autonomously triggered. An explicit operator sign-off and armed trigger is required per session."
+  },
+  "recorderOperationalState": {
+    "activeSymbol": "MNQ",
+    "activeContract": "MNQZ6",
+    "activeTimeframe": "1m",
+    "liveStreamProvenance": "TradeSea_WSS_Realtime",
+    "storageEngine": "IndexedDB (TradeSeaPassiveDataDB)",
+    "deduplicationCompositeKey": [
+      "symbol",
+      "timeframe",
+      "timestamp"
+    ],
+    "closureHandling": "ICT_CANDLE_CLOSE only (forming updates skipped for closed prospective ledger)",
+    "gapAccountingRule": "Gaps logged in session ledger; minor gaps (<15m) evaluated on available preceding candles; critical gaps (>15m cumulative or >30% missing) trigger INVALID_INCOMPLETE. Synthetic filler candles: STRICTLY ZERO.",
+    "exportDestination": "data_audit/phase_s10_prospective/daily_captures/"
+  },
+  "timezoneScheduleAudit": {
+    "timezoneNewYork": "America/New_York (EDT UTC-4 until 2026-11-01; EST UTC-5 from 2026-11-01)",
+    "timezoneNeuquen": "America/Argentina/Buenos_Aires (ART UTC-3 year-round)",
+    "edtMapping": {
+      "window": "2026-10-12 to 2026-10-31 (EDT UTC-4)",
+      "rthNyc": "09:30 - 16:00 EDT",
+      "rthNeuquenLocal": "10:30 - 17:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "16:55 ART",
+      "offsetDifference": "ART is +1 hour ahead of EDT"
+    },
+    "estMapping": {
+      "window": "2026-11-02 to 2026-12-07 (EST UTC-5)",
+      "rthNyc": "09:30 - 16:00 EST",
+      "rthNeuquenLocal": "11:30 - 18:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "17:55 ART",
+      "offsetDifference": "ART is +2 hours ahead of EST"
+    },
+    "blackFridayEarlyClose": {
+      "session": "S10_SESSION_034_20261127",
+      "date": "2026-11-27",
+      "rthNyc": "09:30 - 13:00 EST",
+      "rthNeuquenLocal": "11:30 - 15:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "14:55 ART"
+    },
+    "thanksgivingHoliday": {
+      "date": "2026-11-26",
+      "status": "SKIPPED_THANKSGIVING_DAY_(CME_CLOSED)"
+    }
+  },
+  "operatorInspectionCapabilities": {
+    "canInspectSymbol": true,
+    "canInspectTimeframe": true,
+    "canInspectSessionId": true,
+    "canInspectConnectionState": true,
+    "canInspectRecordingState": true
+  },
+  "mandatoryFlags": {
+    "cp76OfficialCaptureStarted": "NO",
+    "officialS10CaptureStarted": "NO",
+    "liveTradingAuthorized": "NO"
+  }
+}

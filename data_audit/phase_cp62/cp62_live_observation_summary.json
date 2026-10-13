@@ -1,0 +1,42 @@
+{
+  "cp62Status": "PASS",
+  "liveTradeSeaSessionTested": "YES",
+  "realtimeCandleStreamConfirmed": "CONFIRMED",
+  "signalPipelineConfirmed": "CONFIRMED",
+  "hudVisibilityConfirmed": "CONFIRMED",
+  "drawingAlignmentConfirmed": "CONFIRMED",
+  "zoomScaleCheckConfirmed": "CONFIRMED",
+  "timeframeAndSymbolSwitchConfirmed": "CONFIRMED",
+  "reconnectCheckConfirmed": "CONFIRMED",
+  "unresolvedBlockers": 0,
+  "coreIctDiffLines": 0,
+  "liveTradingAuthorized": "NO",
+  "sessionDetails": {
+    "targetUrl": "https://app.tradesea.ai/trade",
+    "activeInstrument": "MNQ (Micro E-mini Nasdaq-100 Futures)",
+    "exchange": "CME",
+    "lastTradedPrice": "31,163.50",
+    "activeTimeframe": "1m",
+    "canvasElementIndices": [
+      117,
+      118
+    ]
+  },
+  "evidenceArtifacts": {
+    "webpRecording": {
+      "path": "C:\\Users\\Administrador\\.gemini\\antigravity-ide\\brain\\0d42e9e7-0698-4935-a5d6-837d9a1861a4\\tradesea_live_observation_1791550709207.webp",
+      "sizeBytes": 664092,
+      "sha256": "c7569457b9ed9a323311d1b3f22bad657d2fb7c8e24f42926b2160962ccba0f7"
+    },
+    "tradeDashboardPng": {
+      "path": "C:\\Users\\Administrador\\.gemini\\antigravity-ide\\brain\\0d42e9e7-0698-4935-a5d6-837d9a1861a4\\tradesea_trade_dashboard_1791550994933.png",
+      "sizeBytes": 178402,
+      "sha256": "acd87f0021f31921858066a9cdfbc61952025c76f2b80b11d2f3870ca1bf1613"
+    },
+    "landingPagePng": {
+      "path": "C:\\Users\\Administrador\\.gemini\\antigravity-ide\\brain\\0d42e9e7-0698-4935-a5d6-837d9a1861a4\\tradesea_landing_page_1791550952413.png",
+      "sizeBytes": 499274,
+      "sha256": "ce0459aa9f00e3908b6a75477d7508eafebb881b157b3758ce87016a18d5b17a"
+    }
+  }
+}

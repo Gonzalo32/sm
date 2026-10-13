@@ -61,18 +61,50 @@ export class CanvasRenderer {
     this.geometryDebugMode = geometryDebug;
   }
 
+  private dpr: number = 1;
+
+  public setDpr(dpr: number): void {
+    if (dpr > 0 && isFinite(dpr)) {
+      this.dpr = dpr;
+    }
+  }
+
+  public getDpr(): number {
+    return this.dpr;
+  }
+
   public getTranslator(): CoordinateTranslator {
     return this.translator;
   }
 
-  public updateViewport(width: number, height: number, minPrice: number, maxPrice: number, firstIdx: number, lastIdx: number): void {
-    if (this.canvas.width !== width || this.canvas.height !== height) {
-      this.canvas.width = width;
-      this.canvas.height = height;
+  public updateViewport(
+    width: number,
+    height: number,
+    minPrice: number,
+    maxPrice: number,
+    firstIdx: number,
+    lastIdx: number,
+    dpr?: number
+  ): void {
+    if (dpr !== undefined && dpr > 0 && isFinite(dpr)) {
+      this.dpr = dpr;
     }
+
+    const safeW = Math.max(1, Math.round(width));
+    const safeH = Math.max(1, Math.round(height));
+    const targetBufferWidth = Math.round(safeW * this.dpr);
+    const targetBufferHeight = Math.round(safeH * this.dpr);
+
+    if (this.canvas.width !== targetBufferWidth || this.canvas.height !== targetBufferHeight) {
+      this.canvas.width = targetBufferWidth;
+      this.canvas.height = targetBufferHeight;
+    }
+    this.canvas.style.width = `${safeW}px`;
+    this.canvas.style.height = `${safeH}px`;
+
     this.translator.updateViewport({
-      width,
-      height,
+      width: safeW,
+      height: safeH,
       minPrice,
       maxPrice,
       firstCandleIndex: firstIdx,
@@ -94,6 +126,7 @@ export class CanvasRenderer {
 
   public startAnimationLoop(): void {
     if (this.currentFrameId !== null) return;
+    if (typeof requestAnimationFrame === 'undefined') return;
 
     const loop = (now: number) => {
       this.frameCount++;
@@ -104,7 +137,9 @@ export class CanvasRenderer {
       }
 
       this.renderFrame();
-      this.currentFrameId = requestAnimationFrame(loop);
+      if (typeof requestAnimationFrame !== 'undefined') {
+        this.currentFrameId = requestAnimationFrame(loop);
+      }
     };
 
     this.currentFrameId = requestAnimationFrame(loop);
@@ -112,7 +147,9 @@ export class CanvasRenderer {
 
   public stopAnimationLoop(): void {
     if (this.currentFrameId !== null) {
-      cancelAnimationFrame(this.currentFrameId);
+      if (typeof cancelAnimationFrame !== 'undefined') {
+        cancelAnimationFrame(this.currentFrameId);
+      }
       this.currentFrameId = null;
     }
   }
@@ -120,6 +157,11 @@ export class CanvasRenderer {
   public renderFrame(): void {
     const { width, height } = this.canvas;
     this.ctx.clearRect(0, 0, width, height);
+
+    this.ctx.save();
+    if (this.dpr !== 1) {
+      this.ctx.scale(this.dpr, this.dpr);
+    }
 
     // Sort visuals by zIndex ascending
     const sorted = [...this.activeVisuals].sort((a, b) => a.zIndex - b.zIndex);
@@ -137,6 +179,8 @@ export class CanvasRenderer {
     if (this.debugMode) {
       this.drawDebugHUD();
     }
+
+    this.ctx.restore();
   }
 
   private drawMarker(m: VisualMarker): void {
@@ -165,6 +209,10 @@ export class CanvasRenderer {
       this.ctx.beginPath();
       this.ctx.arc(x, y, 5, 0, Math.PI * 2);
       this.ctx.stroke();
+    } else if (m.shape === 'CIRCLE') {
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, 5, 0, Math.PI * 2);
+      this.ctx.fill();
     }
 
     if (m.label) {
@@ -178,7 +226,8 @@ export class CanvasRenderer {
   private drawLine(l: VisualLine): void {
     const y = this.translator.priceToY(l.price);
     const x1 = this.translator.indexToX(l.startCandleIndex, l.startTimestamp);
-    const x2 = l.endCandleIndex !== undefined ? this.translator.indexToX(l.endCandleIndex, l.endTimestamp) : this.canvas.width;
+    const viewportWidth = this.translator.getViewport().width;
+    const x2 = l.endCandleIndex !== undefined ? this.translator.indexToX(l.endCandleIndex, l.endTimestamp) : viewportWidth;
 
     this.ctx.save();
     this.ctx.strokeStyle = l.color;
@@ -205,7 +254,8 @@ export class CanvasRenderer {
     const y1 = this.translator.priceToY(r.highPrice);
     const y2 = this.translator.priceToY(r.lowPrice);
     const x1 = this.translator.indexToX(r.startCandleIndex, r.startTimestamp);
-    const x2 = r.endCandleIndex !== undefined ? this.translator.indexToX(r.endCandleIndex, r.endTimestamp) : this.canvas.width;
+    const viewportWidth = this.translator.getViewport().width;
+    const x2 = r.endCandleIndex !== undefined ? this.translator.indexToX(r.endCandleIndex, r.endTimestamp) : viewportWidth;
 
     const width = x2 - x1;
     const height = y2 - y1;

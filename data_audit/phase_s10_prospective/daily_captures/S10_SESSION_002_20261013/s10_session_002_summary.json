@@ -1,0 +1,71 @@
+{
+  "cp77Status": "BLOCKED",
+  "cp78Status": "READY_FOR_HUMAN_RECHECK",
+  "cp79Status": "INVALID_INCOMPLETE",
+  "finalSessionStatus": "INVALID_INCOMPLETE",
+  "governanceVerdict": "SESSION_INVALIDATED_CRITICAL_GAP_EXCEEDED_MISSED_OPEN",
+  "invalidationClause": "Protocol v1.1.0 Section 2: Critical Gaps (> 15 minutes OR >30% missing candles) marks session INVALID_INCOMPLETE and excluded from prospective scoring.",
+  "invalidationEvidence": {
+    "rthScheduledStartArt": "10:30:00 ART",
+    "auditTimestampArt": "10:45:37 ART",
+    "elapsedMinutesSinceOpen": 15.6,
+    "criticalGapThresholdMinutes": 15.0,
+    "captureStartedAtBoundary": false,
+    "syntheticCandlesAllowed": false
+  },
+  "authorizationStatus": {
+    "cp77AuthorizationReceived": "YES",
+    "authorizedSessionId": "S10_SESSION_002_20261013",
+    "authorizedDate": "2026-10-13",
+    "authorizationScope": "PASSIVE_DATA_CAPTURE_ONLY (NO_LIVE_TRADING)"
+  },
+  "preflightStatus": {
+    "cp77PreflightPassed": "NO",
+    "cp78RemediationCompleted": "PENDING_OPERATOR_VERIFICATION",
+    "cp79EligibilityPassed": "NO",
+    "eligibilityFailureReasons": [
+      "MISSED_OPENING_BOUNDARY: RTH opened at 10:30:00 ART without active recording.",
+      "CRITICAL_GAP_EXCEEDED: Elapsed time without recording exceeds the 15-minute critical gap threshold (> 15m), triggering mandatory INVALID_INCOMPLETE.",
+      "UNVERIFIED_DEMO_POSITION: Human operator has not confirmed that the demo position (2 lots CME:MES) was flattened."
+    ]
+  },
+  "mandatoryGovernanceFlags": {
+    "cp79AutomatedOrderActions": 0,
+    "officialS10CaptureStarted": "NO",
+    "liveTradingAuthorized": "NO"
+  },
+  "targetSessionSpecification": {
+    "sessionId": "S10_SESSION_002_20261013",
+    "dateLocal": "2026-10-13",
+    "timezone": "America/New_York (EDT UTC-4)",
+    "rthStartLocalNyc": "09:30:00 EDT",
+    "rthEndLocalNyc": "16:00:00 EDT",
+    "rthStartLocalArt": "10:30:00 ART",
+    "rthEndLocalArt": "17:00:00 ART",
+    "signalCutoffArt": "16:55:00 ART",
+    "requiredContract": "NQZ6 / MNQZ6",
+    "requiredTimeframe": "1m"
+  },
+  "frozenHashesAudit": {
+    "manifestByteHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "manifestHashMatch": true,
+    "protocolByteHash": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "protocolHashMatch": true,
+    "coreIctDiffLines": 0
+  },
+  "officialCaptureLedgerState": {
+    "officialCandlesCaptured": 0,
+    "officialCandlesPersisted": 0,
+    "syntheticCandlesGenerated": 0,
+    "ledgerIntegrityCompromised": false
+  },
+  "nextPermittedManifestSession": {
+    "sessionId": "S10_SESSION_003_20261014",
+    "dateLocal": "2026-10-14",
+    "contract": "NQZ6 / MNQZ6",
+    "timezone": "America/New_York (EDT UTC-4)",
+    "rthStartLocalArt": "10:30:00 ART",
+    "rthEndLocalArt": "17:00:00 ART",
+    "status": "PREREGISTERED_PENDING_ACQUISITION"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "protocolVersion": "1.1.0",
+  "protocolName": "S10_PROSPECTIVE_OOS_EVALUATION_PROTOCOL_V1_1_0_FINAL",
+  "freezeTimestampIso": "2026-10-09T14:40:38.410Z",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "status": "FROZEN_READY_FOR_OPERATOR_SIGN_OFF",
+  "primaryDataSource": {
+    "provider": "TradeSea_WSS_Realtime_Feed",
+    "connectionBackend": "Lucid / Rithmic Gateway",
+    "transport": "WebSocket (TradingView Wire Protocol ~m~len~m~json)",
+    "storageEngine": "IndexedDB (TradeSeaPassiveDataDB)",
+    "dataIsolation": "STRICT_PROSPECTIVE_CLOSED_CANDLE_LEDGER"
+  },
+  "neuquenLocalTimeSchedule": {
+    "edtPeriod": {
+      "dateRange": "2026-10-12 to 2026-10-31 (EDT UTC-4)",
+      "rthNycLocal": "09:30 - 16:00 EDT",
+      "rthNeuquenLocal": "10:30 - 17:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "16:55 ART"
+    },
+    "estPeriod": {
+      "dateRange": "2026-11-02 to 2026-12-07 (EST UTC-5)",
+      "rthNycLocal": "09:30 - 16:00 EST",
+      "rthNeuquenLocal": "11:30 - 18:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "17:55 ART"
+    }
+  },
+  "sessionIntegrityAndInvalidationRules": {
+    "minorGaps": "Gaps < 15 minutes logged in session ledger; signals evaluated strictly on available preceding candles.",
+    "criticalGaps": "Cumulative gap > 15 minutes OR >30% missing candles marks session INVALID_INCOMPLETE.",
+    "signalWindowGaps": "Gaps occurring during potential signal confirmation windows cause signal to be SKIPPED.",
+    "contextSwitches": "Symbol/timeframe changes during RTH invalidate session for that calendar date (INVALID_CONTEXT_SWITCH)."
+  },
+  "december2026RolloverAudit": {
+    "thirdFridayDate": "2026-12-18",
+    "eightDayPriorRuleDate": "2026-12-10 (Thursday)",
+    "thursdayPriorToExpirationWeekDate": "2026-12-17 (Thursday)",
+    "s10PreregisteredManifestEndDate": "2026-12-07 (Monday)",
+    "contractRolloverVerdict": "ALL 40 preregistered sessions in s10_session_manifest.json terminate PRIOR to rollover dates. 100% NQZ6 / MNQZ6."
+  },
+  "immutableHistoricalProtocols": {
+    "protocol_v1_0_0_hash": "ade544739a777f0a8434c2e134eca79e964b68da25f78a6488973cc3b2770ab2",
+    "protocol_v1_0_1_hash": "5b9187b8f20731de86bdca2ff0c26dfc8df1426a9f1fdc023b6dd33abbfc2cdd"
+  }
+}

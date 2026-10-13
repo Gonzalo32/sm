@@ -1,0 +1,42 @@
+{
+  "reconciliationStatus": "VERIFIED_RECONCILED",
+  "sessionDetails": {
+    "sessionId": "CP73_RECONNECT_SESSION_20261009_130459",
+    "symbol": "MNQ",
+    "contract": "MNQZ6",
+    "timeframe": "1m",
+    "localStartTimeIso": "2026-10-09T13:04:59-03:00",
+    "localEndTimeIso": "2026-10-09T13:24:59-03:00",
+    "totalObservationDurationMin": 20,
+    "totalObservationDurationSec": 1200
+  },
+  "interruptionAndRecoveryTimeline": {
+    "interruptionStartIso": "2026-10-09T13:10:00-03:00",
+    "reconnectionRestoredIso": "2026-10-09T13:10:30-03:00",
+    "interruptionDurationSec": 30,
+    "recoveryDurationSec": 30,
+    "stateTransitions": [
+      {
+        "timestampIso": "2026-10-09T13:04:59-03:00",
+        "state": "CONNECTED",
+        "note": "Session start, pre-interruption stream active"
+      },
+      {
+        "timestampIso": "2026-10-09T13:10:00-03:00",
+        "state": "DISCONNECTED",
+        "note": "Controlled live WebSocket pause initiated"
+      },
+      {
+        "timestampIso": "2026-10-09T13:10:25-03:00",
+        "state": "RECONNECTING",
+        "note": "Socket reconnect handshake initiated"
+      },
+      {
+        "timestampIso": "2026-10-09T13:10:30-03:00",
+        "state": "CONNECTED",
+        "note": "Live stream restored, ingestion resumed"
+      }
+    ]
+  },
+  "timelineReconciliationMatch": true
+}

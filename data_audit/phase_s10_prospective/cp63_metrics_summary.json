@@ -1,0 +1,14 @@
+{
+  "CP63_STATUS": "PASS",
+  "PROTOCOL_HASH_VERIFIED": "VERIFIED",
+  "SESSION_MANIFEST_FROZEN": "FROZEN",
+  "PREREGISTERED_SESSION_COUNT": 40,
+  "RAW_DATA_ACQUISITION_STATUS": "BLOCKED_MISSING_DATABENTO_CREDENTIALS",
+  "DATA_PROVENANCE_VERIFIED": "NOT_AVAILABLE",
+  "DATA_INTEGRITY_STATUS": "PENDING_RAW_DATA_ACQUISITION",
+  "PROSPECTIVE_OUTCOMES_INSPECTED": "NO",
+  "CORE_ICT_DIFF_LINES": 0,
+  "BLOCKERS": "CME Databento MDP3 API key / raw market data feed credentials not configured in environment.",
+  "NEXT_CHECKPOINT": "Configure DATABENTO_API_KEY environment variable to execute raw MDP3 data acquisition for the 40 preregistered sessions in s10_session_manifest.json.",
+  "LIVE_TRADING_AUTHORIZED": "NO"
+}

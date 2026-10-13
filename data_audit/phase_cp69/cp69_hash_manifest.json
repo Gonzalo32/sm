@@ -1,0 +1,8 @@
+{
+  "manifestName": "CP69_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T15:05:11.095Z",
+  "files": {
+    "cp69_preflight_summary.json": "b363d77248612340e8f90ba5c58bd531a96f6a8c20063be102986ad53eb4ec10",
+    "cp69_metrics_summary.json": "dc8468dbc7ea680bf04c2fbd3358bb5e9ce43e6b24b87c68c2b0e943ac99462b"
+  }
+}

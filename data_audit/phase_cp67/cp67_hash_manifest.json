@@ -1,0 +1,9 @@
+{
+  "manifestName": "CP67_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T14:40:38.420Z",
+  "files": {
+    "s10_prospective_protocol_spec_v1_1_0_final.json": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "cp67_readiness_status.json": "bb6f69979b6c8d059f5282932b50b4854e5f128d188293824df544bcbce69010",
+    "cp67_metrics_summary.json": "1cc2bfc08adcef8310d08434cc6cf9ce4ad449db4e68f1a5e36f716dfd6df7d3"
+  }
+}

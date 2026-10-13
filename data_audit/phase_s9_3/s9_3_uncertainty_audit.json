@@ -1,0 +1,15 @@
+{
+  "validInferenceMethods": [
+    "Block Bootstrap (Stationary or Circular) with block length >= 20 trades",
+    "Newey-West HAC Standard Error estimation",
+    "Autoregressive AR(1) pre-whitening before variance estimation"
+  ],
+  "invalidInferenceMethods": [
+    "Independent i.i.d. Bootstrap (ignores lag-1 return autocorrelation r=0.7414)",
+    "Episode Bootstrap with N_episodes = 1",
+    "Leave-One-Episode-Out Cross Validation with N_episodes = 1"
+  ],
+  "independentMarketSampleStatus": "INSUFFICIENT",
+  "reason": "S9 consists of a single 16.58-hour continuous session replay (Dec 1-2, 2025). Estimating cross-episode variance requires multiple independent market sessions.",
+  "effectiveSampleSize": "NOT_IDENTIFIABLE_WITH_CONFIDENCE"
+}

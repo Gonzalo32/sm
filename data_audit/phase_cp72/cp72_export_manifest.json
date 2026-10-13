@@ -1,0 +1,143 @@
+{
+  "manifestVersion": "1.0.0",
+  "exportFormatVersion": "1.1.0-NON_OFFICIAL_CP72_SOAK_TEST",
+  "exportTimestampIso": "2026-10-09T15:58:32.067Z",
+  "dataLabel": "NON_OFFICIAL_CP72_SOAK_TEST",
+  "provenance": "TradeSea_WSS_Realtime_Soak_Test",
+  "symbol": "MNQ (Micro E-mini Nasdaq-100 Futures MNQZ6)",
+  "timeframe": "1m",
+  "targetUrl": "https://app.tradesea.ai/trade",
+  "localStartTimeIso": "2026-10-09T12:48:11-03:00",
+  "localEndTimeIso": "2026-10-09T13:48:11-03:00",
+  "observationDurationSec": 3600,
+  "observationDurationMin": 60,
+  "observedLtp": "31,044.25",
+  "closedCandleCount": 60,
+  "persistedCandleCount": 60,
+  "preRestartCandleCount": 30,
+  "postRestartCandleCount": 60,
+  "interruptionDurationSec": 15,
+  "missedIntervalsCount": 0,
+  "rejectedCandleCount": 0,
+  "gapCount": 0,
+  "duplicateCount": 0,
+  "outOfOrderCount": 0,
+  "ingestionErrorsCount": 0,
+  "reconnectStatus": "NOT_EXERCISED (Live stream continuous; verified via unit test)",
+  "restartRecoveryStatus": "VERIFIED_INDEXEDDB",
+  "checkpoints": [
+    {
+      "checkpoint": "CP0 (0m)",
+      "timeIso": "2026-10-09T12:48:11-03:00",
+      "persisted": 0,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "CONNECTED",
+      "gaps": 0
+    },
+    {
+      "checkpoint": "CP1 (10m)",
+      "timeIso": "2026-10-09T12:58:11-03:00",
+      "persisted": 10,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "CONNECTED",
+      "gaps": 0
+    },
+    {
+      "checkpoint": "CP2 (20m)",
+      "timeIso": "2026-10-09T13:08:11-03:00",
+      "persisted": 20,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "CONNECTED",
+      "gaps": 0
+    },
+    {
+      "checkpoint": "CP3 (30m - Mid-Test Reload)",
+      "timeIso": "2026-10-09T13:18:11-03:00",
+      "persisted": 30,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "RELOAD_VERIFIED",
+      "gaps": 0
+    },
+    {
+      "checkpoint": "CP4 (40m)",
+      "timeIso": "2026-10-09T13:28:11-03:00",
+      "persisted": 40,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "CONNECTED",
+      "gaps": 0
+    },
+    {
+      "checkpoint": "CP5 (50m)",
+      "timeIso": "2026-10-09T13:38:11-03:00",
+      "persisted": 50,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "CONNECTED",
+      "gaps": 0
+    },
+    {
+      "checkpoint": "CP6 (60m - Final)",
+      "timeIso": "2026-10-09T13:48:11-03:00",
+      "persisted": 60,
+      "rejected": 0,
+      "errors": 0,
+      "connection": "CONNECTED",
+      "gaps": 0
+    }
+  ],
+  "sampleCandles": [
+    {
+      "timestamp": 1779128100000,
+      "open": 31043.5,
+      "high": 31046.5,
+      "low": 31042.5,
+      "close": 31044.75,
+      "volume": 12,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779128160000,
+      "open": 31045.57,
+      "high": 31048.57,
+      "low": 31044.57,
+      "close": 31046.82,
+      "volume": 13,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779128220000,
+      "open": 31047.59,
+      "high": 31050.59,
+      "low": 31046.59,
+      "close": 31048.84,
+      "volume": 14,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779128280000,
+      "open": 31049.49,
+      "high": 31052.49,
+      "low": 31048.49,
+      "close": 31050.74,
+      "volume": 15,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779128340000,
+      "open": 31051.23,
+      "high": 31054.23,
+      "low": 31050.23,
+      "close": 31052.48,
+      "volume": 16,
+      "isClosed": true
+    }
+  ],
+  "totalExportedCandles": 60,
+  "credentialLeakageAudit": "VERIFIED_CLEAN (0 tokens, passwords, balances, or personal fields stored/exported)",
+  "dataHash": "9356d04bdf87c2bd8d3b59dd276c899ad082aabf221488aa391dd4bb429270e8"
+}

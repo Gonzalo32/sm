@@ -1,0 +1,38 @@
+{
+  "protocolVersion": "1.1.0-proposal",
+  "protocolName": "S10_PROSPECTIVE_OOS_EVALUATION_PROTOCOL_V1_1_0_PROPOSAL",
+  "proposalTimestampIso": "2026-10-09T14:13:40.531Z",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "status": "PROPOSAL_PENDING_REVIEW",
+  "primaryDataSource": {
+    "provider": "TradeSea_WSS_Realtime_Feed",
+    "connectionBackend": "Lucid / Rithmic Gateway",
+    "transport": "WebSocket (TradingView Wire Protocol ~m~len~m~json)",
+    "storageEngine": "IndexedDB (TradeSeaPassiveDataDB)",
+    "dataIsolation": "STRICT_PROSPECTIVE_CLOSED_CANDLE_LEDGER"
+  },
+  "dataFeedLimitationsAndRules": {
+    "volumeAvailability": "Bar volume received in tick stream; tick count and L2 orderbook depth absent.",
+    "timeframePrecision": "1-minute and 5-minute candle timestamps anchored to candle start time (ms Unix epoch).",
+    "activeTabRequirement": "TradeSea browser tab must remain active/focused to prevent Chrome background WebSocket throttling.",
+    "historicalInitialWindowSeparation": "Initial chart historical backfill candles flagged as IS_HISTORICAL_INITIAL; only prospective live closed candles (IS_PROSPECTIVE_LIVE=true) ingested into evaluation ledger.",
+    "disruptionAndIncompleteSessions": {
+      "sessionRejectionCriteria": "Any session with cumulative unrecoverable data gap exceeding 15 minutes OR >30% missing candles is marked INVALID_INCOMPLETE.",
+      "reconnectDeduplication": "Enforced via composite primary key [symbol, timeframe, timestamp]. Duplicate frames discarded without ledger corruption."
+    }
+  },
+  "correctedDecember2026RolloverAudit": {
+    "thirdFridayDate": "2026-12-18",
+    "eightDayPriorRuleDate": "2026-12-10 (Thursday)",
+    "thursdayPriorToExpirationWeekDate": "2026-12-17 (Thursday)",
+    "s10PreregisteredManifestEndDate": "2026-12-07 (Monday)",
+    "contractRolloverVerdict": "ALL 40 preregistered sessions in s10_session_manifest.json (2026-10-12 to 2026-12-07) terminate PRIOR to the December contract rollover date under BOTH 8-day and Thursday rules. 100% of sessions strictly use contract NQZ6 / MNQZ6 with 0 rollover discontinuity."
+  },
+  "protocolDiffVersusV101": [
+    "Data provenance shifted from CME Databento MDP3 to TradeSea WSS Realtime feed",
+    "Storage engine shifted from raw Databento parquet to IndexedDB TradeSeaPassiveDataDB",
+    "Added explicit active tab requirement and Chrome WebSocket throttling mitigation rules",
+    "Added explicit initial historical backfill vs live prospective closed candle tagging",
+    "Corrected December 2026 rollover verification (manifest ends Dec 7, roll on Dec 10/17)"
+  ]
+}

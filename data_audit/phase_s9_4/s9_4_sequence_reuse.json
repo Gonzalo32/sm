@@ -1,0 +1,10 @@
+{
+  "totalTrades": 200,
+  "uniqueSignalTimestampsCount": 200,
+  "uniqueEntryTimestampsCount": 200,
+  "uniqueExitTimestampsCount": 200,
+  "maxTradesPerSignalCandle": 1,
+  "simultaneousOpenPositionsMax": 1,
+  "longShortConflictsCount": 0,
+  "distinctDecisionsStatus": "VERIFIED_200_DISTINCT_CANDLE_DECISIONS"
+}

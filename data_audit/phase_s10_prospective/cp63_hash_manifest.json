@@ -1,0 +1,9 @@
+{
+  "manifestName": "CP63_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T13:17:49.276Z",
+  "files": {
+    "s10_session_manifest.json": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "cp63_acquisition_status.json": "52685de1d96d361c20bae8c69f84ee5dc19c010f239317094f126c34c998ad4a",
+    "cp63_metrics_summary.json": "53ce37c4f29c66b8698c358accbbafbd565ada78ed4d04c529753dc50ee8fc97"
+  }
+}

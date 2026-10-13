@@ -1,0 +1,29 @@
+{
+  "manifestName": "CP75_HASH_VERIFICATION",
+  "verificationTimestampIso": "2026-10-09T17:18:36.565Z",
+  "frozenArtifactsHashes": {
+    "s10_session_manifest.json": {
+      "expected": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+      "measured": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+      "match": true
+    },
+    "s10_prospective_protocol_spec_v1_1_0_final.json": {
+      "expected": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+      "measured": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+      "match": true
+    }
+  },
+  "cp73ArtifactsHashes": {
+    "cp73_export_manifest.json": {
+      "expected": "1eb9a500bfc11cfaa9f58ee9345eb9ad63830bd15c288465c3820b4f7dac6bb3",
+      "measured": "1eb9a500bfc11cfaa9f58ee9345eb9ad63830bd15c288465c3820b4f7dac6bb3",
+      "match": true
+    },
+    "cp73_reconnect_summary.json": {
+      "expected": "8aae1672d8c99616124f83cefa4abed5c0142f865590612c8b6572f0f1efed83",
+      "measured": "8aae1672d8c99616124f83cefa4abed5c0142f865590612c8b6572f0f1efed83",
+      "match": true
+    }
+  },
+  "coreIctDiffLines": 0
+}

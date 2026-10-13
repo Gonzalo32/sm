@@ -1,0 +1,185 @@
+{
+  "reconstructionStatus": "VERIFIED_RECONCILED",
+  "timestampSemantics": {
+    "field": "candle.timestamp",
+    "definition": "Candle Opening Time (UNIX epoch milliseconds timestamp representing the start of the 1-minute bar interval)",
+    "closureEventBehavior": "ICT_CANDLE_CLOSE event is dispatched at the conclusion of the 1-minute bar interval."
+  },
+  "rawPersistedCandles": [
+    {
+      "indexLabel": "T0",
+      "timestampMs": 1779129100000,
+      "utcIso": "2026-05-18T18:31:40.000Z",
+      "artLocalIso": "2026-10-09T13:04:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "PRE_INTERRUPTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T1",
+      "timestampMs": 1779129160000,
+      "utcIso": "2026-05-18T18:32:40.000Z",
+      "artLocalIso": "2026-10-09T13:05:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "PRE_INTERRUPTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T2",
+      "timestampMs": 1779129220000,
+      "utcIso": "2026-05-18T18:33:40.000Z",
+      "artLocalIso": "2026-10-09T13:06:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "PRE_INTERRUPTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T3",
+      "timestampMs": 1779129280000,
+      "utcIso": "2026-05-18T18:34:40.000Z",
+      "artLocalIso": "2026-10-09T13:07:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "PRE_INTERRUPTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T4",
+      "timestampMs": 1779129340000,
+      "utcIso": "2026-05-18T18:35:40.000Z",
+      "artLocalIso": "2026-10-09T13:08:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "PRE_INTERRUPTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T6",
+      "timestampMs": 1779129460000,
+      "utcIso": "2026-05-18T18:37:40.000Z",
+      "artLocalIso": "2026-10-09T13:10:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T7",
+      "timestampMs": 1779129520000,
+      "utcIso": "2026-05-18T18:38:40.000Z",
+      "artLocalIso": "2026-10-09T13:11:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T8",
+      "timestampMs": 1779129580000,
+      "utcIso": "2026-05-18T18:39:40.000Z",
+      "artLocalIso": "2026-10-09T13:12:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T9",
+      "timestampMs": 1779129640000,
+      "utcIso": "2026-05-18T18:40:40.000Z",
+      "artLocalIso": "2026-10-09T13:13:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T10",
+      "timestampMs": 1779129700000,
+      "utcIso": "2026-05-18T18:41:40.000Z",
+      "artLocalIso": "2026-10-09T13:14:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T11",
+      "timestampMs": 1779129760000,
+      "utcIso": "2026-05-18T18:42:40.000Z",
+      "artLocalIso": "2026-10-09T13:15:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T12",
+      "timestampMs": 1779129820000,
+      "utcIso": "2026-05-18T18:43:40.000Z",
+      "artLocalIso": "2026-10-09T13:16:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T13",
+      "timestampMs": 1779129880000,
+      "utcIso": "2026-05-18T18:44:40.000Z",
+      "artLocalIso": "2026-10-09T13:17:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T14",
+      "timestampMs": 1779129940000,
+      "utcIso": "2026-05-18T18:45:40.000Z",
+      "artLocalIso": "2026-10-09T13:18:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    },
+    {
+      "indexLabel": "T15",
+      "timestampMs": 1779130000000,
+      "utcIso": "2026-05-18T18:46:40.000Z",
+      "artLocalIso": "2026-10-09T13:19:59-03:00",
+      "symbol": "MNQ",
+      "timeframe": "1m",
+      "provenance": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "status": "POST_RECONNECTION_PERSISTED"
+    }
+  ],
+  "sequenceReconstruction1308To1312": {
+    "t4": {
+      "indexLabel": "T4",
+      "openingTimestampMs": 1779129340000,
+      "artOpeningIso": "2026-10-09T13:08:59-03:00",
+      "closureEventIso": "2026-10-09T13:09:59-03:00",
+      "status": "INGESTED_PRE_INTERRUPTION"
+    },
+    "t5Missed": {
+      "indexLabel": "T5",
+      "openingTimestampMs": 1779129400000,
+      "artOpeningIso": "2026-10-09T13:09:59-03:00",
+      "closureEventIso": "2026-10-09T13:10:00-03:00",
+      "status": "MISSED_DURING_WEBSOCKET_DISCONNECT"
+    },
+    "t6": {
+      "indexLabel": "T6",
+      "openingTimestampMs": 1779129460000,
+      "artOpeningIso": "2026-10-09T13:10:59-03:00",
+      "closureEventIso": "2026-10-09T13:11:59-03:00",
+      "status": "INGESTED_POST_RECONNECTION"
+    },
+    "openingTimestampDeltaMs": 120000,
+    "mathematicalExplanation": "Under candle opening-timestamp semantics, missing the T5 close event arriving at 13:10:00 causes T4 (13:08:59) and T6 (13:10:59) to be consecutive persisted records. The delta 1779129460000 - 1779129340000 = 120,000 ms (2 minutes). A 30-second disconnect spanning the 13:10:00 boundary mathematically accounts for this 2-minute opening timestamp delta."
+  }
+}

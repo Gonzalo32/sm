@@ -1,0 +1,41 @@
+{
+  "cp68Status": "PASS_WITH_LIMITATIONS",
+  "manifestVersion": "1.0.0",
+  "manifestHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+  "preregisteredSessionCount": 40,
+  "skippedHolidaySessionCount": 1,
+  "thanksgivingHolidayAudit": {
+    "thanksgivingDay": {
+      "date": "2026-11-26",
+      "status": "SKIPPED_THANKSGIVING_DAY_(CME_CLOSED)",
+      "cmeMarketStatus": "CLOSED"
+    },
+    "blackFriday": {
+      "date": "2026-11-27",
+      "status": "PREREGISTERED_PENDING_ACQUISITION",
+      "isEarlyClose": true,
+      "rthEndLocal": "13:00:00",
+      "signalCutoffLocal": "12:55:00",
+      "rthEndNeuquen": "15:00:00 ART",
+      "signalCutoffNeuquen": "14:55:00 ART"
+    }
+  },
+  "timezoneScheduleAudit": {
+    "edtPeriod": {
+      "dateRange": "2026-10-12 to 2026-10-30 (15 sessions)",
+      "rthNyc": "09:30 - 16:00 EDT",
+      "rthNeuquen": "10:30 - 17:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "16:55 ART"
+    },
+    "estPeriod": {
+      "dateRange": "2026-11-02 to 2026-12-07 (25 sessions)",
+      "rthNyc": "09:30 - 16:00 EST",
+      "rthNeuquen": "11:30 - 18:00 ART (UTC-3)",
+      "signalCutoffNeuquen": "17:55 ART"
+    }
+  },
+  "cp67LimitationAcknowledgment": "Real live browser persistence was demonstrated with 1 single closed candle during a brief smoke test. It is explicitly NOT described as a full 6.5-hour RTH session validation.",
+  "coreIctDiffLines": 0,
+  "officialS10CaptureStarted": "NO",
+  "liveTradingAuthorized": "NO"
+}

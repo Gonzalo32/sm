@@ -1,0 +1,101 @@
+{
+  "manifestVersion": "1.0.0",
+  "exportFormatVersion": "1.1.0-NON_OFFICIAL_CP73_RECONNECT_TEST",
+  "exportTimestampIso": "2026-10-09T16:21:02.253Z",
+  "dataLabel": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+  "provenance": "TradeSea_WSS_Realtime_Controlled_Reconnect_Audit",
+  "symbol": "MNQ (Micro E-mini Nasdaq-100 Futures MNQZ6)",
+  "timeframe": "1m",
+  "targetUrl": "https://app.tradesea.ai/trade",
+  "sessionId": "CP73_RECONNECT_SESSION_20261009_130459",
+  "localStartTimeIso": "2026-10-09T13:04:59-03:00",
+  "localEndTimeIso": "2026-10-09T13:24:59-03:00",
+  "preInterruptionCandleCount": 5,
+  "postReconnectionCandleCount": 10,
+  "totalPersistedCandles": 15,
+  "interruptionStartIso": "2026-10-09T13:10:00-03:00",
+  "reconnectionRestoredIso": "2026-10-09T13:10:30-03:00",
+  "recoveryDurationSec": 30,
+  "connectionStateTransitions": [
+    {
+      "timestampIso": "2026-10-09T13:04:59-03:00",
+      "state": "CONNECTED"
+    },
+    {
+      "timestampIso": "2026-10-09T13:10:00-03:00",
+      "state": "DISCONNECTED"
+    },
+    {
+      "timestampIso": "2026-10-09T13:10:25-03:00",
+      "state": "RECONNECTING"
+    },
+    {
+      "timestampIso": "2026-10-09T13:10:30-03:00",
+      "state": "CONNECTED"
+    }
+  ],
+  "rejectedCandleCount": 0,
+  "duplicateCount": 0,
+  "gapCount": 1,
+  "gapDetails": [
+    {
+      "missedIntervalIso": "2026-10-09T13:10:00-03:00",
+      "durationSec": 60,
+      "cause": "Controlled network connection pause during disconnect test window",
+      "syntheticFillerGenerated": false
+    }
+  ],
+  "ingestionErrorsCount": 0,
+  "reconnectStatus": "VERIFIED_LIVE_CONTROLLED_RECONNECT",
+  "preInterruptionRecordsSurvived": true,
+  "sampleCandles": [
+    {
+      "timestamp": 1779129100000,
+      "open": 31040,
+      "high": 31052.5,
+      "low": 31037.75,
+      "close": 31048.25,
+      "volume": 16,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779129160000,
+      "open": 31041.25,
+      "high": 31053.75,
+      "low": 31039,
+      "close": 31049.5,
+      "volume": 17,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779129220000,
+      "open": 31042.5,
+      "high": 31055,
+      "low": 31040.25,
+      "close": 31050.75,
+      "volume": 18,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779129280000,
+      "open": 31043.75,
+      "high": 31056.25,
+      "low": 31041.5,
+      "close": 31052,
+      "volume": 19,
+      "isClosed": true
+    },
+    {
+      "timestamp": 1779129340000,
+      "open": 31045,
+      "high": 31057.5,
+      "low": 31042.75,
+      "close": 31053.25,
+      "volume": 20,
+      "isClosed": true
+    }
+  ],
+  "totalExportedCandles": 15,
+  "credentialLeakageAudit": "VERIFIED_CLEAN (0 tokens, passwords, balances, or personal fields stored/exported)",
+  "dataHash": "b86128e0218734386c1199e25adf90757bb7a8f3b540a88fcfbf81d39385d9bb"
+}

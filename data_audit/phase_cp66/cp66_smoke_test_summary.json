@@ -1,0 +1,38 @@
+{
+  "cp66Status": "PASS_WITH_LIMITATIONS",
+  "liveSessionVerified": "YES",
+  "targetUrl": "https://app.tradesea.ai/trade",
+  "activeInstrument": "MNQ (Micro E-mini Nasdaq-100 Futures MNQZ6)",
+  "activeTimeframe": "1m",
+  "lastTradedPrice": "31,044.25",
+  "ohlcValues": {
+    "open": 31041.25,
+    "high": 31055,
+    "low": 31039.25,
+    "close": 31044.25
+  },
+  "passiveRecorderStatus": "OPERATIONAL_INDEXEDDB_ARMED",
+  "evidenceArtifacts": {
+    "webpRecording": {
+      "path": "C:\\Users\\Administrador\\.gemini\\antigravity-ide\\brain\\0d42e9e7-0698-4935-a5d6-837d9a1861a4\\tradesea_live_smoke_test_1791555832446.webp",
+      "sizeBytes": 812450
+    },
+    "dashboardPng": {
+      "path": "C:\\Users\\Administrador\\.gemini\\antigravity-ide\\brain\\0d42e9e7-0698-4935-a5d6-837d9a1861a4\\tradesea_dashboard_1791555847693.png",
+      "sizeBytes": 198420
+    }
+  },
+  "protocolV110Review": {
+    "status": "REVIEWED_PROPOSAL_VERIFIED",
+    "validSessionCriteria": "RTH 09:30-16:00 local with 15:55 signal cutoff",
+    "invalidSessionCriteria": "Unrecoverable gap >15m OR >30% missing candles",
+    "disconnectDeduplication": "Enforced via composite key [symbol, timeframe, timestamp]",
+    "historicalInitialBackfillExclusion": "Flagged IS_HISTORICAL_INITIAL; strictly excluded from prospective closed ledger",
+    "december2026RolloverVerified": "100% of 40 manifest sessions fall under Q4_Z (NQZ6/MNQZ6) prior to Dec 10/17 roll dates",
+    "preRegistrationPolicy": "40 sessions pre-registered and frozen in s10_session_manifest.json before outcome observation",
+    "separationOfCaptureAndEvaluation": "TradeSeaPassiveRecorder operates strictly isolated from signal engine and order routing"
+  },
+  "coreIctDiffLines": 0,
+  "officialCaptureAuthorized": false,
+  "liveTradingAuthorized": "NO"
+}

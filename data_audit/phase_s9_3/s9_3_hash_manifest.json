@@ -1,0 +1,8 @@
+{
+  "s9_3_canonical_reproduction.json": "9ba8d11055e53fe8eaf7c89a4bc5de58a958e64e0c5182ed4a774d991a06e660",
+  "s9_3_return_dependence.json": "66a31f2187a3aa274194e67b01115a40e28f4c8f405d975d539f985c95e23142",
+  "s9_3_temporal_blocks.json": "f6832f3f9e28448edfa9227b499c5d17861ba443fd66530a62f925f5f03682e1",
+  "s9_3_uncertainty_audit.json": "da9e6c3ce519b3e509e539cc1140ad7946fdf4d656fdcf7987a2620da7353cb9",
+  "s9_3_provenance_audit.json": "6c523a3108aeec9a646695a3e783caf2c5bc5166c25d31f7bbcec3baa65094b1",
+  "s9_3_metrics_summary.json": "bc5f00776c3345d90f71dc2b22a9b1b35b22ddf7ab96813af48561f66d789b91"
+}

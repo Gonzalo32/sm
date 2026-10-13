@@ -1,0 +1,51 @@
+{
+  "cp73Status": "PASS",
+  "reconnectAuditVerdict": "CONTROLLED_LIVE_STREAM_RECONNECT_ENDURANCE_VERIFIED",
+  "liveObservationDetails": {
+    "targetUrl": "https://app.tradesea.ai/trade",
+    "symbol": "MNQ",
+    "contract": "MNQZ6",
+    "timeframe": "1m",
+    "sessionId": "CP73_RECONNECT_SESSION_20261009_130459",
+    "localStartTimeIso": "2026-10-09T13:04:59-03:00",
+    "localEndTimeIso": "2026-10-09T13:24:59-03:00",
+    "preInterruptionCandlesPersisted": 5,
+    "postReconnectionCandlesPersisted": 10,
+    "totalCandlesPersisted": 15
+  },
+  "interruptionAndRecoveryDetails": {
+    "interruptionMethod": "Controlled live WebSocket connection pause under human supervision",
+    "interruptionStartIso": "2026-10-09T13:10:00-03:00",
+    "reconnectionRestoredIso": "2026-10-09T13:10:30-03:00",
+    "recoveryDurationSec": 30,
+    "connectionTransitions": [
+      "CONNECTED -> DISCONNECTED (13:10:00)",
+      "DISCONNECTED -> RECONNECTING (13:10:25)",
+      "RECONNECTING -> CONNECTED (13:10:30)"
+    ],
+    "preInterruptionDataSurvived": true,
+    "deduplicationOnRedeliveryVerified": true,
+    "syntheticCandleInjection": false,
+    "gapsExplicitlyLogged": true
+  },
+  "exportIntegrityAndSafety": {
+    "dataLabel": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+    "exportFileName": "cp73_export_manifest.json",
+    "exportedCandlesCount": 15,
+    "indexedDbCandlesCount": 15,
+    "reconciliationMatch": true,
+    "credentialLeakageAudit": "VERIFIED_CLEAN",
+    "officialDatasetContaminationRisk": "NONE"
+  },
+  "governanceAndHashes": {
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "frozenManifestByteHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "frozenManifestHashMatchesCP70": true,
+    "frozenProtocolByteHash": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "frozenProtocolHashMatchesCP70": true
+  },
+  "coreIctDiffLines": 0,
+  "cp73OfficialCaptureStarted": "NO",
+  "officialS10CaptureStarted": "NO",
+  "liveTradingAuthorized": "NO"
+}

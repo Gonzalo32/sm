@@ -1,0 +1,9 @@
+{
+  "manifestName": "CP65_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T14:13:40.544Z",
+  "files": {
+    "s10_prospective_protocol_spec_v1_1_0_proposal.json": "bfe17fcfea7144ded12e5bf72e62dcb9e2eff5ef90bd25af7970758047bc7312",
+    "cp65_recorder_status.json": "9a78296c96eef2c05b49d5a827b6f173897fc8b013b6383901937019206b8b3a",
+    "cp65_metrics_summary.json": "d0fb3566a04ddf048ce3a6c273945b605fc34c176834d7d2e3e4e8e6e0a932f1"
+  }
+}

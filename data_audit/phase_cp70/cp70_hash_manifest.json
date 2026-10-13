@@ -1,0 +1,8 @@
+{
+  "manifestName": "CP70_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T15:16:21.778Z",
+  "files": {
+    "cp70_hash_reconciliation.json": "f0a8498109a4dd9e4e724cec42d6c3c2a67a51f0f5f973e25c2e20ef9614f0de",
+    "cp70_metrics_summary.json": "5102065a2a239f2a7c53c746774c6bcc874aebda0e0440a814cfda818c1ea2f8"
+  }
+}

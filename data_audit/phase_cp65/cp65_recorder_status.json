@@ -1,0 +1,22 @@
+{
+  "cp65Status": "PASS",
+  "passiveRecorderImplementationStatus": "IMPLEMENTED_AND_TESTED",
+  "indexedDBStorageEngine": "TradeSeaPassiveDataDB",
+  "orderPlacementAuthorized": "NO",
+  "liveTradingAuthorized": "NO",
+  "coreIctDiffLines": 0,
+  "unitTestsPassed": "9 / 9 tests passing in checkpoint65_passive_recorder_implementation.test.ts",
+  "fullWorkspaceTestsPassed": "1423 / 1423 tests passing across 137 test files",
+  "typeCheckErrors": 0,
+  "chromeExtensionBuildStatus": "SUCCESS (dist/ rebuilt)",
+  "december2026RolloverVerification": {
+    "thirdFriday": "2026-12-18",
+    "eightDayRule": "2026-12-10",
+    "thursdayRule": "2026-12-17",
+    "manifestEndDate": "2026-12-07",
+    "rolloverDiscontinuityRisk": "NONE (100% Q4_Z NQZ6/MNQZ6)"
+  },
+  "privacyAndCredentialAudit": "VERIFIED (0 tokens, credentials, balances, or account fields stored or exported)",
+  "protocolProposalVersion": "1.1.0-proposal",
+  "officialCaptureStarted": false
+}

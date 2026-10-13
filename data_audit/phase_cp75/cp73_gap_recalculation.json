@@ -1,0 +1,20 @@
+{
+  "recalculationStatus": "VERIFIED_RECONCILED",
+  "gapDetectionRule": "Delta = timestamp[i] - timestamp[i-1]. If Delta > expectedStepMs (60,000ms), GapDurationMs = Delta - expectedStepMs.",
+  "recalculatedGapCount": 1,
+  "recalculatedGapDurationMs": 60000,
+  "recalculatedGapDurationSec": 60,
+  "persistedGapLogComparison": {
+    "persistedGapCount": 1,
+    "persistedGapDurationSec": 60,
+    "syntheticFillerGenerated": false,
+    "match": true
+  },
+  "fiveWayCategoricalDistinctionAudit": {
+    "missingCandle": "1m candle bar for interval 13:09:00-13:09:59 omitted from prospective ledger.",
+    "missedWebSocketEvent": "ICT_CANDLE_CLOSE frame dropped during WebSocket disconnect.",
+    "intentionalRecorderPause": "Controlled 30-second live connection pause under human supervision.",
+    "reportingIndexOmission": "Index T5 omitted in prose report to maintain zero-offset timestamp index mapping.",
+    "gapDetectorCalculation": "Timestamp delta 120,000ms - 60,000ms = 60,000ms explicit gap."
+  }
+}

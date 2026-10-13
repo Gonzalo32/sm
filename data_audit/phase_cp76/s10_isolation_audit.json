@@ -1,0 +1,37 @@
+{
+  "isolationAuditStatus": "VERIFIED_STRICT_ISOLATION",
+  "officialCapturesDirectory": "data_audit/phase_s10_prospective/daily_captures",
+  "officialCapturesPreExistingFilesCount": 0,
+  "officialLedgerState": "CLEAN_EMPTY",
+  "nonOfficialTestDataExclusion": [
+    {
+      "phase": "CP72",
+      "label": "NON_OFFICIAL_CP72_SOAK_TEST",
+      "formatVersion": "1.1.0-NON_OFFICIAL_CP72_SOAK_TEST",
+      "directory": "data_audit/phase_cp72/",
+      "excludedFromOfficialS10": true
+    },
+    {
+      "phase": "CP73",
+      "label": "NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "formatVersion": "1.1.0-NON_OFFICIAL_CP73_RECONNECT_TEST",
+      "directory": "data_audit/phase_cp73/",
+      "excludedFromOfficialS10": true
+    },
+    {
+      "phase": "CP74",
+      "directory": "data_audit/phase_cp74/",
+      "excludedFromOfficialS10": true
+    },
+    {
+      "phase": "CP75",
+      "directory": "data_audit/phase_cp75/",
+      "excludedFromOfficialS10": true
+    }
+  ],
+  "syntheticDataProhibition": {
+    "syntheticCandlesInProspectiveLedger": 0,
+    "backfilledBarsTaggedAsProspective": 0,
+    "ruleEnforced": "Zero mock/synthetic filler candles are permitted in official S10 data path."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "manifestName": "CP68_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T14:56:16.876Z",
+  "files": {
+    "cp68_manifest_audit.json": "eac1bdbdddacdb3612576c36528d0fd7e91d56e4324232a5c5c5aed1c975fe9a",
+    "cp68_metrics_summary.json": "e31fc76a73fc813530f8139c96e6ff7a673b0b25f8581ae1953b1f979f70c610"
+  }
+}

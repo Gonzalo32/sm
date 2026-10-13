@@ -1,0 +1,38 @@
+{
+  "cp71Status": "PASS_WITH_LIMITATIONS",
+  "soakTestVerdict": "PASSIVE_RECORDER_ENGINEERING_SOAK_TEST_VERIFIED",
+  "liveObservationDetails": {
+    "targetUrl": "https://app.tradesea.ai/trade",
+    "symbol": "MNQ",
+    "contract": "MNQZ6",
+    "timeframe": "1m",
+    "observedLtp": "31,044.25",
+    "observationDurationSec": 180,
+    "full60MinRthEnduranceClaimed": false,
+    "full60MinEnduranceNote": "Multi-candle observation verified. Full RTH session endurance will be monitored session-by-session during official capture under operator supervision."
+  },
+  "persistenceAndRecovery": {
+    "storageEngine": "IndexedDB (TradeSeaPassiveDataDB)",
+    "restartRecoveryVerified": true,
+    "deduplicationVerified": true,
+    "reconnectStatus": "NOT_EXERCISED (Live stream continuous; verified via unit test)",
+    "gapDetectionVerified": true
+  },
+  "exportIntegrityAndSafety": {
+    "dataLabel": "NON_OFFICIAL_CP71_SOAK_TEST",
+    "exportFileName": "cp71_export_manifest.json",
+    "credentialLeakageAudit": "VERIFIED_CLEAN",
+    "officialDatasetContaminationRisk": "NONE"
+  },
+  "governanceAndHashes": {
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "frozenManifestByteHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "frozenManifestHashMatchesCP70": true,
+    "frozenProtocolByteHash": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "frozenProtocolHashMatchesCP70": true
+  },
+  "coreIctDiffLines": 0,
+  "cp71OfficialCaptureStarted": "NO",
+  "officialS10CaptureStarted": "NO",
+  "liveTradingAuthorized": "NO"
+}

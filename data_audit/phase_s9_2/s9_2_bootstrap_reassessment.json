@@ -1,0 +1,6 @@
+{
+  "status": "INSUFFICIENT_CLUSTER_COUNT",
+  "message": "S8-200, S8.8, and S9 datasets each consist of exactly 1 contiguous episode of 5m/15m candles. Resampling 1-2 clusters via bootstrap cannot produce meaningful variance estimates.",
+  "bootstrapClusterInference": "INSUFFICIENT_CLUSTER_COUNT",
+  "loeoInferenceLimitation": true
+}

@@ -1,0 +1,10 @@
+{
+  "strictOverlapPairsCount": 0,
+  "strictOverlapPercentage": 0,
+  "strictOverlapPairs": [],
+  "boundaryTouchPairsCount": 199,
+  "holdingCandleCounts": {
+    "1": 200
+  },
+  "overlapRiskStatus": "LOW"
+}

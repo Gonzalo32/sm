@@ -1,0 +1,44 @@
+# PHASE CP84 — FINAL STATUS
+
+```text
+CP84_STATUS = COMPLETE_VERIFIED
+PRODUCT_PURPOSE = VISUAL_DECISION_SUPPORT_AND_CHART_ANNOTATION
+AUTOMATED_TRADING_BOT = NO
+
+IMPLEMENTATION_GAP_STATUS = RESOLVED
+VISUAL_SETUP_ADAPTER = IMPLEMENTED (adaptSetupsToVisuals)
+PIPELINE_INTEGRATION = CONNECTED (ICTPipelineCoordinator -> VisualAdapter)
+CHART_BUY_SELL_OVERLAY_STATUS = RENDERABLE_ON_CANVAS
+CONFIRMED_BUY_MARKER = TRIANGLE_UP (#22c55e)
+CONFIRMED_SELL_MARKER = TRIANGLE_DOWN (#ef4444)
+ENTRY_ZONE_BOX = RECTANGLE (FVG/OB Bounds)
+INVALIDATION_LEVEL = DASHED_LINE (Swept Extreme Price)
+TARGET_LEVEL = DOTTED_LINE (Opposing Liquidity Level)
+
+LIFECYCLE_HANDLING = STRICT (WATCHING/FORMING omitted from entry; INVALIDATED/EXPIRED pruned)
+DEDUPLICATION = DETERMINISTIC (Keyed by symbol, timeframe, modelId, direction)
+CONTEXT_SWITCHING = SAFE (resetContext clears active setup registry)
+
+DETECTION_CORE_STATUS = FULLY_FROZEN (0 diff lines on core/ict/)
+LOOKAHEAD_BIAS = 0% (VERIFIED)
+ORDER_EXECUTION_APIS_IN_CODE = ZERO (0)
+
+TEST_SUITE_STATUS = 156 FILES PASSED / 1549 TESTS PASSED (100%)
+CP84_TESTS = 12 / 12 PASSED
+BUILD_STATUS = SUCCESS (tsc && vite build exit code 0)
+
+FROZEN_MANIFEST_SHA256 = 744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107
+FROZEN_PROTOCOL_V1_1_0_SHA256 = d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220
+CORE_ICT_DIFF_LINES = 0
+
+CP84_ORDER_ACTIONS = 0
+CP84_AUTOMATED_TRADING_UI_INTERACTIONS = 0
+OFFICIAL_S10_CAPTURE_STARTED = NO
+LIVE_TRADING_AUTHORIZED = NO
+```
+
+## Summary
+
+* **Objective Accomplished**: Visual setup annotation adapter implemented and integrated into the TradeSea chart pipeline.
+* **Core Invariant Preserved**: `core/ict/` remains 100% frozen with 0 diff lines against baseline `57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a`.
+* **Zero Trading Side Effects**: Zero order actions, zero broker credentials, zero automated trading UI interactions.

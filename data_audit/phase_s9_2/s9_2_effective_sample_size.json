@@ -1,0 +1,42 @@
+{
+  "S8_200": {
+    "dataset": "S8-200",
+    "N": 200,
+    "numClusters": 1,
+    "mAvg": 200,
+    "rho1": 0.9174694847044692,
+    "DEFF": 183.57642745618938,
+    "Neff": 1.0894644959126363,
+    "status": "NOT_IDENTIFIABLE_WITH_CONFIDENCE"
+  },
+  "S8_8": {
+    "dataset": "S8.8",
+    "N": 50,
+    "numClusters": 1,
+    "mAvg": 50,
+    "rho1": 0.7638692983391537,
+    "DEFF": 38.429595618618535,
+    "Neff": 1.3010805655153912,
+    "status": "NOT_IDENTIFIABLE_WITH_CONFIDENCE"
+  },
+  "S9": {
+    "dataset": "S9",
+    "N": 200,
+    "numClusters": 1,
+    "mAvg": 200,
+    "rho1": 0.7413992428625864,
+    "DEFF": 148.5384493296547,
+    "Neff": 1.3464527258941255,
+    "status": "NOT_IDENTIFIABLE_WITH_CONFIDENCE"
+  },
+  "Combined": {
+    "dataset": "Combined",
+    "N": 450,
+    "numClusters": 2,
+    "mAvg": 225,
+    "rho1": 0.9079694957675786,
+    "DEFF": 204.3851670519376,
+    "Neff": 2.2017253330602395,
+    "status": "NOT_IDENTIFIABLE_WITH_CONFIDENCE"
+  }
+}

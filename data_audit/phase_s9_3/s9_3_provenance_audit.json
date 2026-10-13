@@ -1,0 +1,7 @@
+{
+  "dataProvenance": "REAL_MARKET_DATABENTO_GLBX_MDP3",
+  "modelSelectionIndependence": "UNVERIFIED",
+  "periodSelectionIndependence": "UNVERIFIED",
+  "provenanceStatement": "Dataset is genuine real-market CME futures data. However, zero pre-registration artifacts exist in the repository establishing that S9 session boundaries (Dec 1-2, 2025) were selected prior to dataset exposure.",
+  "classification": "POTENTIALLY_SELECTION_BIASED_UNVERIFIED_PRE_REGISTRATION"
+}

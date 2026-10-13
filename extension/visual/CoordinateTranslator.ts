@@ -25,9 +25,13 @@ export interface TvCoordinateBridgeAPI {
   indexToX?: (index: number) => number | null;
 }
 
+import { ChartViewportUpdate } from './VisualTypes';
+
 export class CoordinateTranslator {
   private config: ViewportConfig;
   private tvBridgeApi?: TvCoordinateBridgeAPI;
+  private isSynchronized: boolean = false;
+  private lastViewportUpdate?: ChartViewportUpdate;
 
   constructor(config?: Partial<ViewportConfig>) {
     this.config = {
@@ -43,10 +47,47 @@ export class CoordinateTranslator {
       lastCandleIndex: config?.lastCandleIndex ?? 100,
       barWidth: config?.barWidth ?? 8,
     };
+    if (config?.minPrice !== undefined && config?.maxPrice !== undefined) {
+      this.isSynchronized = true;
+    }
+  }
+
+  public isViewportSynchronized(): boolean {
+    return this.isSynchronized;
+  }
+
+  public setViewportSynchronized(synced: boolean): void {
+    this.isSynchronized = synced;
+  }
+
+  public getLastViewportUpdate(): ChartViewportUpdate | undefined {
+    return this.lastViewportUpdate;
+  }
+
+  public updateFromValidatedViewport(viewport: ChartViewportUpdate): void {
+    this.lastViewportUpdate = viewport;
+    this.isSynchronized = true;
+    this.updateViewport({
+      width: viewport.width,
+      height: viewport.height,
+      minPrice: viewport.minPrice,
+      maxPrice: viewport.maxPrice,
+      firstCandleIndex: viewport.firstCandleIndex,
+      lastCandleIndex: viewport.lastCandleIndex,
+      barWidth: viewport.barWidth,
+    });
+  }
+
+  public resetViewportSync(): void {
+    this.isSynchronized = false;
+    this.lastViewportUpdate = undefined;
   }
 
   public updateViewport(config: Partial<ViewportConfig>): void {
     this.config = { ...this.config, ...config };
+    if (config.minPrice !== undefined && config.maxPrice !== undefined) {
+      this.isSynchronized = true;
+    }
     // Recalculate dynamic barWidth if last and first indices provided
     if (config.firstCandleIndex !== undefined && config.lastCandleIndex !== undefined) {
       const visibleBars = Math.max(1, config.lastCandleIndex - config.firstCandleIndex);
@@ -57,6 +98,7 @@ export class CoordinateTranslator {
 
   public setTvBridgeApi(api: TvCoordinateBridgeAPI): void {
     this.tvBridgeApi = api;
+    this.isSynchronized = true;
   }
 
   public getViewport(): ViewportConfig {

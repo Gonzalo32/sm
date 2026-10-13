@@ -1,0 +1,29 @@
+{
+  "cp70Status": "PASS_WITH_LIMITATIONS",
+  "reconciliationVerdict": "MANIFEST_AND_PROTOCOL_INTEGRITY_VERIFIED",
+  "sessionManifestForensics": {
+    "filePath": "data_audit/phase_s10_prospective/s10_session_manifest.json",
+    "exactByteSha256": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "cp63MachineReadableHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "cp68ReportedTextHash": "e7ed57ec22df0ddbe4bc5a3ff67ef37eaec797be834a34b22c7eb1df0a8525b6",
+    "discrepancyRootCause": "Documentation transcription artifact in markdown report text tables; the underlying file data_audit/phase_s10_prospective/s10_session_manifest.json has remained 100% byte-unmodified since its creation in CP63.",
+    "manifestIntegrityStatus": "VERIFIED_UNMODIFIED"
+  },
+  "protocolSpecForensics": {
+    "filePath": "data_audit/phase_s10_prospective/s10_prospective_protocol_spec_v1_1_0_final.json",
+    "exactByteSha256": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "cp67MachineReadableHash": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "protocolIntegrityStatus": "VERIFIED_UNMODIFIED"
+  },
+  "operatorReadinessSummary": {
+    "cp69LiveEvidence": "3 real closed candles observed in ~3 minutes on TradeSea MNQ 1m (LTP 31,044.25)",
+    "fullSessionEnduranceClaimed": false,
+    "humanOperatorGateStatus": "AWAITING_HUMAN_SIGN_OFF",
+    "remainingBlockers": [
+      "Explicit human operator authorization required to commence official capture"
+    ]
+  },
+  "coreIctDiffLines": 0,
+  "officialS10CaptureStarted": "NO",
+  "liveTradingAuthorized": "NO"
+}

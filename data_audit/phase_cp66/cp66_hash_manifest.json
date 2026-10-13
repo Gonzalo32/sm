@@ -1,0 +1,8 @@
+{
+  "manifestName": "CP66_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T14:26:10.241Z",
+  "files": {
+    "cp66_smoke_test_summary.json": "17d3e875dc0c71d26eafb5995b5455bac60eb402d03079ab5533e685563d8595",
+    "cp66_metrics_summary.json": "15a7f6b7a36d5356569cf424af38e0225fe1a7971834c18d5f97b1f03d02df08"
+  }
+}

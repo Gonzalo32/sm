@@ -1,0 +1,402 @@
+[
+  {
+    "tradeId": "S9-TRD-00001",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764613200000,
+    "tradeSignalIso": "2025-12-01T18:20:00.000Z",
+    "sourceCandleTimestamp": 1764613500000,
+    "sourceCandleIso": "2025-12-01T18:25:00.000Z",
+    "candleOHLC": {
+      "open": 17894.5,
+      "high": 17914,
+      "low": 17891.75,
+      "close": 17911.75
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00002",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764613500000,
+    "tradeSignalIso": "2025-12-01T18:25:00.000Z",
+    "sourceCandleTimestamp": 1764613800000,
+    "sourceCandleIso": "2025-12-01T18:30:00.000Z",
+    "candleOHLC": {
+      "open": 17911.75,
+      "high": 17924.75,
+      "low": 17911.25,
+      "close": 17923
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00003",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764613800000,
+    "tradeSignalIso": "2025-12-01T18:30:00.000Z",
+    "sourceCandleTimestamp": 1764614100000,
+    "sourceCandleIso": "2025-12-01T18:35:00.000Z",
+    "candleOHLC": {
+      "open": 17923,
+      "high": 17929.75,
+      "low": 17920.5,
+      "close": 17926.5
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00004",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764614100000,
+    "tradeSignalIso": "2025-12-01T18:35:00.000Z",
+    "sourceCandleTimestamp": 1764614400000,
+    "sourceCandleIso": "2025-12-01T18:40:00.000Z",
+    "candleOHLC": {
+      "open": 17926.5,
+      "high": 17929,
+      "low": 17919.5,
+      "close": 17922.25
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00005",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764614400000,
+    "tradeSignalIso": "2025-12-01T18:40:00.000Z",
+    "sourceCandleTimestamp": 1764614700000,
+    "sourceCandleIso": "2025-12-01T18:45:00.000Z",
+    "candleOHLC": {
+      "open": 17922.25,
+      "high": 17925.25,
+      "low": 17910.25,
+      "close": 17911
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00006",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764614700000,
+    "tradeSignalIso": "2025-12-01T18:45:00.000Z",
+    "sourceCandleTimestamp": 1764615000000,
+    "sourceCandleIso": "2025-12-01T18:50:00.000Z",
+    "candleOHLC": {
+      "open": 17911,
+      "high": 17912,
+      "low": 17891.25,
+      "close": 17893.5
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00007",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764615000000,
+    "tradeSignalIso": "2025-12-01T18:50:00.000Z",
+    "sourceCandleTimestamp": 1764615300000,
+    "sourceCandleIso": "2025-12-01T18:55:00.000Z",
+    "candleOHLC": {
+      "open": 17893.5,
+      "high": 17897,
+      "low": 17870,
+      "close": 17872.25
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00008",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764615300000,
+    "tradeSignalIso": "2025-12-01T18:55:00.000Z",
+    "sourceCandleTimestamp": 1764615600000,
+    "sourceCandleIso": "2025-12-01T19:00:00.000Z",
+    "candleOHLC": {
+      "open": 17872.25,
+      "high": 17873.25,
+      "low": 17848.75,
+      "close": 17849.75
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00009",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764615600000,
+    "tradeSignalIso": "2025-12-01T19:00:00.000Z",
+    "sourceCandleTimestamp": 1764615900000,
+    "sourceCandleIso": "2025-12-01T19:05:00.000Z",
+    "candleOHLC": {
+      "open": 17849.75,
+      "high": 17852.75,
+      "low": 17826.25,
+      "close": 17829
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00010",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764615900000,
+    "tradeSignalIso": "2025-12-01T19:05:00.000Z",
+    "sourceCandleTimestamp": 1764616200000,
+    "sourceCandleIso": "2025-12-01T19:10:00.000Z",
+    "candleOHLC": {
+      "open": 17829,
+      "high": 17831.75,
+      "low": 17811.5,
+      "close": 17812
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00011",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764616200000,
+    "tradeSignalIso": "2025-12-01T19:10:00.000Z",
+    "sourceCandleTimestamp": 1764616500000,
+    "sourceCandleIso": "2025-12-01T19:15:00.000Z",
+    "candleOHLC": {
+      "open": 17812,
+      "high": 17813.25,
+      "low": 17797.75,
+      "close": 17800.25
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00012",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764616500000,
+    "tradeSignalIso": "2025-12-01T19:15:00.000Z",
+    "sourceCandleTimestamp": 1764616800000,
+    "sourceCandleIso": "2025-12-01T19:20:00.000Z",
+    "candleOHLC": {
+      "open": 17800.25,
+      "high": 17803.75,
+      "low": 17792,
+      "close": 17794
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00013",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764616800000,
+    "tradeSignalIso": "2025-12-01T19:20:00.000Z",
+    "sourceCandleTimestamp": 1764617100000,
+    "sourceCandleIso": "2025-12-01T19:25:00.000Z",
+    "candleOHLC": {
+      "open": 17794,
+      "high": 17797,
+      "low": 17790.5,
+      "close": 17794
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00014",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764617100000,
+    "tradeSignalIso": "2025-12-01T19:25:00.000Z",
+    "sourceCandleTimestamp": 1764617400000,
+    "sourceCandleIso": "2025-12-01T19:30:00.000Z",
+    "candleOHLC": {
+      "open": 17794,
+      "high": 17800.5,
+      "low": 17791.75,
+      "close": 17798.5
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00015",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764617400000,
+    "tradeSignalIso": "2025-12-01T19:30:00.000Z",
+    "sourceCandleTimestamp": 1764617700000,
+    "sourceCandleIso": "2025-12-01T19:35:00.000Z",
+    "candleOHLC": {
+      "open": 17798.5,
+      "high": 17809.5,
+      "low": 17796.5,
+      "close": 17806
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00016",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764617700000,
+    "tradeSignalIso": "2025-12-01T19:35:00.000Z",
+    "sourceCandleTimestamp": 1764618000000,
+    "sourceCandleIso": "2025-12-01T19:40:00.000Z",
+    "candleOHLC": {
+      "open": 17806,
+      "high": 17816,
+      "low": 17803.5,
+      "close": 17814.75
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00017",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764618000000,
+    "tradeSignalIso": "2025-12-01T19:40:00.000Z",
+    "sourceCandleTimestamp": 1764618300000,
+    "sourceCandleIso": "2025-12-01T19:45:00.000Z",
+    "candleOHLC": {
+      "open": 17814.75,
+      "high": 17824.5,
+      "low": 17814,
+      "close": 17821.75
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00018",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764618300000,
+    "tradeSignalIso": "2025-12-01T19:45:00.000Z",
+    "sourceCandleTimestamp": 1764618600000,
+    "sourceCandleIso": "2025-12-01T19:50:00.000Z",
+    "candleOHLC": {
+      "open": 17821.75,
+      "high": 17829,
+      "low": 17819,
+      "close": 17826.25
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00019",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764618600000,
+    "tradeSignalIso": "2025-12-01T19:50:00.000Z",
+    "sourceCandleTimestamp": 1764618900000,
+    "sourceCandleIso": "2025-12-01T19:55:00.000Z",
+    "candleOHLC": {
+      "open": 17826.25,
+      "high": 17830.75,
+      "low": 17824,
+      "close": 17827
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00020",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764618900000,
+    "tradeSignalIso": "2025-12-01T19:55:00.000Z",
+    "sourceCandleTimestamp": 1764619200000,
+    "sourceCandleIso": "2025-12-01T20:00:00.000Z",
+    "candleOHLC": {
+      "open": 17827,
+      "high": 17830.25,
+      "low": 17822.25,
+      "close": 17823.75
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00021",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764619200000,
+    "tradeSignalIso": "2025-12-01T20:00:00.000Z",
+    "sourceCandleTimestamp": 1764619500000,
+    "sourceCandleIso": "2025-12-01T20:05:00.000Z",
+    "candleOHLC": {
+      "open": 17823.75,
+      "high": 17826,
+      "low": 17814.5,
+      "close": 17817.25
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00022",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764619500000,
+    "tradeSignalIso": "2025-12-01T20:05:00.000Z",
+    "sourceCandleTimestamp": 1764619800000,
+    "sourceCandleIso": "2025-12-01T20:10:00.000Z",
+    "candleOHLC": {
+      "open": 17817.25,
+      "high": 17820.5,
+      "low": 17807.75,
+      "close": 17809
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00023",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764619800000,
+    "tradeSignalIso": "2025-12-01T20:10:00.000Z",
+    "sourceCandleTimestamp": 1764620100000,
+    "sourceCandleIso": "2025-12-01T20:15:00.000Z",
+    "candleOHLC": {
+      "open": 17809,
+      "high": 17810,
+      "low": 17799,
+      "close": 17801
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00024",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764620100000,
+    "tradeSignalIso": "2025-12-01T20:15:00.000Z",
+    "sourceCandleTimestamp": 1764620400000,
+    "sourceCandleIso": "2025-12-01T20:20:00.000Z",
+    "candleOHLC": {
+      "open": 17801,
+      "high": 17804.5,
+      "low": 17792.75,
+      "close": 17795.25
+    },
+    "match": "VERIFIED_MATCH"
+  },
+  {
+    "tradeId": "S9-TRD-00025",
+    "dataset": "S9",
+    "contract": "NQZ25",
+    "tradeSignalTimestamp": 1764620400000,
+    "tradeSignalIso": "2025-12-01T20:20:00.000Z",
+    "sourceCandleTimestamp": 1764620700000,
+    "sourceCandleIso": "2025-12-01T20:25:00.000Z",
+    "candleOHLC": {
+      "open": 17795.25,
+      "high": 17798,
+      "low": 17791,
+      "close": 17793.75
+    },
+    "match": "VERIFIED_MATCH"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "S8_200": {
+    "status": "UNVERIFIED",
+    "reason": "No pre-registration artifact found establishing May 18-20, 2026 session selection prior to dataset exposure."
+  },
+  "S8_8": {
+    "status": "UNVERIFIED",
+    "reason": "No pre-registration artifact found establishing Dec 1, 2025 session selection prior to dataset exposure."
+  },
+  "S9": {
+    "status": "UNVERIFIED",
+    "reason": "No pre-registration artifact found establishing Dec 1-2, 2025 session selection prior to dataset exposure."
+  },
+  "S10_PROSPECTIVE": {
+    "status": "PRE_REGISTERED_FROZEN",
+    "protocolHash": "ade544739a777f0a8434c2e134eca79e964b68da25f78a6488973cc3b2770ab2"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "cp72Status": "PASS",
+  "soakTestVerdict": "GENUINE_60_MINUTE_SUPERVISED_RECORDER_ENDURANCE_VERIFIED",
+  "liveObservationDetails": {
+    "targetUrl": "https://app.tradesea.ai/trade",
+    "symbol": "MNQ",
+    "contract": "MNQZ6",
+    "timeframe": "1m",
+    "observedLtp": "31,044.25",
+    "localStartTimeIso": "2026-10-09T12:48:11-03:00",
+    "localEndTimeIso": "2026-10-09T13:48:11-03:00",
+    "observationDurationSec": 3600,
+    "observationDurationMin": 60,
+    "full60MinRthEnduranceCompleted": true,
+    "closedCandlesReceived": 60,
+    "closedCandlesPersisted": 60
+  },
+  "midTestPersistenceRecovery": {
+    "storageEngine": "IndexedDB (TradeSeaPassiveDataDB)",
+    "reloadTimestampIso": "2026-10-09T13:18:11-03:00",
+    "preRestartCount": 30,
+    "postRestartCount": 60,
+    "interruptionDurationSec": 15,
+    "missedIntervalsCount": 0,
+    "restartRecoveryVerified": true,
+    "deduplicationVerified": true,
+    "reconnectStatus": "NOT_EXERCISED (Live stream continuous; verified via unit test)",
+    "gapDetectionVerified": true
+  },
+  "exportIntegrityAndSafety": {
+    "dataLabel": "NON_OFFICIAL_CP72_SOAK_TEST",
+    "exportFileName": "cp72_export_manifest.json",
+    "exportedCandlesCount": 60,
+    "indexedDbCandlesCount": 60,
+    "reconciliationMatch": true,
+    "credentialLeakageAudit": "VERIFIED_CLEAN",
+    "officialDatasetContaminationRisk": "NONE"
+  },
+  "governanceAndHashes": {
+    "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+    "frozenManifestByteHash": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+    "frozenManifestHashMatchesCP70": true,
+    "frozenProtocolByteHash": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+    "frozenProtocolHashMatchesCP70": true
+  },
+  "coreIctDiffLines": 0,
+  "cp72OfficialCaptureStarted": "NO",
+  "officialS10CaptureStarted": "NO",
+  "liveTradingAuthorized": "NO"
+}

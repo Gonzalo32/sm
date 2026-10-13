@@ -1,0 +1,21 @@
+{
+  "manifestName": "CP76_HASH_VERIFICATION",
+  "verificationTimestampIso": "2026-10-13T11:29:08.872Z",
+  "frozenArtifactsHashes": {
+    "s10_session_manifest.json": {
+      "expected": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+      "measured": "744720e2b930550d1d7bb76654459b9277c094302b595051fad8323cba7f7107",
+      "match": true
+    },
+    "s10_prospective_protocol_spec_v1_1_0_final.json": {
+      "expected": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+      "measured": "d8c4e83cbce2a303c2fd947cac424822d6d6885a4d5800ff234ef5e348317220",
+      "match": true
+    }
+  },
+  "cp76ArtifactsHashes": {
+    "s10_readiness_summary.json": "644e0353da08911b217205ef03f7f6486714bb4211e1475c9b3e842545034e1f",
+    "s10_isolation_audit.json": "6ffd2c574d099d49e464da6bce5e8d9831fd054b631f5c2e8be5ba6ef145400d"
+  },
+  "coreIctDiffLines": 0
+}

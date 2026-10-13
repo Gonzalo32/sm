@@ -1,0 +1,152 @@
+{
+  "protocolVersion": "1.0.1",
+  "protocolName": "S10_PROSPECTIVE_OOS_EVALUATION_PROTOCOL_V1_0_1",
+  "freezeTimestamp": "2026-10-09T12:27:36.571Z",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "preflightStatus": "PREFLIGHT_VERIFIED_AND_FROZEN",
+  "sessionTimezone": "America/New_York",
+  "regularTradingHoursLocal": {
+    "start": "09:30:00",
+    "end": "16:00:00"
+  },
+  "dynamicUtcSessionRules": {
+    "easternDaylightTime_EDT": {
+      "utcOffsetHours": -4,
+      "startUtc": "13:30:00Z",
+      "endUtc": "20:00:00Z"
+    },
+    "easternStandardTime_EST": {
+      "utcOffsetHours": -5,
+      "startUtc": "14:30:00Z",
+      "endUtc": "21:00:00Z"
+    }
+  },
+  "holidayCalendarRules": {
+    "calendarName": "CME_US_EQUITIES_HOLIDAY_CALENDAR",
+    "holidaysSkipped": [
+      "Martin Luther King Jr Day",
+      "Presidents Day",
+      "Good Friday",
+      "Memorial Day",
+      "Juneteenth",
+      "Independence Day",
+      "Labor Day",
+      "Thanksgiving Day",
+      "Christmas Day"
+    ],
+    "earlyCloseRule": "Sessions closing early (13:00 America/New_York) terminate signal generation at 12:55 local time."
+  },
+  "eligibleInstruments": [
+    {
+      "symbol": "NQ",
+      "name": "E-mini NQ Futures",
+      "pointValueUSD": 20,
+      "tickSize": 0.25,
+      "tickValueUSD": 5
+    },
+    {
+      "symbol": "MNQ",
+      "name": "Micro E-mini NQ Futures",
+      "pointValueUSD": 2,
+      "tickSize": 0.25,
+      "tickValueUSD": 0.5
+    }
+  ],
+  "deterministicContractRollRules": {
+    "schedule": "Quarterly contracts H (Mar), M (Jun), U (Sep), Z (Dec)",
+    "rollEffectiveTime": "00:00:00 America/New_York on the 8th calendar day prior to contract expiration (Thursday before 3rd Friday of contract month)",
+    "quarterlyRanges": {
+      "Q1_H": "Dec 08 (prev year) to Mar 12",
+      "Q2_M": "Mar 13 to Jun 11",
+      "Q3_U": "Jun 12 to Sep 10",
+      "Q4_Z": "Sep 11 to Dec 07"
+    },
+    "discontinuityPolicy": "No trade or signal evaluation spans across a contract rollover timestamp."
+  },
+  "executionCostModel": {
+    "classification": "ASSUMPTION_ONLY",
+    "baseRoundTripFrictionPoints": 1,
+    "costBreakdownPoints": {
+      "bidAskSpread": 0.5,
+      "commissionAndClearingFees": 0.25,
+      "slippageAllowance": 0.25
+    },
+    "dollarFrictionPerTrade": {
+      "NQ": 20,
+      "MNQ": 2
+    },
+    "sensitivityScenariosPoints": [
+      {
+        "name": "Scenario_A_Low",
+        "frictionPoints": 0.5,
+        "nqDollar": 10
+      },
+      {
+        "name": "Scenario_B_Base",
+        "frictionPoints": 1,
+        "nqDollar": 20
+      },
+      {
+        "name": "Scenario_C_High",
+        "frictionPoints": 1.5,
+        "nqDollar": 30
+      },
+      {
+        "name": "Scenario_D_Stress",
+        "frictionPoints": 2,
+        "nqDollar": 40
+      }
+    ]
+  },
+  "candleTimestampConvention": "5-minute candle timestamp t0 represents CANDLE START TIME.",
+  "signalEntryExitSequence": {
+    "signalCandle": "Candle starting at t0 (spans t0 to t0 + 5m)",
+    "confirmationTimestamp": "t0 + 5m (candle close)",
+    "entryTimestamp": "t0 + 5m (executed at candle close price)",
+    "exitTimestamp": "t0 + 10m (executed at close price of holding candle)",
+    "holdingDurationSec": 300
+  },
+  "sessionCloseHandling": {
+    "cutoffLocalTime": "15:55:00 America/New_York",
+    "policy": "Signals generated on the final candle of RTH (15:55 local) are SKIPPED to prevent overnight position holding."
+  },
+  "sessionLedgerRequirements": [
+    "Must log ALL pre-registered calendar sessions in s10_session_manifest.json",
+    "Includes active sessions with signals, active sessions with 0 signals, skipped holiday sessions, and negative sessions"
+  ],
+  "riskUnits": {
+    "primaryPointUnit": "Points (pt)",
+    "primaryDollarUnit": "USD Dollars ($)",
+    "nqPointMultiplier": 20,
+    "mnqPointMultiplier": 2
+  },
+  "sampleSufficiencyPlan": {
+    "targetMinSessions": 30,
+    "targetMaxSessions": 50,
+    "preRegistrationPolicy": "Pre-register exact calendar dates in session ledger prior to acquiring or analyzing outcome data.",
+    "stoppingRule": "Must complete evaluation over all pre-registered sessions without interim early stopping based on performance results.",
+    "dependenceEvaluation": "Post-acquisition effective sample size (N_eff) evaluated via HAC (Newey-West) standard errors and stationary block bootstrap (b >= 20)."
+  },
+  "predefinedRejectionThresholds": {
+    "minWinRate": 0.6,
+    "minMeanNetPoints": 0,
+    "maxClosedDrawdownPoints": 30
+  },
+  "excludedEvaluatedRanges": [
+    {
+      "name": "S8-200",
+      "startIso": "2026-05-18T18:15:00.000Z",
+      "endIso": "2026-05-20T20:00:00.000Z"
+    },
+    {
+      "name": "S8.8",
+      "startIso": "2025-12-01T19:35:00.000Z",
+      "endIso": "2025-12-01T23:40:00.000Z"
+    },
+    {
+      "name": "S9",
+      "startIso": "2025-12-01T18:20:00.000Z",
+      "endIso": "2025-12-02T10:55:00.000Z"
+    }
+  ]
+}

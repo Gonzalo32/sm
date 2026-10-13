@@ -1,0 +1,25 @@
+{
+  "candleAccountingStatus": "VERIFIED_RECONCILED",
+  "preInterruptionCandlesCount": 5,
+  "preInterruptionLabels": "T0, T1, T2, T3, T4 (13:04:59 to 13:08:59)",
+  "postReconnectionCandlesCount": 10,
+  "postReconnectionLabels": "T6, T7, T8, T9, T10, T11, T12, T13, T14, T15 (13:10:59 to 13:19:59)",
+  "totalPersistedCandles": 15,
+  "indexedDbRecordCount": 15,
+  "exportedRecordCount": 15,
+  "reconciliationMatch": true,
+  "missingIndexForensics": {
+    "missingIndex": "T5",
+    "missedTimestampIso": "2026-10-09T13:10:00-03:00",
+    "cause": "Controlled 30-second live WebSocket disconnection paused frame receiving during minute 5 (13:09:59-13:10:59). The 13:10:00 closed candle event was missed during the disconnect window.",
+    "indexLabelingConventions": "Prose table omitted index T5 to preserve zero-offset timestamp index mapping between live candles and recorded ledger."
+  },
+  "fourWayDistinctionAudit": {
+    "realMissingMarketInterval": "CME exchange market continued streaming ticks, but local client frame delivery was interrupted.",
+    "intentionalRecorderInterruption": "Controlled 30-second live WebSocket disconnect executed under human supervision.",
+    "gapDetectionEvent": "Passive recorder logged 1 explicit gap (timestamp delta 120,000ms > 60,000ms) without generating synthetic candles.",
+    "missingOrInconsistentAuditLabel": "Index T5 omitted in prose table to maintain zero-offset timestamp index mapping."
+  },
+  "syntheticCandleCount": 0,
+  "duplicateCount": 0
+}

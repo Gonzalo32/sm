@@ -1,0 +1,272 @@
+{
+  "binaryACF": [
+    {
+      "lag": 1,
+      "autocorrelation": 0.044702233250620116,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 2,
+      "autocorrelation": -0.1852662721893486,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 3,
+      "autocorrelation": -0.18026627218934857,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 4,
+      "autocorrelation": -0.18118343195266218,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 5,
+      "autocorrelation": -0.10575014315709078,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 6,
+      "autocorrelation": 0.35143538843290534,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 7,
+      "autocorrelation": 0.04511643443405187,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 8,
+      "autocorrelation": -0.18485207100591663,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 9,
+      "autocorrelation": 0.11963256346630972,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 10,
+      "autocorrelation": 0.12463256346630981,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 11,
+      "autocorrelation": -0.18168639053254385,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 12,
+      "autocorrelation": 0.01418973086466874,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 13,
+      "autocorrelation": -0.06307787745752995,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 14,
+      "autocorrelation": -0.17852071005917106,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 15,
+      "autocorrelation": 0.12596392441305526,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 16,
+      "autocorrelation": 0.27774766176751153,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 17,
+      "autocorrelation": -0.18127218934911188,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 18,
+      "autocorrelation": -0.17627218934911187,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 19,
+      "autocorrelation": 0.025521091811414154,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 20,
+      "autocorrelation": -0.089921740790227,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    }
+  ],
+  "netReturnACF": [
+    {
+      "lag": 1,
+      "autocorrelation": 0.7413992428625864,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 2,
+      "autocorrelation": 0.34372010072827613,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 3,
+      "autocorrelation": -0.023050498214200296,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 4,
+      "autocorrelation": -0.24833497538771768,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 5,
+      "autocorrelation": -0.27555901544921135,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 6,
+      "autocorrelation": -0.13614785941927002,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 7,
+      "autocorrelation": 0.003226595164934465,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 8,
+      "autocorrelation": 0.13406226940426766,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 9,
+      "autocorrelation": 0.21844971569060453,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 10,
+      "autocorrelation": 0.13589372251400075,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 11,
+      "autocorrelation": -0.0650240917556628,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    },
+    {
+      "lag": 12,
+      "autocorrelation": -0.2174174492426929,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 13,
+      "autocorrelation": -0.318173677167109,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 14,
+      "autocorrelation": -0.3478617132932319,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 15,
+      "autocorrelation": -0.3052124191888423,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 16,
+      "autocorrelation": -0.2802129113052376,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 17,
+      "autocorrelation": -0.33734143567130337,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 18,
+      "autocorrelation": -0.3366103625032276,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 19,
+      "autocorrelation": -0.2522402061338526,
+      "ci95": 0.1385929291125633,
+      "isSignificant": true
+    },
+    {
+      "lag": 20,
+      "autocorrelation": -0.11591977517547868,
+      "ci95": 0.1385929291125633,
+      "isSignificant": false
+    }
+  ],
+  "runsTest": {
+    "totalRuns": 51,
+    "expectedRuns": 53.39,
+    "varianceRuns": 13.529256783919598,
+    "zScore": -0.6497719077003309,
+    "pValue": 0.5158393135394206,
+    "maxWinStreak": 9,
+    "maxLossStreak": 2
+  },
+  "returnQuantiles": {
+    "min": -8,
+    "p10": -1.7749999999999995,
+    "p25": 3.6875,
+    "median": 7.5,
+    "p75": 16.3125,
+    "p90": 20.75,
+    "max": 21.5
+  },
+  "concentrationRisk": {
+    "top1NetPoints": 21.5,
+    "top1PercentOfTotal": 1.1909707796704057,
+    "top5NetPoints": 107.5,
+    "top5PercentOfTotal": 5.954853898352029,
+    "top10NetPoints": 214.25,
+    "top10PercentOfTotal": 11.868162304389973
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "NQZ25": {
+    "dataset": "S9_NQZ25",
+    "tradeCount": 200,
+    "firstSignalTimestamp": 1764613200000,
+    "firstSignalIso": "2025-12-01T18:20:00.000Z",
+    "lastSignalTimestamp": 1764672900000,
+    "lastSignalIso": "2025-12-02T10:55:00.000Z",
+    "firstEntryTimestamp": 1764613500000,
+    "firstEntryIso": "2025-12-01T18:25:00.000Z",
+    "lastEntryTimestamp": 1764673200000,
+    "lastEntryIso": "2025-12-02T11:00:00.000Z",
+    "spanMinutes": 995,
+    "spanHours": 16.583333333333332,
+    "spanDays": 0.6909722222222222,
+    "timeRangeValid": "YES"
+  }
+}

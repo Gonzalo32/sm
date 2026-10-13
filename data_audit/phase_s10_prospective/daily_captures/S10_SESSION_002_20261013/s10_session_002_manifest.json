@@ -1,0 +1,17 @@
+{
+  "manifestVersion": "1.0.0",
+  "exportFormatVersion": "1.1.0",
+  "sessionId": "S10_SESSION_002_20261013",
+  "sessionDate": "2026-10-13",
+  "status": "BLOCKED_PREFLIGHT_FAILURE",
+  "symbol": "MNQ",
+  "timeframe": "1m",
+  "closedCandleCount": 0,
+  "data": [],
+  "blockingReasons": [
+    "Active chart symbol in TradeSea was MES instead of required MNQ",
+    "Observation time (08:35 ART) is prior to RTH open (10:30 ART)",
+    "Unauthorized demo order placed by browser agent requiring operator intervention"
+  ],
+  "timestampIso": "2026-10-13T11:47:35.987Z"
+}

@@ -1,0 +1,82 @@
+{
+  "protocolVersion": "1.0.0",
+  "protocolName": "S10_PROSPECTIVE_OOS_EVALUATION_PROTOCOL",
+  "freezeTimestamp": "2026-10-09T12:21:13.572Z",
+  "baselineCommit": "57acd4c42e18f234c5dbfa64ba5b4e45bf59cb5a",
+  "eligibleInstruments": [
+    {
+      "symbol": "NQ",
+      "name": "E-mini NQ Futures",
+      "pointValueUSD": 20,
+      "tickSize": 0.25,
+      "tickValueUSD": 5
+    },
+    {
+      "symbol": "MNQ",
+      "name": "Micro E-mini NQ Futures",
+      "pointValueUSD": 2,
+      "tickSize": 0.25,
+      "tickValueUSD": 0.5
+    }
+  ],
+  "contractRollRules": "Quarterly roll schedule (H=Mar, M=Jun, U=Sep, Z=Dec). Switch active contract 8 calendar days prior to expiration (second Thursday of contract month).",
+  "tradingSession": "US Equities Regular Trading Hours (RTH) + Extended Trading Hours (ETH) active session window",
+  "timeZone": "America/New_York (UTC-5 / UTC-4 DST)",
+  "sessionStartUtc": "13:30:00Z",
+  "sessionEndUtc": "20:00:00Z",
+  "dataSource": "CME Databento MDP3 (GLBX.MDP3) direct order book / OHLC aggregate candles",
+  "timestampFormat": "Unix epoch milliseconds (13-digit integer) and ISO 8601 UTC strings",
+  "holdingDuration": "1 5-minute candle (300 seconds)",
+  "maxConcurrentPositions": 1,
+  "positionOverlapAllowed": false,
+  "signalConfirmationSequence": "signalTimestamp (t0 - 5m) <= confirmationTimestamp (t0) <= entryTimestamp (t0) < exitTimestamp (t0 + 5m)",
+  "frictionModel": {
+    "type": "FIXED_PER_TRADE_FRICTION",
+    "frictionPoints": 1,
+    "breakdown": {
+      "spreadPoints": 0.5,
+      "commissionAndSlippagePoints": 0.5
+    },
+    "nqValueUSD": 20,
+    "mnqValueUSD": 2
+  },
+  "maxMissingCandlePercent": 5,
+  "syntheticCandleInsertionAllowed": false,
+  "targetMinIndependentSessions": 30,
+  "targetMaxIndependentSessions": 50,
+  "acquisitionStoppingRule": "Must acquire and evaluate all pre-registered sessions within target window without early stopping based on interim performance results.",
+  "primaryMetrics": [
+    "winRate",
+    "totalNetPoints",
+    "meanNetPoints",
+    "maxClosedDrawdownPoints"
+  ],
+  "diagnosticMetrics": [
+    "returnLag1Autocorr",
+    "outcomeLag1Autocorr",
+    "hacStandardError",
+    "blockBootstrap95CI"
+  ],
+  "failureCriteria": {
+    "minWinRateThreshold": 0.6,
+    "minMeanNetPointsThreshold": 0,
+    "maxDrawdownPointsThreshold": 30
+  },
+  "excludedEvaluatedRanges": [
+    {
+      "name": "S8-200",
+      "startIso": "2026-05-18T18:15:00.000Z",
+      "endIso": "2026-05-20T20:00:00.000Z"
+    },
+    {
+      "name": "S8.8",
+      "startIso": "2025-12-01T19:35:00.000Z",
+      "endIso": "2025-12-01T23:40:00.000Z"
+    },
+    {
+      "name": "S9",
+      "startIso": "2025-12-01T18:20:00.000Z",
+      "endIso": "2025-12-02T10:55:00.000Z"
+    }
+  ]
+}

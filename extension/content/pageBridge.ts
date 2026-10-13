@@ -59,6 +59,91 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
   // Periodic Context Polling
   setInterval(detectContext, 1000);
 
+  // Checkpoint 86: Passive Viewport Inspection from TradingView Widget API (Strict Read-Only)
+  let lastReportedViewport: { minPrice: number; maxPrice: number; width: number; height: number; firstIdx?: number; lastIdx?: number } | null = null;
+
+  function inspectTradingViewViewport() {
+    try {
+      const tvWidget = (window as any).tvWidget;
+      if (!tvWidget || typeof tvWidget.activeChart !== 'function') {
+        return;
+      }
+
+      const chart = tvWidget.activeChart();
+      if (!chart) return;
+
+      let minPrice: number | null = null;
+      let maxPrice: number | null = null;
+
+      if (typeof chart.getVisiblePriceRange === 'function') {
+        const pr = chart.getVisiblePriceRange();
+        if (pr && typeof pr.from === 'number' && typeof pr.to === 'number' && pr.to > pr.from) {
+          minPrice = pr.from;
+          maxPrice = pr.to;
+        }
+      } else if (typeof chart.getPriceRange === 'function') {
+        const pr = chart.getPriceRange();
+        if (pr && typeof pr.from === 'number' && typeof pr.to === 'number' && pr.to > pr.from) {
+          minPrice = pr.from;
+          maxPrice = pr.to;
+        }
+      }
+
+      if (minPrice === null || maxPrice === null || !isFinite(minPrice) || !isFinite(maxPrice)) {
+        return;
+      }
+
+      const container = (document.querySelector('.chart-container') as HTMLElement) ||
+                        (document.querySelector('[class*="chart-container"]') as HTMLElement) ||
+                        document.body;
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 600;
+
+      let firstCandleIndex = 0;
+      let lastCandleIndex = 100;
+
+      if (typeof chart.getVisibleRange === 'function') {
+        const vr = chart.getVisibleRange();
+        if (vr && typeof vr.from === 'number' && typeof vr.to === 'number') {
+          // If range is available, can estimate visible bars
+        }
+      }
+
+      if (
+        lastReportedViewport &&
+        lastReportedViewport.minPrice === minPrice &&
+        lastReportedViewport.maxPrice === maxPrice &&
+        lastReportedViewport.width === width &&
+        lastReportedViewport.height === height
+      ) {
+        return;
+      }
+
+      lastReportedViewport = { minPrice, maxPrice, width, height, firstIdx: firstCandleIndex, lastIdx: lastCandleIndex };
+
+      window.postMessage({
+        type: 'ICT_VIEWPORT_CHANGED',
+        payload: {
+          source: 'TRADINGVIEW_WIDGET_API',
+          symbol: currentSymbol,
+          timeframe: currentTimeframe,
+          width,
+          height,
+          minPrice,
+          maxPrice,
+          firstCandleIndex,
+          lastCandleIndex,
+          barWidth: Math.max(1, (width - 60) / Math.max(1, lastCandleIndex - firstCandleIndex)),
+          timestamp: Date.now(),
+        },
+      }, '*');
+    } catch (e) {
+      // Safe passive inspection, ignore errors
+    }
+  }
+
+  setInterval(inspectTradingViewViewport, 500);
+
   // Intercept WebSocket Stream for Real-time Candle Feeds
   const OriginalWebSocket = window.WebSocket;
   (window as any).WebSocket = function (url: string | URL, protocols?: string | string[]) {

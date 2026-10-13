@@ -16,7 +16,7 @@ import { ReplayState } from '../../core/ict/replay/ReplayTypes';
 import { VisualAdapter } from '../visual/VisualAdapter';
 import { ICTHUD } from '../visual/ICTHUD';
 import { CanvasRenderer } from '../visual/CanvasRenderer';
-import { VisualObject } from '../visual/VisualTypes';
+import { VisualObject, ChartViewportUpdate, validateViewportUpdate } from '../visual/VisualTypes';
 
 import { CandidateContextEngine, CandidateContext } from '../../core/ict/context/CandidateContextEngine';
 import { MultiTimeframeContextEngine, MultiTimeframeContext } from '../../core/ict/context/MultiTimeframeContextEngine';
@@ -119,14 +119,67 @@ export class ICTPipelineCoordinator {
       this.store
     );
     this.ictEngine.resetProgressiveBuffer();
+    this.visualAdapter.resetContext(symbol, timeframe);
+    this.visualAdapter.setViewportSynchronized(false);
 
     if (this.renderer) {
+      this.renderer.getTranslator().resetViewportSync();
       this.renderer.clear();
     }
 
     if (this.mode === 'LIVE') {
       this.reevaluate();
     }
+  }
+
+  /**
+   * Updates viewport synchronization from validated chart update.
+   * Rejects invalid, stale, or context-mismatched updates.
+   */
+  public updateViewport(viewport: ChartViewportUpdate): boolean {
+    const validation = validateViewportUpdate(viewport);
+    if (!validation.valid) {
+      if (this.debugMode) {
+        console.warn(`[ICT Pipeline] Rejected invalid viewport update: ${validation.error}`);
+      }
+      return false;
+    }
+
+    // Check instrument and timeframe match
+    if (viewport.symbol !== this.symbol || viewport.timeframe !== this.timeframe) {
+      if (this.debugMode) {
+        console.warn(`[ICT Pipeline] Rejected viewport context mismatch: expected ${this.symbol}/${this.timeframe}, got ${viewport.symbol}/${viewport.timeframe}`);
+      }
+      return false;
+    }
+
+    if (this.renderer) {
+      this.renderer.updateViewport(
+        viewport.width,
+        viewport.height,
+        viewport.minPrice,
+        viewport.maxPrice,
+        viewport.firstCandleIndex,
+        viewport.lastCandleIndex
+      );
+      this.renderer.getTranslator().updateFromValidatedViewport(viewport);
+    }
+
+    this.visualAdapter.setViewportSynchronized(true);
+
+    if (this.mode === 'LIVE') {
+      this.reevaluate();
+    }
+
+    return true;
+  }
+
+  public getRenderer(): CanvasRenderer | null {
+    return this.renderer;
+  }
+
+  public getVisualAdapter(): VisualAdapter {
+    return this.visualAdapter;
   }
 
   public getContext(): { symbol: string; timeframe: Timeframe } {
@@ -196,8 +249,8 @@ export class ICTPipelineCoordinator {
       mtfContext = this.mtfEngine.evaluateMTFContext(htfCandidateContext, candidateContext);
     }
 
-    // 6. Adapt Visuals
-    const visuals = this.visualAdapter.adaptStateToVisuals(state, events, candidateContext);
+    // 6. Adapt Visuals (including CP84 confirmed setup annotations)
+    const visuals = this.visualAdapter.adaptStateToVisuals(state, events, candidateContext, setups);
 
     const executionTimeMs = Math.round(performance.now() - startTime);
 

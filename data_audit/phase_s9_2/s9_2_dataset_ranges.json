@@ -1,0 +1,50 @@
+{
+  "S8_200": {
+    "dataset": "S8-200",
+    "tradeCount": 200,
+    "firstSignalTimestamp": 1779128100000,
+    "firstSignalIso": "2026-05-18T18:15:00.000Z",
+    "lastSignalTimestamp": 1779307200000,
+    "lastSignalIso": "2026-05-20T20:00:00.000Z",
+    "firstEntryTimestamp": 1779128400000,
+    "firstEntryIso": "2026-05-18T18:20:00.000Z",
+    "lastEntryTimestamp": 1779307500000,
+    "lastEntryIso": "2026-05-20T20:05:00.000Z",
+    "spanMinutes": 2985,
+    "spanHours": 49.75,
+    "spanDays": 2.0729166666666665,
+    "timeRangeValid": "YES"
+  },
+  "S8_8": {
+    "dataset": "S8.8",
+    "tradeCount": 50,
+    "firstSignalTimestamp": 1764617700000,
+    "firstSignalIso": "2025-12-01T19:35:00.000Z",
+    "lastSignalTimestamp": 1764632400000,
+    "lastSignalIso": "2025-12-01T23:40:00.000Z",
+    "firstEntryTimestamp": 1764618000000,
+    "firstEntryIso": "2025-12-01T19:40:00.000Z",
+    "lastEntryTimestamp": 1764632700000,
+    "lastEntryIso": "2025-12-01T23:45:00.000Z",
+    "spanMinutes": 245,
+    "spanHours": 4.083333333333333,
+    "spanDays": 0.17013888888888887,
+    "timeRangeValid": "YES"
+  },
+  "S9": {
+    "dataset": "S9",
+    "tradeCount": 200,
+    "firstSignalTimestamp": 1764613200000,
+    "firstSignalIso": "2025-12-01T18:20:00.000Z",
+    "lastSignalTimestamp": 1764672900000,
+    "lastSignalIso": "2025-12-02T10:55:00.000Z",
+    "firstEntryTimestamp": 1764613500000,
+    "firstEntryIso": "2025-12-01T18:25:00.000Z",
+    "lastEntryTimestamp": 1764673200000,
+    "lastEntryIso": "2025-12-02T11:00:00.000Z",
+    "spanMinutes": 995,
+    "spanHours": 16.583333333333332,
+    "spanDays": 0.6909722222222222,
+    "timeRangeValid": "YES"
+  }
+}

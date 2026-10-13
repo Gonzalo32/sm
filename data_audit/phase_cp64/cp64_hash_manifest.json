@@ -1,0 +1,8 @@
+{
+  "manifestName": "CP64_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T13:32:35.033Z",
+  "files": {
+    "cp64_feasibility_summary.json": "8f6d919b75ff463c671c5acb2ed4b95f01047f6877a45afcc67ce9b0c9e3e2e2",
+    "cp64_metrics_summary.json": "fba4d09966b64b22f2f56a3d1bc937c07743d6e545653da6563ca7ddbd11a858"
+  }
+}

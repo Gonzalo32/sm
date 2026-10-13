@@ -1,0 +1,43 @@
+{
+  "changeLogVersion": "1.0.1-CHANGELOG",
+  "changeLogTimestamp": "2026-10-09T12:27:36.571Z",
+  "previousVersion": "1.0.0",
+  "previousHash": "ade544739a777f0a8434c2e134eca79e964b68da25f78a6488973cc3b2770ab2",
+  "newVersion": "1.0.1",
+  "newHash": "5b9187b8f20731de86bdca2ff0c26dfc8df1426a9f1fdc023b6dd33abbfc2cdd",
+  "acquisitionState": "PRE_ACQUISITION_NO_PROSPECTIVE_DATA_EXAMINED",
+  "changes": [
+    {
+      "area": "Timezone",
+      "description": "Replaced static UTC window with dynamic EDT/EST timezone conversion rules for America/New_York (RTH 09:30 - 16:00 local time)."
+    },
+    {
+      "area": "Holidays",
+      "description": "Added CME US Equities holiday calendar rules and early close handling."
+    },
+    {
+      "area": "Contract Rollover",
+      "description": "Defined deterministic quarterly roll effective timestamps (Thursday before 3rd Friday of contract month at 00:00 America/New_York)."
+    },
+    {
+      "area": "Cost Breakdown",
+      "description": "Explicitly decomposed 1.0 pt friction into 0.50 pt spread, 0.25 pt commission/clearing, and 0.25 pt slippage, with dollar values ($20 NQ / $2 MNQ)."
+    },
+    {
+      "area": "Cost Sensitivity",
+      "description": "Pre-declared 4 cost sensitivity scenarios (Low 0.5pt, Base 1.0pt, High 1.5pt, Stress 2.0pt)."
+    },
+    {
+      "area": "Session Close",
+      "description": "Specified skipping signals generated on the final RTH candle (15:55 local time) to eliminate overnight holding."
+    },
+    {
+      "area": "Risk Units",
+      "description": "Declared primary risk and drawdown accounting in both Points (pt) and USD Dollars ($)."
+    },
+    {
+      "area": "Pre-Registration",
+      "description": "Mandated logging 30-50 prospective session dates in session ledger prior to running signal generation."
+    }
+  ]
+}

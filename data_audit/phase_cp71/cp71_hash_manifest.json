@@ -1,0 +1,8 @@
+{
+  "manifestName": "CP71_HASH_MANIFEST",
+  "creationTimestamp": "2026-10-09T15:41:27.888Z",
+  "files": {
+    "cp71_export_manifest.json": "1f4fe0090aa56ad442985d3e703b2e01e10ca9474dfcca51f227c566e38ba0c9",
+    "cp71_soak_summary.json": "652d2220c81ca6d115b09671048c69755597e3d0f2cda51a25435db616ac7474"
+  }
+}
