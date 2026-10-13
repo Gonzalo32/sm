@@ -550,4 +550,216 @@ describe('CP84 — Visual Setup Annotation Adapter & Chart Overlay Test Suite', 
     });
     expect(diff.trim()).toBe('');
   });
+
+  // ==========================================
+  // Checkpoint 89 — Missing Lifecycle and Optional-Level Test Coverage
+  // ==========================================
+
+  it('13. Setup transitioning to COMPLETED prunes visual annotation cleanly (CP89)', () => {
+    const confirmedSetup: ICTSetup = {
+      id: 'SETUP-MODEL_A_LONG-MNQ-1m-1728820000000',
+      symbol: 'MNQ',
+      timeframe: '1m',
+      direction: 'LONG',
+      status: 'CONFIRMED',
+      activatedTimestamp: 1728819000000,
+      confirmedTimestamp: 1728820000000,
+      mandatoryConfluences: ['LIQUIDITY_SWEEP'] as any,
+      fulfilledConfluences: ['LIQUIDITY_SWEEP'] as any,
+      missingConfluences: [],
+      invalidatingConditions: [],
+      evidence: ['Model: Model A Long'],
+    };
+
+    // 1. Initial confirmation renders active visuals
+    const activeVisuals = adapter.adaptSetupsToVisuals([confirmedSetup], mockState, []);
+    expect(activeVisuals.length).toBeGreaterThan(0);
+    expect(adapter.getActiveSetupVisualCount()).toBeGreaterThan(0);
+
+    // 2. Setup transitions to COMPLETED when target is reached
+    const completedSetup: ICTSetup = {
+      ...confirmedSetup,
+      status: 'COMPLETED',
+      completedTimestamp: 1728820800000,
+    };
+
+    const visualsAfterCompleted = adapter.adaptSetupsToVisuals([completedSetup], mockState, []);
+    // Pruned from visual registry: 0 active drawings
+    expect(visualsAfterCompleted.length).toBe(0);
+    expect(adapter.getActiveSetupVisualCount()).toBe(0);
+  });
+
+  it('14. Missing optional entry zone preserves directional marker and does not fabricate rectangle (CP89)', () => {
+    // State with NO Fair Value Gaps and NO Order Blocks
+    const stateNoFvgNoOb: ICTMarketState = {
+      ...mockState,
+      fairValueGaps: [],
+      orderBlocks: [],
+      activeSwingLow: {
+        id: 'SW-1',
+        symbol: 'MNQ',
+        timeframe: '1m',
+        type: 'SWING_LOW',
+        price: 21460,
+        candleIndex: 30,
+        timestamp: 1728818000000,
+        eventTimestamp: 1728818000000,
+        confirmationTimestamp: 1728818200000,
+        strength: 3,
+        confirmed: true,
+        classification: 'INTERNAL',
+        broken: false,
+      },
+      swings: [
+        {
+          id: 'SW-1',
+          symbol: 'MNQ',
+          timeframe: '1m',
+          type: 'SWING_LOW',
+          price: 21460,
+          candleIndex: 30,
+          timestamp: 1728818000000,
+          eventTimestamp: 1728818000000,
+          confirmationTimestamp: 1728818200000,
+          strength: 3,
+          confirmed: true,
+          classification: 'INTERNAL',
+          broken: false,
+        },
+      ],
+    };
+
+    const setupWithSwingEntry: ICTSetup = {
+      id: 'SETUP-MODEL_A_LONG-MNQ-1m-1728820000000',
+      symbol: 'MNQ',
+      timeframe: '1m',
+      direction: 'LONG',
+      status: 'CONFIRMED',
+      activatedTimestamp: 1728819000000,
+      confirmedTimestamp: 1728820000000,
+      mandatoryConfluences: ['MSS_CONFIRMED'] as any,
+      fulfilledConfluences: ['MSS_CONFIRMED'] as any,
+      missingConfluences: [],
+      invalidatingConditions: [],
+      evidence: ['Model: Model A Long'],
+    };
+
+    const visuals = adapter.adaptSetupsToVisuals([setupWithSwingEntry], stateNoFvgNoOb, []);
+
+    // 1. Valid directional marker is still generated
+    const marker = visuals.find((v) => v.type === 'MARKER');
+    expect(marker).toBeDefined();
+    expect((marker as any).shape).toBe('TRIANGLE_UP');
+    expect((marker as any).price).toBe(21460); // Entry price preserved from swing
+    expect((marker as any).color).toBe('#22c55e');
+
+    // 2. NO entry zone rectangle is fabricated
+    const rectangles = visuals.filter((v) => v.type === 'RECTANGLE');
+    expect(rectangles.length).toBe(0);
+
+    // 3. Fail closed if entry price is also missing (empty swings)
+    const emptySwingsState: ICTMarketState = {
+      ...stateNoFvgNoOb,
+      activeSwingLow: undefined,
+      swings: [],
+    };
+    const visualsEmpty = adapter.adaptSetupsToVisuals([setupWithSwingEntry], emptySwingsState, []);
+    expect(visualsEmpty.length).toBe(0);
+  });
+
+  it('15. Missing optional target and invalidation does not fabricate price levels (CP89)', () => {
+    // 15A. Missing target (no un-swept opposing liquidity)
+    const stateNoTarget: ICTMarketState = {
+      ...mockState,
+      liquidityLevels: [
+        {
+          id: 'LIQ-1',
+          symbol: 'MNQ',
+          timeframe: '1m',
+          type: 'BSL',
+          price: 21600,
+          category: 'SWING_HIGH',
+          swings: [],
+          swept: true, // Already swept -> cannot serve as active target
+        },
+      ],
+    };
+
+    const setup: ICTSetup = {
+      id: 'SETUP-MODEL_A_LONG-MNQ-1m-1728820000000',
+      symbol: 'MNQ',
+      timeframe: '1m',
+      direction: 'LONG',
+      status: 'CONFIRMED',
+      activatedTimestamp: 1728819000000,
+      confirmedTimestamp: 1728820000000,
+      mandatoryConfluences: ['LIQUIDITY_SWEEP'] as any,
+      fulfilledConfluences: ['LIQUIDITY_SWEEP'] as any,
+      missingConfluences: [],
+      invalidatingConditions: [],
+      evidence: ['Model: Model A Long'],
+    };
+
+    const sweepEvent: ICTEvent = {
+      type: 'LIQUIDITY_SWEEP',
+      symbol: 'MNQ',
+      timeframe: '1m',
+      timestamp: 1728818500000,
+      eventTimestamp: 1728818500000,
+      confirmationTimestamp: 1728818600000,
+      candleIndex: 35,
+      sweep: {
+        id: 'SWP-1',
+        symbol: 'MNQ',
+        timeframe: '1m',
+        liquidityLevelId: 'LIQ-SSL-1',
+        liquidityType: 'SSL',
+        levelPrice: 21450,
+        extremePrice: 21440,
+        sweepTimestamp: 1728818500000,
+        candleIndex: 35,
+        confirmed: true,
+      },
+    };
+
+    const visualsNoTarget = adapter.adaptSetupsToVisuals([setup], stateNoTarget, [sweepEvent]);
+    // Invalidation line present from sweep
+    const invLine = visualsNoTarget.find((v) => v.id.includes('INV'));
+    expect(invLine).toBeDefined();
+    expect((invLine as any).price).toBe(21440);
+    // Target line MUST NOT be fabricated
+    const tgtLine = visualsNoTarget.find((v) => v.id.includes('TGT'));
+    expect(tgtLine).toBeUndefined();
+
+    // 15B. Missing invalidation (no sweep event and no opposite swing)
+    const stateNoInv: ICTMarketState = {
+      ...mockState,
+      activeSwingLow: undefined,
+      activeSwingHigh: undefined,
+      swings: [],
+    };
+    const visualsNoInv = adapter.adaptSetupsToVisuals([setup], stateNoInv, []);
+    // Target line present from mockState BSL (21600)
+    const tgtLinePresent = visualsNoInv.find((v) => v.id.includes('TGT'));
+    expect(tgtLinePresent).toBeDefined();
+    expect((tgtLinePresent as any).price).toBe(21600);
+    // Invalidation line MUST NOT be fabricated
+    const invLineAbsent = visualsNoInv.find((v) => v.id.includes('INV'));
+    expect(invLineAbsent).toBeUndefined();
+
+    // 15C. Both missing: neither target nor invalidation is fabricated
+    const stateNoTargetNoInv: ICTMarketState = {
+      ...mockState,
+      liquidityLevels: [],
+      activeSwingLow: undefined,
+      activeSwingHigh: undefined,
+      swings: [],
+    };
+    const visualsBothMissing = adapter.adaptSetupsToVisuals([setup], stateNoTargetNoInv, []);
+    const anyLines = visualsBothMissing.filter((v) => v.type === 'LINE');
+    expect(anyLines.length).toBe(0); // Zero line levels fabricated
+    // Marker and entry zone rectangle are still preserved
+    expect(visualsBothMissing.some((v) => v.type === 'MARKER')).toBe(true);
+    expect(visualsBothMissing.some((v) => v.type === 'RECTANGLE')).toBe(true);
+  });
 });
