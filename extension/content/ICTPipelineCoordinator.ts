@@ -1,6 +1,7 @@
 /**
  * ICT Assistant - Real Market & Replay Pipeline Coordinator (ISOLATED World)
  * Connects CandleStore / ReplayEngine -> ICTEngine -> ConfluenceEngine -> SetupEngine -> MarketContextEngine -> VisualAdapter -> ICTHUD.
+ * Integrates TradeSea Market Analyst decision-support engine, journal, and visual overlay adapter.
  * Guarantees 100% shared domain logic between LIVE stream and REPLAY mode.
  */
 
@@ -20,6 +21,11 @@ import { VisualObject, ChartViewportUpdate, validateViewportUpdate } from '../vi
 
 import { CandidateContextEngine, CandidateContext } from '../../core/ict/context/CandidateContextEngine';
 import { MultiTimeframeContextEngine, MultiTimeframeContext } from '../../core/ict/context/MultiTimeframeContextEngine';
+
+import { MarketAnalystEngine } from '../../core/analyst/MarketAnalystEngine';
+import { MarketAnalystJournal } from '../analyst/MarketAnalystJournal';
+import { MarketAnalystVisualAdapter } from '../analyst/MarketAnalystVisualAdapter';
+import { MarketAnalysis } from '../../core/analyst/MarketAnalystTypes';
 
 export interface PipelineEvaluationResult {
   engineResult: ICTEngineResult;
@@ -51,6 +57,12 @@ export class ICTPipelineCoordinator {
   private hud: ICTHUD | null = null;
   private renderer: CanvasRenderer | null = null;
 
+  // Market Analyst Modules
+  private analystEngine: MarketAnalystEngine;
+  private analystJournal: MarketAnalystJournal;
+  private analystVisualAdapter: MarketAnalystVisualAdapter;
+  private lastAnalysis: MarketAnalysis | null = null;
+
   constructor(
     symbol: string = 'MNQ',
     timeframe: Timeframe = '1m',
@@ -79,6 +91,29 @@ export class ICTPipelineCoordinator {
 
     this.hud = options?.hud || null;
     this.renderer = options?.renderer || null;
+
+    // Instantiate Market Analyst
+    this.analystEngine = new MarketAnalystEngine();
+    this.analystJournal = new MarketAnalystJournal();
+    this.analystVisualAdapter = new MarketAnalystVisualAdapter();
+
+    // Hook HUD Analyst Callbacks
+    if (this.hud) {
+      this.hud.onAnalyzeMarket = () => {
+        this.runMarketAnalysis().catch((err) => {
+          if (this.debugMode) console.error('[ICT Pipeline] Analysis error:', err);
+        });
+      };
+      this.hud.onToggleAnalystOverlay = (visible: boolean) => {
+        this.analystVisualAdapter.setVisible(visible);
+        this.refreshVisuals();
+      };
+      this.hud.onClearAnalystOverlay = () => {
+        this.analystVisualAdapter.clear();
+        this.hud?.setAnalysis(null);
+        this.refreshVisuals();
+      };
+    }
 
     // Listen to replay updates to re-evaluate on every step
     this.replayEngine.subscribe((state, currentSlice) => {
@@ -118,9 +153,14 @@ export class ICTPipelineCoordinator {
       { source: 'TradeSea_WS', instrument: symbol as any, timeframe: timeframe as any },
       this.store
     );
+
     this.ictEngine.resetProgressiveBuffer();
     this.visualAdapter.resetContext(symbol, timeframe);
     this.visualAdapter.setViewportSynchronized(false);
+    this.analystVisualAdapter.setViewportSynchronized(false);
+    this.analystVisualAdapter.clear();
+    this.lastAnalysis = null;
+    if (this.hud) this.hud.setAnalysis(null);
 
     if (this.renderer) {
       this.renderer.getTranslator().resetViewportSync();
@@ -166,6 +206,7 @@ export class ICTPipelineCoordinator {
     }
 
     this.visualAdapter.setViewportSynchronized(true);
+    this.analystVisualAdapter.setViewportSynchronized(true);
 
     if (this.mode === 'LIVE') {
       this.reevaluate();
@@ -180,6 +221,18 @@ export class ICTPipelineCoordinator {
 
   public getVisualAdapter(): VisualAdapter {
     return this.visualAdapter;
+  }
+
+  public getMarketAnalystVisualAdapter(): MarketAnalystVisualAdapter {
+    return this.analystVisualAdapter;
+  }
+
+  public getMarketAnalystJournal(): MarketAnalystJournal {
+    return this.analystJournal;
+  }
+
+  public getLastAnalysis(): MarketAnalysis | null {
+    return this.lastAnalysis;
   }
 
   public getContext(): { symbol: string; timeframe: Timeframe } {
@@ -219,6 +272,87 @@ export class ICTPipelineCoordinator {
   }
 
   /**
+   * Refreshes chart overlay canvas with merged visuals (ICT setups + Market Analyst).
+   */
+  public refreshVisuals(): void {
+    if (!this.renderer) return;
+
+    const candles = this.store.getCandles();
+    const engineResult = this.ictEngine.process(candles, this.symbol, this.timeframe);
+    const candidateContext = this.candidateEngine.buildCandidateContext(engineResult.state, engineResult.events);
+    const confluences = this.confluenceEngine.evaluateConfluences(engineResult.state, engineResult.events);
+    const setups = this.setupEngine.evaluateSetups(engineResult.state, engineResult.events, confluences);
+
+    const setupVisuals = this.visualAdapter.adaptStateToVisuals(engineResult.state, engineResult.events, candidateContext, setups);
+    const analystVisuals = this.analystVisualAdapter.getVisuals();
+    const merged = [...setupVisuals, ...analystVisuals];
+
+    this.renderer.updateVisuals(merged, {
+      symbol: this.symbol,
+      timeframe: this.timeframe,
+      candleCount: candles.length,
+      eventCount: engineResult.events.length,
+      activeFvgCount: engineResult.state.fairValueGaps.filter((f) => f.status === 'ACTIVE').length,
+      liquidityCount: engineResult.state.liquidityLevels.length,
+    });
+  }
+
+  /**
+   * User-triggered point-in-time Market Analysis execution.
+   */
+  public async runMarketAnalysis(): Promise<MarketAnalysis> {
+    const candles = this.store.getCandles();
+    const engineResult = this.ictEngine.process(candles, this.symbol, this.timeframe);
+    const confluences = this.confluenceEngine.evaluateConfluences(engineResult.state, engineResult.events);
+    const setups = this.setupEngine.evaluateSetups(engineResult.state, engineResult.events, confluences);
+    const candidateContext = this.candidateEngine.buildCandidateContext(engineResult.state, engineResult.events);
+
+    const analysis = this.analystEngine.analyze(
+      candles,
+      engineResult.state,
+      engineResult.events,
+      setups,
+      candidateContext,
+      Date.now()
+    );
+
+    this.lastAnalysis = analysis;
+
+    // Persist immutable original record to journal
+    try {
+      const startTs = candles.length > 0 ? candles[0].timestamp : undefined;
+      const endTs = candles.length > 0 ? candles[candles.length - 1].timestamp : undefined;
+      await this.analystJournal.recordForecast(analysis, candles.length, startTs, endTs);
+    } catch (e) {
+      if (this.debugMode) {
+        console.warn('[ICT Pipeline Coordinator] Failed to record forecast to journal:', e);
+      }
+    }
+
+    // Adapt visuals
+    const currentIdx = candles.length > 0 ? candles.length - 1 : 0;
+    this.analystVisualAdapter.adaptAnalysisToVisuals(analysis, currentIdx);
+
+    // Update HUD
+    if (this.hud) {
+      this.hud.setAnalysis(analysis);
+      const marketContext = this.contextEngine.buildContext(engineResult.state, engineResult.events, confluences, setups);
+      this.hud.render(marketContext, {
+        candleCount: candles.length,
+        executionTimeMs: 0,
+        fps: 60,
+        candidateContext,
+        analysis,
+      });
+    }
+
+    // Refresh renderer
+    this.refreshVisuals();
+
+    return analysis;
+  }
+
+  /**
    * Shared Domain Logic Processor: Evaluates any given slice of candles.
    * Guarantees 100% equivalence between LIVE stream and REPLAY step.
    */
@@ -249,8 +383,10 @@ export class ICTPipelineCoordinator {
       mtfContext = this.mtfEngine.evaluateMTFContext(htfCandidateContext, candidateContext);
     }
 
-    // 6. Adapt Visuals (including CP84 confirmed setup annotations)
-    const visuals = this.visualAdapter.adaptStateToVisuals(state, events, candidateContext, setups);
+    // 6. Adapt Visuals (including CP84 confirmed setup annotations and analyst overlays)
+    const setupVisuals = this.visualAdapter.adaptStateToVisuals(state, events, candidateContext, setups);
+    const analystVisuals = this.analystVisualAdapter.getVisuals();
+    const visuals = [...setupVisuals, ...analystVisuals];
 
     const executionTimeMs = Math.round(performance.now() - startTime);
 
@@ -263,6 +399,7 @@ export class ICTPipelineCoordinator {
         replayState,
         candidateContext,
         mtfContext,
+        analysis: this.lastAnalysis,
       });
     }
 

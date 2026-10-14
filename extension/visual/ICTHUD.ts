@@ -1,13 +1,15 @@
 /**
  * Extension Visual Layer - ICT Market Context Assistant & Replay HUD
- * Renders structured natural-language market context, replay controls, historical event timeline, and audit inspector.
- * Derived strictly from ICTMarketContext data model. Zero trading signals.
+ * Renders structured natural-language market context, replay controls, historical event timeline,
+ * and TradeSea Market Analyst decision-support trigger & scenario cards.
+ * Derived strictly from ICTMarketContext data model and MarketAnalysis results. Zero trading execution.
  */
 
 import { ICTMarketContext } from '../../core/ict/context/MarketContextEngine';
 import { ReplayState } from '../../core/ict/replay/ReplayTypes';
 import { CandidateContext } from '../../core/ict/context/CandidateContextEngine';
 import { MultiTimeframeContext } from '../../core/ict/context/MultiTimeframeContextEngine';
+import { MarketAnalysis } from '../../core/analyst/MarketAnalystTypes';
 
 export interface EventAuditDetail {
   type: string;
@@ -32,6 +34,16 @@ export class ICTHUD {
   private isVisible: boolean = true;
   private mode: HUDMode = 'LIVE';
   private selectedAuditDetail: EventAuditDetail | null = null;
+
+  // Market Analyst State
+  private currentAnalysis: MarketAnalysis | null = null;
+  private isAnalyzing: boolean = false;
+  private isAnalystOverlayVisible: boolean = true;
+
+  // Market Analyst Callbacks
+  public onAnalyzeMarket?: () => void;
+  public onToggleAnalystOverlay?: (visible: boolean) => void;
+  public onClearAnalystOverlay?: () => void;
 
   // Replay Control Callbacks
   public onModeChange?: (mode: HUDMode) => void;
@@ -64,7 +76,9 @@ export class ICTHUD {
       position: fixed;
       top: 50px;
       right: 20px;
-      width: 360px;
+      width: 370px;
+      max-height: 85vh;
+      overflow-y: auto;
       background: rgba(15, 23, 42, 0.96);
       backdrop-filter: blur(14px);
       border: 1px solid rgba(56, 189, 248, 0.4);
@@ -99,6 +113,19 @@ export class ICTHUD {
     this.selectedAuditDetail = detail;
   }
 
+  public setAnalysis(analysis: MarketAnalysis | null): void {
+    this.currentAnalysis = analysis;
+    this.isAnalyzing = false;
+  }
+
+  public setAnalyzing(analyzing: boolean): void {
+    this.isAnalyzing = analyzing;
+  }
+
+  public getAnalystOverlayVisible(): boolean {
+    return this.isAnalystOverlayVisible;
+  }
+
   public render(
     context: ICTMarketContext,
     options?: {
@@ -110,9 +137,14 @@ export class ICTHUD {
       validationMetrics?: any;
       candidateContext?: CandidateContext;
       mtfContext?: MultiTimeframeContext;
+      analysis?: MarketAnalysis | null;
     }
   ): void {
     if (!this.container || !this.isVisible) return;
+
+    if (options?.analysis !== undefined) {
+      this.currentAnalysis = options.analysis;
+    }
 
     const { symbol, ltfTimeframe, htfTimeframe, structure, liquidity, pdArray, displacement, setup, narrativeSummary } = context;
     const replayState = options?.replayState;
@@ -125,16 +157,25 @@ export class ICTHUD {
         case 'CLEAR':
         case 'CONFIRMED':
         case 'PRESENT':
+        case 'ANALYSIS_READY':
+        case 'BULLISH':
           return `<span style="color:#4ade80; background:rgba(34,197,94,0.15); padding:1px 6px; border-radius:4px; font-weight:700;">${status}</span>`;
         case 'BORDERLINE':
         case 'FORMING':
+        case 'NO_CLEAR_OPPORTUNITY':
+        case 'INDETERMINATE':
           return `<span style="color:#facc15; background:rgba(234,179,8,0.15); padding:1px 6px; border-radius:4px; font-weight:700;">${status}</span>`;
         case 'QUESTIONABLE':
         case 'INVALIDATED':
         case 'EXPIRED':
+        case 'STALE_MARKET_DATA':
+        case 'CONFLICTING_EVIDENCE':
+        case 'ANALYSIS_ERROR':
+        case 'BEARISH':
           return `<span style="color:#f87171; background:rgba(239,68,68,0.15); padding:1px 6px; border-radius:4px; font-weight:700;">${status}</span>`;
         case 'UNREVIEWED':
         case 'WATCHING':
+        case 'INSUFFICIENT_DATA':
         case 'ABSENT':
         default:
           return `<span style="color:#94a3b8; background:rgba(148,163,184,0.15); padding:1px 6px; border-radius:4px; font-weight:600;">${status}</span>`;
@@ -142,11 +183,9 @@ export class ICTHUD {
     };
 
     if (this.mode === 'VALIDATION' && valCase) {
-      // Render Dedicated Validation Lab Dual Panel
       const snapStr = JSON.stringify(valCase.detectionSnapshot, null, 2);
 
       this.container.innerHTML = `
-        <!-- Top Mode Switcher Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px;">
           <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">🧪 ICT VALIDATION LAB</span>
           <div style="display:flex; gap:4px;">
@@ -156,14 +195,12 @@ export class ICTHUD {
           </div>
         </div>
 
-        <!-- Case Navigation Controls -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:rgba(30,41,59,0.85); padding:6px 8px; border-radius:6px; border:1px solid #334155;">
           <button id="btn-val-prev" style="padding:3px 8px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-weight:700;">&lt; Previous Case</button>
           <span style="color:#f8fafc; font-weight:700; font-size:10px;">${valCase.caseId.slice(0, 24)}...</span>
           <button id="btn-val-next" style="padding:3px 8px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-weight:700;">Next Case &gt;</button>
         </div>
 
-        <!-- PANEL 1: DETECTION LAYER (Mathematical Truth) -->
         <div style="margin-bottom:8px; background:rgba(15,23,42,0.9); padding:8px 10px; border-radius:8px; border:1px solid rgba(56,189,248,0.4);">
           <div style="color:#38bdf8; font-weight:800; font-size:10px; text-transform:uppercase; margin-bottom:4px;">⚙️ DETECTION LAYER (Pure Mathematical Truth)</div>
           <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
@@ -182,7 +219,6 @@ export class ICTHUD {
           <pre style="background:#090d16; padding:6px; border-radius:4px; color:#38bdf8; font-size:9px; max-height:80px; overflow-y:auto; margin:0;">${snapStr}</pre>
         </div>
 
-        <!-- PANEL 2: VALIDATION LAYER (Independent Audit Evaluation) -->
         <div style="margin-bottom:8px; background:rgba(30,41,59,0.9); padding:8px 10px; border-radius:8px; border:1px solid rgba(250,204,21,0.4);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
             <span style="color:#facc15; font-weight:800; font-size:10px; text-transform:uppercase;">⚖️ VALIDATION LAYER (Independent Audit)</span>
@@ -211,6 +247,9 @@ export class ICTHUD {
       return;
     }
 
+    // Market Analyst Card HTML
+    const analystCardHtml = this.renderMarketAnalystCard(getStatusBadge);
+
     const narrativeHtml = narrativeSummary && narrativeSummary.length > 0
       ? narrativeSummary.map((line) => `<div style="color:#e2e8f0; margin-bottom:2px;">• ${line}</div>`).join('')
       : '<div style="color:#94a3b8;">• Analizando contexto de mercado...</div>';
@@ -230,7 +269,6 @@ export class ICTHUD {
         ? setup.invalidatedConditions.map((c) => `<div style="color:#f87171;">${c}</div>`).join('')
         : '';
 
-    // Replay Mode Header & Control Bar
     const replayControlsHtml = isReplay
       ? `
         <div style="margin-bottom:10px; background:rgba(30,41,59,0.85); padding:8px 10px; border-radius:8px; border:1px solid #0284c7;">
@@ -252,7 +290,6 @@ export class ICTHUD {
       `
       : '';
 
-    // Active Event Audit Inspector Section with Anti-Lookahead Proof
     const activeAudit = this.selectedAuditDetail || {
       type: displacement.state === 'PRESENT' ? 'DISPLACEMENT' : 'MARKET_STRUCTURE',
       timestamp: displacement.lastCandleTimestamp || Date.now(),
@@ -295,7 +332,6 @@ export class ICTHUD {
     `;
 
     this.container.innerHTML = `
-      <!-- Top Mode Switcher Bar -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px;">
         <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">⚡ ICT ASSISTANT <span style="font-size:9px; color:#94a3b8;">(${htfTimeframe})</span></span>
         <div style="display:flex; gap:4px;">
@@ -304,6 +340,9 @@ export class ICTHUD {
           <button id="btn-mode-validation" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${isValidation ? '#0284c7' : '#1e293b'}; color:${isValidation ? '#fff' : '#94a3b8'};">VALIDATION</button>
         </div>
       </div>
+
+      <!-- TradeSea Market Analyst Trigger & Output Section -->
+      ${analystCardHtml}
 
       <!-- Replay Controls (Visible in Replay Mode) -->
       ${replayControlsHtml}
@@ -368,12 +407,131 @@ export class ICTHUD {
       }
     `;
 
-    // Attach Event Listeners to UI Buttons
     this.attachEventListeners(isReplay, replayState);
+  }
+
+  private renderMarketAnalystCard(getStatusBadge: (s: string) => string): string {
+    const anl = this.currentAnalysis;
+
+    let analysisBody = '';
+    if (this.isAnalyzing) {
+      analysisBody = `
+        <div style="color:#38bdf8; font-weight:700; padding:8px 0; text-align:center;">
+          ⏳ Evaluando datos de mercado y estructuras ICT...
+        </div>
+      `;
+    } else if (anl) {
+      const scenario = anl.selectedScenario;
+      const isBull = scenario?.direction === 'BULLISH';
+      const dirColor = isBull ? '#4ade80' : scenario?.direction === 'BEARISH' ? '#f87171' : '#facc15';
+
+      let scenarioDetails = '';
+      if (scenario) {
+        scenarioDetails = `
+          <div style="margin-top:6px; background:#090d16; padding:6px 8px; border-radius:6px; border:1px solid #334155;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <span style="color:#94a3b8;">Dirección:</span> <b style="color:${dirColor};">${scenario.direction}</b>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <span style="color:#94a3b8;">Ref Price:</span> <span style="color:#f8fafc;">$${scenario.referencePrice.toFixed(2)}</span>
+            </div>
+            ${
+              scenario.nearbyTarget
+                ? `<div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                    <span style="color:#94a3b8;">Objetivo Cercano:</span> <b style="color:#38bdf8;">$${scenario.nearbyTarget.price.toFixed(2)}</b>
+                  </div>
+                  <div style="color:#64748b; font-size:9px; margin-bottom:3px;">↳ ${scenario.nearbyTarget.rationale}</div>`
+                : ''
+            }
+            ${
+              scenario.extendedTarget
+                ? `<div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                    <span style="color:#94a3b8;">Objetivo Extendido:</span> <b style="color:#4ade80;">$${scenario.extendedTarget.price.toFixed(2)}</b>
+                  </div>
+                  <div style="color:#64748b; font-size:9px; margin-bottom:3px;">↳ ${scenario.extendedTarget.rationale}</div>`
+                : ''
+            }
+            ${
+              scenario.invalidationLevel !== undefined
+                ? `<div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                    <span style="color:#94a3b8;">Invalidación:</span> <b style="color:#f87171;">$${scenario.invalidationLevel.toFixed(2)}</b>
+                  </div>
+                  <div style="color:#64748b; font-size:9px; margin-bottom:3px;">↳ ${scenario.invalidationRationale || 'Violación de estructura'}</div>`
+                : ''
+            }
+            <div style="display:flex; justify-content:space-between; border-top:1px dashed #334155; padding-top:4px; margin-top:4px;">
+              <span style="color:#94a3b8;">Dist. Riesgo:</span> <span>${scenario.riskDistance ? `${scenario.riskDistance.toFixed(2)} pts` : 'N/A'}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:#94a3b8;">Mov. Neto Estimado:</span> <span>${scenario.estimatedNetMove ? `${scenario.estimatedNetMove.toFixed(2)} pts` : 'N/A'}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:#94a3b8;">Ratio R:R:</span> <b style="color:${(scenario.estimatedRewardRiskRatio || 0) >= 1.5 ? '#4ade80' : '#facc15'};">${scenario.estimatedRewardRiskRatio ? `${scenario.estimatedRewardRiskRatio.toFixed(2)}` : 'N/A'}</b>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:2px;">
+              <span style="color:#94a3b8;">Confianza Cualitativa:</span> <b style="color:#cbd5e1;">${scenario.confidenceLabel}</b>
+            </div>
+            ${scenario.frictionAssumptionNote ? `<div style="color:#64748b; font-size:8px; margin-top:4px; line-height:1.2;">* ${scenario.frictionAssumptionNote}</div>` : ''}
+          </div>
+        `;
+      }
+
+      analysisBody = `
+        <div style="margin-top:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="color:#94a3b8;">Estado:</span> ${getStatusBadge(anl.status)}
+          </div>
+          <div style="color:#cbd5e1; font-size:10px; margin-bottom:4px;">${anl.statusExplanation}</div>
+          ${scenarioDetails}
+          <div style="display:flex; gap:4px; margin-top:6px;">
+            <button id="btn-analyst-toggle-overlay" style="flex:1; padding:3px 6px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
+              ${this.isAnalystOverlayVisible ? '👁 Ocultar Dibujos' : '👁 Mostrar Dibujos'}
+            </button>
+            <button id="btn-analyst-clear-overlay" style="flex:1; padding:3px 6px; background:#1e293b; color:#f87171; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
+              ✕ Limpiar Gráfico
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div style="margin-bottom:10px; background:linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95)); padding:10px 12px; border-radius:10px; border:1px solid #0284c7; box-shadow:0 4px 12px rgba(2,132,199,0.2);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="color:#38bdf8; font-weight:800; font-size:11px; letter-spacing:0.5px;">📊 TRADESEA MARKET ANALYST</span>
+          <span style="color:#64748b; font-size:9px;">Decisión Humana</span>
+        </div>
+        <button id="btn-analizar-mercado" style="width:100%; padding:6px 10px; background:#0284c7; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(2,132,199,0.4); transition:background 0.2s;">
+          ${this.isAnalyzing ? '⏳ Analizando...' : '⚡ Analizar mercado'}
+        </button>
+        ${analysisBody}
+      </div>
+    `;
   }
 
   private attachEventListeners(isReplay: boolean, replayState?: ReplayState): void {
     if (!this.container) return;
+
+    // Market Analyst Event Listeners
+    document.getElementById('btn-analizar-mercado')?.addEventListener('click', () => {
+      if (this.onAnalyzeMarket) {
+        this.setAnalyzing(true);
+        this.onAnalyzeMarket();
+      }
+    });
+
+    document.getElementById('btn-analyst-toggle-overlay')?.addEventListener('click', () => {
+      this.isAnalystOverlayVisible = !this.isAnalystOverlayVisible;
+      if (this.onToggleAnalystOverlay) {
+        this.onToggleAnalystOverlay(this.isAnalystOverlayVisible);
+      }
+    });
+
+    document.getElementById('btn-analyst-clear-overlay')?.addEventListener('click', () => {
+      if (this.onClearAnalystOverlay) {
+        this.onClearAnalystOverlay();
+      }
+    });
 
     document.getElementById('btn-mode-live')?.addEventListener('click', () => {
       this.mode = 'LIVE';
