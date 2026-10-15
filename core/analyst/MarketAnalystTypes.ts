@@ -5,6 +5,7 @@
  */
 
 import { Timeframe } from '../market/Candle';
+import { SessionClassificationResult } from '../ict/time/SessionClassifier';
 
 export type MarketAnalysisStatus =
   | 'ANALYSIS_READY'
@@ -76,6 +77,7 @@ export interface MarketAnalysis {
   dataQualityNotes: string[];
   uncertaintyNotes: string[];
   modelVersions: Record<string, string>;
+  sessionContext?: SessionClassificationResult;
 }
 
 export interface MarketDataIntegrityCheck {

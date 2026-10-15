@@ -47,6 +47,7 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
       console.log(`[ICT Bridge] Context Change: ${currentSymbol} ${currentTimeframe} -> ${newSymbol} ${newTimeframe}`);
       currentSymbol = newSymbol;
       currentTimeframe = newTimeframe;
+      activeCandleTimestamp = 0;
       window.postMessage({
         type: 'ICT_CONTEXT_CHANGED',
         payload: { symbol: currentSymbol, timeframe: currentTimeframe },
@@ -193,14 +194,33 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
       if (keys.length > 0 && series[keys[0]].s) {
         const bars = series[keys[0]].s;
         if (bars.length > 0) {
+          if (bars.length > 1) {
+            // Checkpoint 101: Multi-bar historical batch delivery
+            const batchCandles: Candle[] = bars.map((b: any) => ({
+              timestamp: b.v[0] * 1000,
+              open: Number(b.v[1]),
+              high: Number(b.v[2]),
+              low: Number(b.v[3]),
+              close: Number(b.v[4]),
+              volume: b.v[5] !== undefined ? Number(b.v[5]) : 0,
+            }));
+
+            window.postMessage({
+              type: 'ICT_HISTORICAL_BATCH',
+              candles: batchCandles,
+              symbol: currentSymbol,
+              timeframe: currentTimeframe,
+            }, '*');
+          }
+
           const lastBar = bars[bars.length - 1].v; // [time, open, high, low, close, volume]
           candleData = {
             timestamp: lastBar[0] * 1000,
-            open: lastBar[1],
-            high: lastBar[2],
-            low: lastBar[3],
-            close: lastBar[4],
-            volume: lastBar[5],
+            open: Number(lastBar[1]),
+            high: Number(lastBar[2]),
+            low: Number(lastBar[3]),
+            close: Number(lastBar[4]),
+            volume: lastBar[5] !== undefined ? Number(lastBar[5]) : 0,
           };
         }
       }

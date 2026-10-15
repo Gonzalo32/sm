@@ -26,6 +26,7 @@ import { MarketAnalystEngine } from '../../core/analyst/MarketAnalystEngine';
 import { MarketAnalystJournal } from '../analyst/MarketAnalystJournal';
 import { MarketAnalystVisualAdapter } from '../analyst/MarketAnalystVisualAdapter';
 import { MarketAnalysis } from '../../core/analyst/MarketAnalystTypes';
+import { SessionClassifier, SessionClassificationResult, isValidTimestamp } from '../../core/ict/time/SessionClassifier';
 
 export interface PipelineEvaluationResult {
   engineResult: ICTEngineResult;
@@ -62,6 +63,7 @@ export class ICTPipelineCoordinator {
   private analystJournal: MarketAnalystJournal;
   private analystVisualAdapter: MarketAnalystVisualAdapter;
   private lastAnalysis: MarketAnalysis | null = null;
+  private lastSessionContext: SessionClassificationResult | null = null;
 
   constructor(
     symbol: string = 'MNQ',
@@ -110,6 +112,8 @@ export class ICTPipelineCoordinator {
       };
       this.hud.onClearAnalystOverlay = () => {
         this.analystVisualAdapter.clear();
+        this.lastAnalysis = null;
+        this.lastSessionContext = null;
         this.hud?.setAnalysis(null);
         this.refreshVisuals();
       };
@@ -235,6 +239,10 @@ export class ICTPipelineCoordinator {
     return this.lastAnalysis;
   }
 
+  public getLastSessionContext(): SessionClassificationResult | null {
+    return this.lastSessionContext;
+  }
+
   public getContext(): { symbol: string; timeframe: Timeframe } {
     return { symbol: this.symbol, timeframe: this.timeframe };
   }
@@ -253,9 +261,36 @@ export class ICTPipelineCoordinator {
     return this.reevaluate(htfCandidateContext);
   }
 
+  /**
+   * Checkpoint 102: Returns strictly closed candles eligible for market analysis.
+   * Excludes the final candle whose closure status is indeterminate (forming/active)
+   * unless explicit closure is verified.
+   * Does NOT modify or prune the underlying CandleStore.
+   */
+  public getAnalysisEligibleCandles(): Candle[] {
+    const candles = this.store.getCandles();
+    if (candles.length <= 1) {
+      // 0 candles or 1 candle with no successor cannot confirm closure
+      return [];
+    }
+
+    // Bars 0 through N-2 are guaranteed closed because each bar i has a confirmed successor bar i+1 with T_{i+1} > T_i.
+    // The final bar (N-1) has no successor in the store and is treated conservatively as unconfirmed/forming.
+    return candles.slice(0, candles.length - 1);
+  }
+
   public ingestCandles(candles: Candle[], htfCandidateContext?: CandidateContext): PipelineEvaluationResult {
     this.mode = 'LIVE';
-    this.adapter.loadHistoricalWindow(candles);
+    if (!Array.isArray(candles) || candles.length === 0) {
+      return this.reevaluate(htfCandidateContext);
+    }
+
+    // Checkpoint 102: Preserve any existing streaming candles that are strictly newer than the incoming batch
+    const maxBatchTs = Math.max(...candles.map((c) => c.timestamp));
+    const existingNewer = this.store.getCandles().filter((c) => c.timestamp > maxBatchTs);
+    const mergedBatch = existingNewer.length > 0 ? [...candles, ...existingNewer] : candles;
+
+    this.adapter.loadHistoricalWindow(mergedBatch);
     return this.reevaluate(htfCandidateContext);
   }
 
@@ -285,7 +320,16 @@ export class ICTPipelineCoordinator {
 
     const setupVisuals = this.visualAdapter.adaptStateToVisuals(engineResult.state, engineResult.events, candidateContext, setups);
     const analystVisuals = this.analystVisualAdapter.getVisuals();
-    const merged = [...setupVisuals, ...analystVisuals];
+
+    // Checkpoint 100.3 / 102: Apply visual suppression filter for non-READY analysis
+    let filteredSetupVisuals = setupVisuals;
+    if (this.lastAnalysis && this.lastAnalysis.status !== 'ANALYSIS_READY') {
+      filteredSetupVisuals = setupVisuals.filter(
+        (v) => !v.id.endsWith('-MARKER') && !v.id.endsWith('-TGT')
+      );
+    }
+
+    const merged = [...filteredSetupVisuals, ...analystVisuals];
 
     this.renderer.updateVisuals(merged, {
       symbol: this.symbol,
@@ -299,16 +343,18 @@ export class ICTPipelineCoordinator {
 
   /**
    * User-triggered point-in-time Market Analysis execution.
+   * Evaluates strictly on confirmed closed history via getAnalysisEligibleCandles().
+   * By default, analysis results are transient (zero IndexedDB or ledger writes).
    */
-  public async runMarketAnalysis(): Promise<MarketAnalysis> {
-    const candles = this.store.getCandles();
-    const engineResult = this.ictEngine.process(candles, this.symbol, this.timeframe);
+  public async runMarketAnalysis(options?: { persistForecast?: boolean }): Promise<MarketAnalysis> {
+    const analysisCandles = this.getAnalysisEligibleCandles();
+    const engineResult = this.ictEngine.process(analysisCandles, this.symbol, this.timeframe);
     const confluences = this.confluenceEngine.evaluateConfluences(engineResult.state, engineResult.events);
     const setups = this.setupEngine.evaluateSetups(engineResult.state, engineResult.events, confluences);
     const candidateContext = this.candidateEngine.buildCandidateContext(engineResult.state, engineResult.events);
 
     const analysis = this.analystEngine.analyze(
-      candles,
+      analysisCandles,
       engineResult.state,
       engineResult.events,
       setups,
@@ -316,21 +362,42 @@ export class ICTPipelineCoordinator {
       Date.now()
     );
 
+    // CP105: Explicit user-requested session classification on the latest confirmed closed candle
+    const latestCandle = analysisCandles.length > 0 ? analysisCandles[analysisCandles.length - 1] : undefined;
+    if (latestCandle && isValidTimestamp(latestCandle.timestamp)) {
+      try {
+        this.lastSessionContext = SessionClassifier.classify(latestCandle.timestamp);
+      } catch (err) {
+        if (this.debugMode) {
+          console.warn('[ICT Pipeline Coordinator] Session classification failed:', err);
+        }
+        this.lastSessionContext = null;
+      }
+    } else {
+      this.lastSessionContext = null;
+    }
+
+    if (this.lastSessionContext) {
+      analysis.sessionContext = this.lastSessionContext;
+    }
+
     this.lastAnalysis = analysis;
 
-    // Persist immutable original record to journal
-    try {
-      const startTs = candles.length > 0 ? candles[0].timestamp : undefined;
-      const endTs = candles.length > 0 ? candles[candles.length - 1].timestamp : undefined;
-      await this.analystJournal.recordForecast(analysis, candles.length, startTs, endTs);
-    } catch (e) {
-      if (this.debugMode) {
-        console.warn('[ICT Pipeline Coordinator] Failed to record forecast to journal:', e);
+    // Checkpoint 102: Transient analysis contract — do NOT write forecasts to journal unless explicitly requested
+    if (options?.persistForecast === true) {
+      try {
+        const startTs = analysisCandles.length > 0 ? analysisCandles[0].timestamp : undefined;
+        const endTs = analysisCandles.length > 0 ? analysisCandles[analysisCandles.length - 1].timestamp : undefined;
+        await this.analystJournal.recordForecast(analysis, analysisCandles.length, startTs, endTs);
+      } catch (e) {
+        if (this.debugMode) {
+          console.warn('[ICT Pipeline Coordinator] Failed to record forecast to journal:', e);
+        }
       }
     }
 
     // Adapt visuals
-    const currentIdx = candles.length > 0 ? candles.length - 1 : 0;
+    const currentIdx = analysisCandles.length > 0 ? analysisCandles.length - 1 : 0;
     this.analystVisualAdapter.adaptAnalysisToVisuals(analysis, currentIdx);
 
     // Update HUD
@@ -338,7 +405,7 @@ export class ICTPipelineCoordinator {
       this.hud.setAnalysis(analysis);
       const marketContext = this.contextEngine.buildContext(engineResult.state, engineResult.events, confluences, setups);
       this.hud.render(marketContext, {
-        candleCount: candles.length,
+        candleCount: analysisCandles.length,
         executionTimeMs: 0,
         fps: 60,
         candidateContext,

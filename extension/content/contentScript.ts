@@ -7,6 +7,7 @@ import { ICTPipelineCoordinator } from './ICTPipelineCoordinator';
 import { ICTHUD } from '../visual/ICTHUD';
 import { CanvasRenderer } from '../visual/CanvasRenderer';
 import { OverlayCanvasManager } from '../visual/OverlayCanvasManager';
+import { Candle } from '../../core/market/Candle';
 
 console.log('[ICT ContentScript] Initializing Checkpoint 86 Safe Viewport Synchronization & Visual Overlay...');
 
@@ -76,6 +77,19 @@ window.addEventListener('message', (event) => {
   } else if (type === 'ICT_CONTEXT_CHANGED' && payload) {
     coordinator.setContext(payload.symbol, payload.timeframe);
     recorder.startRecording(payload.symbol, payload.timeframe).catch(() => {});
+  } else if (type === 'ICT_HISTORICAL_BATCH' && event.data.candles) {
+    // Checkpoint 101: Route multi-bar historical batch exclusively to coordinator
+    // Do NOT call recorder or trigger S10 persistence
+    if (symbol && timeframe) {
+      const current = coordinator.getContext();
+      if (current.symbol !== symbol || current.timeframe !== timeframe) {
+        coordinator.setContext(symbol, timeframe);
+      }
+    }
+    const batchCandles: Candle[] = event.data.candles;
+    if (Array.isArray(batchCandles) && batchCandles.length > 0) {
+      coordinator.ingestCandles(batchCandles);
+    }
   } else if (type === 'ICT_CANDLE_UPDATE' || type === 'ICT_NEW_CANDLE' || type === 'ICT_CANDLE_CLOSE') {
     if (symbol && timeframe) {
       const current = coordinator.getContext();

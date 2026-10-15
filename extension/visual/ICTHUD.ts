@@ -476,12 +476,36 @@ export class ICTHUD {
         `;
       }
 
+      let sessionBadgeHtml = '';
+      if (anl.sessionContext) {
+        const s = anl.sessionContext;
+        const windows: string[] = [];
+        if (s.isNyCashOpen) windows.push('NY Cash Open');
+        if (s.isInNyAmSilverBullet) windows.push('NY AM Silver Bullet');
+        else if (s.isInNyAmKillzone) windows.push('NY AM Killzone');
+        if (s.isInNyLunchAvoidance) windows.push('NY Lunch');
+        if (s.isInNyPmSilverBullet) windows.push('NY PM Silver Bullet');
+        else if (s.isInNyPmKillzone) windows.push('NY PM Killzone');
+        if (s.isInLondonSilverBullet) windows.push('London Silver Bullet');
+        else if (s.isInLondonKillzone) windows.push('London Killzone');
+        if (s.isInAsianWindow) windows.push('Asian Window');
+
+        const windowDesc = windows.length > 0 ? windows.join(' / ') : 'Outside Killzone';
+        sessionBadgeHtml = `
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:9px; background:rgba(30,41,59,0.6); padding:3px 6px; border-radius:4px; border:1px solid #334155;">
+            <span style="color:#94a3b8;">Sesión (${s.et.timeZoneName}):</span>
+            <span style="color:#38bdf8; font-weight:700;">${windowDesc} [Trade Date: ${s.tradeDate}]</span>
+          </div>
+        `;
+      }
+
       analysisBody = `
         <div style="margin-top:6px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
             <span style="color:#94a3b8;">Estado:</span> ${getStatusBadge(anl.status)}
           </div>
           <div style="color:#cbd5e1; font-size:10px; margin-bottom:4px;">${anl.statusExplanation}</div>
+          ${sessionBadgeHtml}
           ${scenarioDetails}
           <div style="display:flex; gap:4px; margin-top:6px;">
             <button id="btn-analyst-toggle-overlay" style="flex:1; padding:3px 6px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
