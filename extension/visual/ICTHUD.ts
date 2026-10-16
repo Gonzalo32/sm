@@ -33,6 +33,12 @@ export class ICTHUD {
   private container: HTMLDivElement | null = null;
   private isVisible: boolean = true;
   private isMinimized: boolean = false;
+  private isDraggableInitialized: boolean = false;
+  private isDragging: boolean = false;
+  private dragStartX: number = 0;
+  private dragStartY: number = 0;
+  private initialLeft: number = 0;
+  private initialTop: number = 0;
   private lastContext: ICTMarketContext | null = null;
   private lastOptions: any = null;
   private mode: HUDMode = 'LIVE';
@@ -70,6 +76,7 @@ export class ICTHUD {
     if (typeof document === 'undefined') return;
     if (document.getElementById('ict-assistant-hud')) {
       this.container = document.getElementById('ict-assistant-hud') as HTMLDivElement;
+      this.setupDraggable();
       return;
     }
 
@@ -99,6 +106,118 @@ export class ICTHUD {
 
     document.body.appendChild(hud);
     this.container = hud;
+    this.setupDraggable();
+  }
+
+  private setupDraggable(): void {
+    if (!this.container || this.isDraggableInitialized) return;
+    this.isDraggableInitialized = true;
+
+    const onStartDrag = (clientX: number, clientY: number, target: HTMLElement): boolean => {
+      // Do not initiate drag if user clicked on interactive controls
+      if (target.closest('button, input, select, textarea, pre, a')) {
+        return false;
+      }
+
+      // In expanded mode, drag from header or drag handles to avoid intercepting scroll or content selection
+      if (!this.isMinimized && !target.closest('.hud-drag-handle') && !target.closest('.hud-header')) {
+        return false;
+      }
+
+      this.isDragging = true;
+      this.dragStartX = clientX;
+      this.dragStartY = clientY;
+
+      const rect = this.container!.getBoundingClientRect();
+      this.initialLeft = rect.left;
+      this.initialTop = rect.top;
+
+      // Switch from right/bottom to explicit left/top coordinates
+      this.container!.style.right = 'auto';
+      this.container!.style.bottom = 'auto';
+      this.container!.style.left = `${this.initialLeft}px`;
+      this.container!.style.top = `${this.initialTop}px`;
+      this.container!.style.cursor = 'grabbing';
+      if (typeof document !== 'undefined') {
+        document.body.style.userSelect = 'none';
+      }
+      return true;
+    };
+
+    const onMoveDrag = (clientX: number, clientY: number) => {
+      if (!this.isDragging || !this.container) return;
+
+      const dx = clientX - this.dragStartX;
+      const dy = clientY - this.dragStartY;
+
+      let newLeft = this.initialLeft + dx;
+      let newTop = this.initialTop + dy;
+
+      const containerWidth = this.container.offsetWidth;
+      const containerHeight = this.container.offsetHeight;
+      const maxLeft = Math.max(0, window.innerWidth - containerWidth);
+      const maxTop = Math.max(0, window.innerHeight - containerHeight);
+
+      newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+      newTop = Math.max(0, Math.min(newTop, maxTop));
+
+      this.container.style.left = `${newLeft}px`;
+      this.container.style.top = `${newTop}px`;
+    };
+
+    const onEndDrag = () => {
+      if (!this.isDragging) return;
+      this.isDragging = false;
+      if (this.container) {
+        this.container.style.cursor = '';
+      }
+      if (typeof document !== 'undefined') {
+        document.body.style.userSelect = '';
+      }
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      onMoveDrag(e.clientX, e.clientY);
+    };
+
+    const onMouseUp = () => {
+      onEndDrag();
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        onMoveDrag(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
+      }
+    };
+
+    const onTouchEnd = () => {
+      onEndDrag();
+    };
+
+    this.container.addEventListener('mousedown', (e: MouseEvent) => {
+      if (e.button !== 0) return;
+      if (onStartDrag(e.clientX, e.clientY, e.target as HTMLElement)) {
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+        e.preventDefault();
+      }
+    });
+
+    this.container.addEventListener('touchstart', (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        if (onStartDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches[0].target as HTMLElement)) {
+          window.addEventListener('touchmove', onTouchMove, { passive: false });
+          window.addEventListener('touchend', onTouchEnd);
+          window.addEventListener('touchcancel', onTouchEnd);
+        }
+      }
+    }, { passive: true });
   }
 
   public setVisible(visible: boolean): void {
@@ -163,8 +282,9 @@ export class ICTHUD {
       this.container.style.maxHeight = 'none';
       this.container.style.padding = '6px 10px';
       this.container.innerHTML = `
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-weight:800; color:#38bdf8; font-size:11px; letter-spacing:0.5px;">⚡ ICT</span>
+        <div class="hud-header" style="display:flex; align-items:center; gap:8px;">
+          <span class="hud-drag-handle" style="cursor:grab; color:#64748b; font-size:14px; user-select:none; padding:0 2px;" title="Arrastrar">⠿</span>
+          <span class="hud-drag-handle" style="font-weight:800; color:#38bdf8; font-size:11px; letter-spacing:0.5px; cursor:grab;">⚡ ICT</span>
           <button id="btn-analizar-mercado" style="padding:4px 8px; background:#0284c7; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:10px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(2,132,199,0.4);">
             ${this.isAnalyzing ? '⏳ Analizando...' : '⚡ Analizar mercado'}
           </button>
@@ -215,12 +335,16 @@ export class ICTHUD {
       const snapStr = JSON.stringify(valCase.detectionSnapshot, null, 2);
 
       this.container.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px;">
-          <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">🧪 ICT VALIDATION LAB</span>
-          <div style="display:flex; gap:4px;">
+        <div class="hud-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px; cursor:grab;">
+          <div class="hud-drag-handle" style="display:flex; align-items:center; gap:6px; cursor:grab; user-select:none;" title="Arrastrar panel">
+            <span style="color:#64748b; font-size:14px;">⠿</span>
+            <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">🧪 ICT VALIDATION LAB</span>
+          </div>
+          <div style="display:flex; gap:4px; align-items:center;">
             <button id="btn-mode-live" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:#1e293b; color:#94a3b8;">LIVE</button>
             <button id="btn-mode-replay" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:#1e293b; color:#94a3b8;">REPLAY</button>
             <button id="btn-mode-validation" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:#0284c7; color:#fff;">VALIDATION</button>
+            <button id="btn-hud-minimize" style="padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700; border:1px solid #475569; cursor:pointer; background:#1e293b; color:#cbd5e1; margin-left:2px;" title="Minimizar panel">➖</button>
           </div>
         </div>
 
@@ -361,8 +485,11 @@ export class ICTHUD {
     `;
 
     this.container.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px;">
-        <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">⚡ ICT ASSISTANT <span style="font-size:9px; color:#94a3b8;">(${htfTimeframe})</span></span>
+      <div class="hud-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px; cursor:grab;">
+        <div class="hud-drag-handle" style="display:flex; align-items:center; gap:6px; cursor:grab; user-select:none;" title="Arrastrar panel">
+          <span style="color:#64748b; font-size:14px;">⠿</span>
+          <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">⚡ ICT ASSISTANT <span style="font-size:9px; color:#94a3b8;">(${htfTimeframe})</span></span>
+        </div>
         <div style="display:flex; gap:4px; align-items:center;">
           <button id="btn-mode-live" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${!isReplay && !isValidation ? '#0284c7' : '#1e293b'}; color:${!isReplay && !isValidation ? '#fff' : '#94a3b8'};">LIVE</button>
           <button id="btn-mode-replay" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${isReplay ? '#0284c7' : '#1e293b'}; color:${isReplay ? '#fff' : '#94a3b8'};">REPLAY</button>
@@ -594,6 +721,17 @@ export class ICTHUD {
 
     document.getElementById('btn-hud-expand')?.addEventListener('click', () => {
       this.isMinimized = false;
+      if (this.container && typeof window !== 'undefined') {
+        const rect = this.container.getBoundingClientRect();
+        if (rect.left + 380 > window.innerWidth) {
+          const clampedLeft = Math.max(10, window.innerWidth - 390);
+          this.container.style.left = `${clampedLeft}px`;
+        }
+        if (rect.top + 450 > window.innerHeight) {
+          const clampedTop = Math.max(10, window.innerHeight - 480);
+          this.container.style.top = `${clampedTop}px`;
+        }
+      }
       if (this.lastContext) this.render(this.lastContext, this.lastOptions);
     });
 
