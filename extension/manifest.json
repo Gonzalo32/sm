@@ -26,6 +26,15 @@
         "https://app.tradesea.ai/*",
         "https://*.tradesea.ai/*"
       ],
+      "js": ["content/pageBridge.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://app.tradesea.ai/*",
+        "https://*.tradesea.ai/*"
+      ],
       "js": ["content/contentScript.js"],
       "run_at": "document_idle"
     }

@@ -7,11 +7,18 @@
 import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
 
 (function initPageBridge() {
+  if ((window as any).__ICT_PAGE_BRIDGE_INITIALIZED__) {
+    console.log('[ICT Assistant Bridge] Already initialized, skipping duplicate injection.');
+    return;
+  }
+  (window as any).__ICT_PAGE_BRIDGE_INITIALIZED__ = true;
+
   console.log('[ICT Assistant Bridge] Main world bridge initialized.');
 
   let currentSymbol = 'MNQ';
   let currentTimeframe = '1m';
   let activeCandleTimestamp = 0;
+  let lastCachedBatch: { candles: Candle[]; symbol: string; timeframe: string } | null = null;
 
   // Detect Symbol & Timeframe from TradingView widget or DOM
   function detectContext() {
@@ -181,6 +188,85 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
   };
   (window as any).WebSocket.prototype = OriginalWebSocket.prototype;
 
+  // Intercept window.fetch for REST Historical Candle Feeds (e.g. /history?...)
+  const originalFetch = window.fetch;
+  (window as any).fetch = async function (input: RequestInfo | URL, init?: RequestInit) {
+    const response = await originalFetch.call(this, input, init);
+    try {
+      const url = typeof input === 'string' ? input : (input as any)?.url || '';
+      if (url.includes('/history') || url.includes('history?')) {
+        const clone = response.clone();
+        clone.json().then((data: any) => {
+          handleParsedHistoryFetch(data);
+        }).catch(() => {});
+      }
+    } catch (e) {
+      // Safe passive inspection
+    }
+    return response;
+  };
+
+  function handleParsedHistoryFetch(data: any) {
+    if (!data) return;
+    let batchCandles: Candle[] = [];
+
+    // 1. TradingView UDF format: { s: 'ok', t: [...], o: [...], h: [...], l: [...], c: [...] }
+    if (Array.isArray(data.t) && Array.isArray(data.c)) {
+      const len = data.t.length;
+      for (let i = 0; i < len; i++) {
+        const rawT = Number(data.t[i]);
+        const ts = rawT > 1e11 ? rawT : rawT * 1000;
+        batchCandles.push({
+          timestamp: ts,
+          open: Number(data.o[i]),
+          high: Number(data.h[i]),
+          low: Number(data.l[i]),
+          close: Number(data.c[i]),
+          volume: data.v && data.v[i] !== undefined ? Number(data.v[i]) : 0,
+        });
+      }
+    } else if (Array.isArray(data)) {
+      // 2. Direct array format: [ { time/timestamp, open, high, low, close, volume } ]
+      for (const b of data) {
+        const rawT = Number(b.timestamp || b.time || b.t || 0);
+        const ts = rawT > 1e11 ? rawT : rawT * 1000;
+        if (ts > 0 && b.open !== undefined && b.close !== undefined) {
+          batchCandles.push({
+            timestamp: ts,
+            open: Number(b.open ?? b.o),
+            high: Number(b.high ?? b.h),
+            low: Number(b.low ?? b.l),
+            close: Number(b.close ?? b.c),
+            volume: b.volume !== undefined ? Number(b.volume) : b.v !== undefined ? Number(b.v) : 0,
+          });
+        }
+      }
+    } else if (data.bars && Array.isArray(data.bars)) {
+      return handleParsedHistoryFetch(data.bars);
+    } else if (data.data && Array.isArray(data.data)) {
+      return handleParsedHistoryFetch(data.data);
+    }
+
+    if (batchCandles.length > 0) {
+      batchCandles.sort((a, b) => a.timestamp - b.timestamp);
+
+      lastCachedBatch = {
+        candles: batchCandles,
+        symbol: currentSymbol,
+        timeframe: currentTimeframe,
+      };
+
+      console.log(`[ICT Assistant Bridge] Successfully captured ${batchCandles.length} candles from fetch(/history). Emitting ICT_HISTORICAL_BATCH.`);
+
+      window.postMessage({
+        type: 'ICT_HISTORICAL_BATCH',
+        candles: batchCandles,
+        symbol: currentSymbol,
+        timeframe: currentTimeframe,
+      }, '*');
+    }
+  }
+
   function handleParsedWSMessage(parsed: any) {
     if (!parsed) return;
 
@@ -204,6 +290,12 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
               close: Number(b.v[4]),
               volume: b.v[5] !== undefined ? Number(b.v[5]) : 0,
             }));
+
+            lastCachedBatch = {
+              candles: batchCandles,
+              symbol: currentSymbol,
+              timeframe: currentTimeframe,
+            };
 
             window.postMessage({
               type: 'ICT_HISTORICAL_BATCH',
@@ -292,9 +384,21 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
     };
   }
 
-  // Listen for request probes from ContentScript
+  // Listen for request probes and cached batch requests from ContentScript
   window.addEventListener('message', (event) => {
     if (!event.data) return;
+
+    if (event.data.type === 'ICT_REQUEST_CACHED_BATCH') {
+      if (lastCachedBatch) {
+        console.log(`[ICT Assistant Bridge] Delivering cached historical batch (${lastCachedBatch.candles.length} candles) to ContentScript.`);
+        window.postMessage({
+          type: 'ICT_HISTORICAL_BATCH',
+          candles: lastCachedBatch.candles,
+          symbol: lastCachedBatch.symbol,
+          timeframe: lastCachedBatch.timeframe,
+        }, '*');
+      }
+    }
 
     if (event.data.type === 'ICT_RUN_HISTORICAL_PROBE') {
       const targetCount = event.data.count || 1000;

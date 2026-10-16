@@ -102,7 +102,7 @@ export class ICTPipelineCoordinator {
     // Hook HUD Analyst Callbacks
     if (this.hud) {
       this.hud.onAnalyzeMarket = () => {
-        this.runMarketAnalysis().catch((err) => {
+        this.runMarketAnalysis({ allowDelayedFeed: true }).catch((err) => {
           if (this.debugMode) console.error('[ICT Pipeline] Analysis error:', err);
         });
       };
@@ -321,6 +321,26 @@ export class ICTPipelineCoordinator {
     const setupVisuals = this.visualAdapter.adaptStateToVisuals(engineResult.state, engineResult.events, candidateContext, setups);
     const analystVisuals = this.analystVisualAdapter.getVisuals();
 
+    // Auto-calibrate viewport if uncalibrated (at default 21400/21500) so lines/zones are visible at real market prices
+    const translator = this.renderer?.getTranslator();
+    if (translator && candles.length > 0) {
+      const vp = translator.getViewport();
+      if (!translator.isViewportSynchronized() || (vp.minPrice === 21400 && vp.maxPrice === 21500)) {
+        const recentCandles = candles.slice(-80);
+        const minLow = Math.min(...recentCandles.map((c) => c.low));
+        const maxHigh = Math.max(...recentCandles.map((c) => c.high));
+        const pad = Math.max(10, (maxHigh - minLow) * 0.15);
+        translator.updateViewport({
+          minPrice: minLow - pad,
+          maxPrice: maxHigh + pad,
+          firstCandleIndex: Math.max(0, candles.length - 80),
+          lastCandleIndex: candles.length - 1,
+        });
+        translator.setViewportSynchronized(true);
+        this.analystVisualAdapter.setViewportSynchronized(true);
+      }
+    }
+
     // Checkpoint 100.3 / 102: Apply visual suppression filter for non-READY analysis
     let filteredSetupVisuals = setupVisuals;
     if (this.lastAnalysis && this.lastAnalysis.status !== 'ANALYSIS_READY') {
@@ -346,12 +366,18 @@ export class ICTPipelineCoordinator {
    * Evaluates strictly on confirmed closed history via getAnalysisEligibleCandles().
    * By default, analysis results are transient (zero IndexedDB or ledger writes).
    */
-  public async runMarketAnalysis(options?: { persistForecast?: boolean }): Promise<MarketAnalysis> {
+  public async runMarketAnalysis(options?: { persistForecast?: boolean; allowDelayedFeed?: boolean }): Promise<MarketAnalysis> {
     const analysisCandles = this.getAnalysisEligibleCandles();
     const engineResult = this.ictEngine.process(analysisCandles, this.symbol, this.timeframe);
     const confluences = this.confluenceEngine.evaluateConfluences(engineResult.state, engineResult.events);
     const setups = this.setupEngine.evaluateSetups(engineResult.state, engineResult.events, confluences);
     const candidateContext = this.candidateEngine.buildCandidateContext(engineResult.state, engineResult.events);
+
+    const latestCandle = analysisCandles.length > 0 ? analysisCandles[analysisCandles.length - 1] : undefined;
+    
+    // In Demo / Delayed feeds (or when allowDelayedFeed is enabled), anchor evaluation timestamp
+    // to the latest confirmed closed candle so STALE_MARKET_DATA does not suppress visual analysis.
+    const evalTimestamp = options?.allowDelayedFeed && latestCandle ? latestCandle.timestamp : Date.now();
 
     const analysis = this.analystEngine.analyze(
       analysisCandles,
@@ -359,11 +385,10 @@ export class ICTPipelineCoordinator {
       engineResult.events,
       setups,
       candidateContext,
-      Date.now()
+      evalTimestamp
     );
 
     // CP105: Explicit user-requested session classification on the latest confirmed closed candle
-    const latestCandle = analysisCandles.length > 0 ? analysisCandles[analysisCandles.length - 1] : undefined;
     if (latestCandle && isValidTimestamp(latestCandle.timestamp)) {
       try {
         this.lastSessionContext = SessionClassifier.classify(latestCandle.timestamp);

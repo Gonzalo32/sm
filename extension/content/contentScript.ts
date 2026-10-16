@@ -31,6 +31,9 @@ const coordinator = new ICTPipelineCoordinator('MNQ', '1m', {
 // Arm fail-closed mode: suppress price-anchored setup drawings when viewport is not synchronized
 coordinator.getVisualAdapter().setFailClosedOnUnsyncedViewport(true);
 
+// Initial HUD render so the UI panel and manual analysis button are immediately visible
+coordinator.reevaluate();
+
 // 4. Inject Page Bridge script into MAIN world
 function injectPageBridge() {
   try {
@@ -109,3 +112,4 @@ window.addEventListener('message', (event) => {
 
 // Initialization
 injectPageBridge();
+window.postMessage({ type: 'ICT_REQUEST_CACHED_BATCH' }, '*');

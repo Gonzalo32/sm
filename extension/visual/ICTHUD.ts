@@ -32,6 +32,9 @@ export type HUDMode = 'LIVE' | 'REPLAY' | 'VALIDATION';
 export class ICTHUD {
   private container: HTMLDivElement | null = null;
   private isVisible: boolean = true;
+  private isMinimized: boolean = false;
+  private lastContext: ICTMarketContext | null = null;
+  private lastOptions: any = null;
   private mode: HUDMode = 'LIVE';
   private selectedAuditDetail: EventAuditDetail | null = null;
 
@@ -146,11 +149,37 @@ export class ICTHUD {
       this.currentAnalysis = options.analysis;
     }
 
+    this.lastContext = context;
+    this.lastOptions = options;
+
     const { symbol, ltfTimeframe, htfTimeframe, structure, liquidity, pdArray, displacement, setup, narrativeSummary } = context;
     const replayState = options?.replayState;
     const valCase = options?.validationCase;
     const isReplay = this.mode === 'REPLAY' || !!replayState;
     const isValidation = this.mode === 'VALIDATION' || !!valCase;
+
+    if (this.isMinimized) {
+      this.container.style.width = 'auto';
+      this.container.style.maxHeight = 'none';
+      this.container.style.padding = '6px 10px';
+      this.container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-weight:800; color:#38bdf8; font-size:11px; letter-spacing:0.5px;">⚡ ICT</span>
+          <button id="btn-analizar-mercado" style="padding:4px 8px; background:#0284c7; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:10px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(2,132,199,0.4);">
+            ${this.isAnalyzing ? '⏳ Analizando...' : '⚡ Analizar mercado'}
+          </button>
+          <button id="btn-hud-expand" style="padding:3px 7px; background:#1e293b; color:#38bdf8; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:11px; font-weight:800;" title="Expandir panel">
+            ➕
+          </button>
+        </div>
+      `;
+      this.attachEventListeners(isReplay, replayState);
+      return;
+    }
+
+    this.container.style.width = '370px';
+    this.container.style.maxHeight = '85vh';
+    this.container.style.padding = '14px 16px';
 
     const getStatusBadge = (status: string) => {
       switch (status) {
@@ -334,10 +363,11 @@ export class ICTHUD {
     this.container.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px;">
         <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">⚡ ICT ASSISTANT <span style="font-size:9px; color:#94a3b8;">(${htfTimeframe})</span></span>
-        <div style="display:flex; gap:4px;">
+        <div style="display:flex; gap:4px; align-items:center;">
           <button id="btn-mode-live" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${!isReplay && !isValidation ? '#0284c7' : '#1e293b'}; color:${!isReplay && !isValidation ? '#fff' : '#94a3b8'};">LIVE</button>
           <button id="btn-mode-replay" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${isReplay ? '#0284c7' : '#1e293b'}; color:${isReplay ? '#fff' : '#94a3b8'};">REPLAY</button>
           <button id="btn-mode-validation" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${isValidation ? '#0284c7' : '#1e293b'}; color:${isValidation ? '#fff' : '#94a3b8'};">VALIDATION</button>
+          <button id="btn-hud-minimize" style="padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700; border:1px solid #475569; cursor:pointer; background:#1e293b; color:#cbd5e1; margin-left:2px;" title="Minimizar panel">➖</button>
         </div>
       </div>
 
@@ -555,6 +585,16 @@ export class ICTHUD {
       if (this.onClearAnalystOverlay) {
         this.onClearAnalystOverlay();
       }
+    });
+
+    document.getElementById('btn-hud-minimize')?.addEventListener('click', () => {
+      this.isMinimized = true;
+      if (this.lastContext) this.render(this.lastContext, this.lastOptions);
+    });
+
+    document.getElementById('btn-hud-expand')?.addEventListener('click', () => {
+      this.isMinimized = false;
+      if (this.lastContext) this.render(this.lastContext, this.lastOptions);
     });
 
     document.getElementById('btn-mode-live')?.addEventListener('click', () => {
