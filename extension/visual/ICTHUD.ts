@@ -44,13 +44,26 @@ export class ICTHUD {
   private mode: HUDMode = 'LIVE';
   private selectedAuditDetail: EventAuditDetail | null = null;
 
+  // Extension & Overlay Controls
+  private isRunning: boolean = true;
+  private isChartOverlayVisible: boolean = true;
+  public onToggleRunning?: (running: boolean) => void;
+  public onToggleChartOverlay?: (visible: boolean) => void;
+
   // Market Analyst State
   private currentAnalysis: MarketAnalysis | null = null;
   private isAnalyzing: boolean = false;
   private isAnalystOverlayVisible: boolean = true;
+  private isDynamicAnalysisActive: boolean = false;
+  private lastDirectionChangeNotice: {
+    from: string;
+    to: string;
+    timestamp: number;
+  } | null = null;
 
   // Market Analyst Callbacks
   public onAnalyzeMarket?: () => void;
+  public onToggleDynamicAnalysis?: (active: boolean) => void;
   public onToggleAnalystOverlay?: (visible: boolean) => void;
   public onClearAnalystOverlay?: () => void;
 
@@ -244,8 +257,61 @@ export class ICTHUD {
     this.isAnalyzing = analyzing;
   }
 
+  public setDynamicAnalysisActive(active: boolean): void {
+    this.isDynamicAnalysisActive = active;
+  }
+
+  public isDynamicAnalysisActiveState(): boolean {
+    return this.isDynamicAnalysisActive;
+  }
+
+  public setDirectionChangeNotice(notice: { from: string; to: string; timestamp: number } | null): void {
+    this.lastDirectionChangeNotice = notice;
+  }
+
   public getAnalystOverlayVisible(): boolean {
     return this.isAnalystOverlayVisible;
+  }
+
+  public setRunning(running: boolean): void {
+    this.isRunning = running;
+    if (this.lastContext) {
+      this.render(this.lastContext, this.lastOptions);
+    }
+  }
+
+  public isRunningState(): boolean {
+    return this.isRunning;
+  }
+
+  public setChartOverlayVisible(visible: boolean): void {
+    this.isChartOverlayVisible = visible;
+    this.isAnalystOverlayVisible = visible;
+    this.updateOverlayButtons();
+  }
+
+  public isChartOverlayVisibleState(): boolean {
+    return this.isChartOverlayVisible;
+  }
+
+  public updateOverlayButtons(): void {
+    if (typeof document === 'undefined') return;
+    const text = this.isChartOverlayVisible ? '👁 Ocultar Gráfico' : '👁 Mostrar Gráfico';
+    const bg = this.isChartOverlayVisible ? '#1e293b' : '#334155';
+    const color = this.isChartOverlayVisible ? '#cbd5e1' : '#facc15';
+
+    const btnHud = document.getElementById('btn-hud-toggle-chart');
+    if (btnHud) {
+      btnHud.textContent = text;
+      btnHud.style.backgroundColor = bg;
+      btnHud.style.color = color;
+    }
+    const btnAnalyst = document.getElementById('btn-analyst-toggle-overlay');
+    if (btnAnalyst) {
+      btnAnalyst.textContent = text;
+      btnAnalyst.style.backgroundColor = bg;
+      btnAnalyst.style.color = color;
+    }
   }
 
   public render(
@@ -275,16 +341,21 @@ export class ICTHUD {
     const replayState = options?.replayState;
     const valCase = options?.validationCase;
     const isReplay = this.mode === 'REPLAY' || !!replayState;
-    const isValidation = this.mode === 'VALIDATION' || !!valCase;
 
     if (this.isMinimized) {
       this.container.style.width = 'auto';
       this.container.style.maxHeight = 'none';
       this.container.style.padding = '6px 10px';
       this.container.innerHTML = `
-        <div class="hud-header" style="display:flex; align-items:center; gap:8px;">
+        <div class="hud-header" style="display:flex; align-items:center; gap:6px;">
           <span class="hud-drag-handle" style="cursor:grab; color:#64748b; font-size:14px; user-select:none; padding:0 2px;" title="Arrastrar">⠿</span>
           <span class="hud-drag-handle" style="font-weight:800; color:#38bdf8; font-size:11px; letter-spacing:0.5px; cursor:grab;">⚡ ICT</span>
+          <button id="btn-hud-power" style="padding:3px 7px; background:${this.isRunning ? '#ef4444' : '#22c55e'}; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:10px; font-weight:800;" title="${this.isRunning ? 'Detener extensión' : 'Reanudar extensión'}">
+            ${this.isRunning ? '⏹ Detener' : '▶ Reanudar'}
+          </button>
+          <button id="btn-hud-toggle-chart" style="padding:3px 7px; background:#1e293b; color:${this.isChartOverlayVisible ? '#cbd5e1' : '#facc15'}; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:10px; font-weight:800;" title="${this.isChartOverlayVisible ? 'Ocultar gráfico' : 'Mostrar gráfico'}">
+            ${this.isChartOverlayVisible ? '👁' : '👁‍🗨'}
+          </button>
           <button id="btn-analizar-mercado" style="padding:4px 8px; background:#0284c7; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:10px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(2,132,199,0.4);">
             ${this.isAnalyzing ? '⏳ Analizando...' : '⚡ Analizar mercado'}
           </button>
@@ -488,15 +559,25 @@ export class ICTHUD {
       <div class="hud-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #334155; padding-bottom:6px; cursor:grab;">
         <div class="hud-drag-handle" style="display:flex; align-items:center; gap:6px; cursor:grab; user-select:none;" title="Arrastrar panel">
           <span style="color:#64748b; font-size:14px;">⠿</span>
-          <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">⚡ ICT ASSISTANT <span style="font-size:9px; color:#94a3b8;">(${htfTimeframe})</span></span>
+          <span style="font-weight:800; color:#38bdf8; font-size:12px; letter-spacing:0.5px;">⚡ ICT ASSISTANT <span style="font-size:9px; color:#94a3b8;">(${htfTimeframe})</span> <span style="font-size:9px; color:#22c55e; background:rgba(34,197,94,0.15); padding:1px 5px; border-radius:3px; font-weight:700;">LIVE</span></span>
         </div>
         <div style="display:flex; gap:4px; align-items:center;">
-          <button id="btn-mode-live" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${!isReplay && !isValidation ? '#0284c7' : '#1e293b'}; color:${!isReplay && !isValidation ? '#fff' : '#94a3b8'};">LIVE</button>
-          <button id="btn-mode-replay" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${isReplay ? '#0284c7' : '#1e293b'}; color:${isReplay ? '#fff' : '#94a3b8'};">REPLAY</button>
-          <button id="btn-mode-validation" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${isValidation ? '#0284c7' : '#1e293b'}; color:${isValidation ? '#fff' : '#94a3b8'};">VALIDATION</button>
+          <button id="btn-hud-toggle-chart" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:1px solid #475569; cursor:pointer; background:${this.isChartOverlayVisible ? '#1e293b' : '#334155'}; color:${this.isChartOverlayVisible ? '#cbd5e1' : '#facc15'};" title="${this.isChartOverlayVisible ? 'Ocultar gráfico' : 'Mostrar gráfico'}">
+            ${this.isChartOverlayVisible ? '👁 Ocultar Gráfico' : '👁 Mostrar Gráfico'}
+          </button>
+          <button id="btn-hud-power" style="padding:2px 6px; border-radius:4px; font-size:9px; font-weight:700; border:none; cursor:pointer; background:${this.isRunning ? '#ef4444' : '#22c55e'}; color:#fff;" title="${this.isRunning ? 'Detener extensión' : 'Reanudar extensión'}">
+            ${this.isRunning ? '⏹ Detener' : '▶ Reanudar'}
+          </button>
           <button id="btn-hud-minimize" style="padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700; border:1px solid #475569; cursor:pointer; background:#1e293b; color:#cbd5e1; margin-left:2px;" title="Minimizar panel">➖</button>
         </div>
       </div>
+
+      ${!this.isRunning ? `
+        <div id="hud-stopped-banner" style="margin-bottom:8px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; border-radius:6px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:#f87171; font-weight:700; font-size:10px;">⏹ EXTENSIÓN DETENIDA (Pausada)</span>
+          <button id="btn-hud-resume-banner" style="padding:2px 8px; background:#22c55e; color:#fff; border:none; border-radius:4px; font-size:9px; font-weight:700; cursor:pointer;">▶ Iniciar</button>
+        </div>
+      ` : ''}
 
       <!-- TradeSea Market Analyst Trigger & Output Section -->
       ${analystCardHtml}
@@ -552,16 +633,12 @@ export class ICTHUD {
         </div>
       </div>
 
-      <!-- Engine Debug Info -->
-      ${
-        options
-          ? `<div style="border-top:1px solid #334155; pt:4px; margin-top:6px; font-size:9px; color:#64748b; display:flex; justify-content:space-between;">
-              <span>Velas: ${options.candleCount || 0}</span>
-              <span>Exec: ${options.executionTimeMs || 0}ms</span>
-              <span>FPS: ${options.fps || 60}</span>
-            </div>`
-          : ''
-      }
+      <!-- Geometry & Engine Debug Info at the very end of ICT Assistant -->
+      <div style="border-top:1px solid #334155; padding-top:6px; margin-top:8px; font-size:9px; color:#64748b; display:flex; justify-content:space-between; align-items:center;">
+        <span>Velas: ${options?.candleCount || 0} • Exec: ${options?.executionTimeMs || 0}ms</span>
+        <span style="color:#38bdf8; font-weight:600;">Geometría: Sincronizada</span>
+        <span style="color:${(options?.fps || 60) >= 55 ? '#4ade80' : '#facc15'}; font-weight:700;">${options?.fps || 60} FPS</span>
+      </div>
     `;
 
     this.attachEventListeners(isReplay, replayState);
@@ -665,8 +742,8 @@ export class ICTHUD {
           ${sessionBadgeHtml}
           ${scenarioDetails}
           <div style="display:flex; gap:4px; margin-top:6px;">
-            <button id="btn-analyst-toggle-overlay" style="flex:1; padding:3px 6px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
-              ${this.isAnalystOverlayVisible ? '👁 Ocultar Dibujos' : '👁 Mostrar Dibujos'}
+            <button id="btn-analyst-toggle-overlay" style="flex:1; padding:3px 6px; background:${this.isChartOverlayVisible ? '#1e293b' : '#334155'}; color:${this.isChartOverlayVisible ? '#cbd5e1' : '#facc15'}; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
+              ${this.isChartOverlayVisible ? '👁 Ocultar Gráfico' : '👁 Mostrar Gráfico'}
             </button>
             <button id="btn-analyst-clear-overlay" style="flex:1; padding:3px 6px; background:#1e293b; color:#f87171; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
               ✕ Limpiar Gráfico
@@ -680,11 +757,32 @@ export class ICTHUD {
       <div style="margin-bottom:10px; background:linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95)); padding:10px 12px; border-radius:10px; border:1px solid #0284c7; box-shadow:0 4px 12px rgba(2,132,199,0.2);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <span style="color:#38bdf8; font-weight:800; font-size:11px; letter-spacing:0.5px;">📊 TRADESEA MARKET ANALYST</span>
-          <span style="color:#64748b; font-size:9px;">Decisión Humana</span>
+          <span style="display:flex; align-items:center; gap:4px; font-size:9px; color:${this.isDynamicAnalysisActive ? '#4ade80' : '#94a3b8'};">
+            ${this.isDynamicAnalysisActive ? '<span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 6px #22c55e;"></span> Auto-Gestión' : 'Manual'}
+          </span>
         </div>
-        <button id="btn-analizar-mercado" style="width:100%; padding:6px 10px; background:#0284c7; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(2,132,199,0.4); transition:background 0.2s;">
-          ${this.isAnalyzing ? '⏳ Analizando...' : '⚡ Analizar mercado'}
-        </button>
+        <div style="display:flex; gap:6px; margin-bottom:6px;">
+          <button id="btn-analizar-mercado" style="flex:1; padding:6px 8px; background:${this.isDynamicAnalysisActive ? '#059669' : '#0284c7'}; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(2,132,199,0.4); transition:background 0.2s;">
+            ${this.isAnalyzing ? '⏳ Analizando...' : (this.isDynamicAnalysisActive ? '⚡ Re-evaluar ahora' : '⚡ Analizar mercado')}
+          </button>
+          <button id="btn-toggle-dynamic-analyst" style="padding:6px 10px; background:${this.isDynamicAnalysisActive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(100, 116, 139, 0.2)'}; color:${this.isDynamicAnalysisActive ? '#34d399' : '#94a3b8'}; border:1px solid ${this.isDynamicAnalysisActive ? '#059669' : '#475569'}; border-radius:6px; cursor:pointer; font-size:10px; font-weight:700; white-space:nowrap;" title="Activar/Pausar evaluación continua automática">
+            ${this.isDynamicAnalysisActive ? '● Auto: ON' : '○ Auto: OFF'}
+          </button>
+        </div>
+        ${this.isDynamicAnalysisActive ? `<div style="font-size:9px; color:#34d399; margin-bottom:6px; display:flex; align-items:center; gap:4px; background:rgba(6, 78, 59, 0.3); padding:3px 6px; border-radius:4px; border:1px solid rgba(16, 185, 129, 0.3);">
+          <span>🔄</span> <b>Auto-gestión activa:</b> evalúa y se corrige dinámicamente con cada vela
+        </div>` : ''}
+        ${this.lastDirectionChangeNotice ? `
+          <div style="background:rgba(59, 130, 246, 0.2); border:1px solid #3b82f6; border-radius:6px; padding:6px 8px; margin-bottom:6px;">
+            <div style="color:#60a5fa; font-weight:800; font-size:10px; display:flex; justify-content:space-between;">
+              <span>🔄 CAMBIO DE TENDENCIA DETECTADO</span>
+              <span style="font-size:8px; color:#94a3b8;">${new Date(this.lastDirectionChangeNotice.timestamp).toLocaleTimeString()}</span>
+            </div>
+            <div style="color:#e2e8f0; font-size:9.5px; margin-top:2px;">
+              Giro de <b style="color:${this.lastDirectionChangeNotice.from === 'BEARISH' ? '#f87171' : '#4ade80'};">${this.lastDirectionChangeNotice.from}</b> ➔ <b style="color:${this.lastDirectionChangeNotice.to === 'BULLISH' ? '#4ade80' : '#f87171'};">${this.lastDirectionChangeNotice.to}</b>. Niveles y objetivo actualizados.
+            </div>
+          </div>
+        ` : ''}
         ${analysisBody}
       </div>
     `;
@@ -693,22 +791,61 @@ export class ICTHUD {
   private attachEventListeners(isReplay: boolean, replayState?: ReplayState): void {
     if (!this.container) return;
 
+    // Power & Running State Event Listeners
+    const handleTogglePower = () => {
+      this.isRunning = !this.isRunning;
+      if (this.onToggleRunning) {
+        this.onToggleRunning(this.isRunning);
+      }
+      if (this.lastContext) {
+        this.render(this.lastContext, this.lastOptions);
+      }
+    };
+
+    document.getElementById('btn-hud-power')?.addEventListener('click', handleTogglePower);
+    document.getElementById('btn-hud-resume-banner')?.addEventListener('click', handleTogglePower);
+
+    // Chart Overlay Toggle Event Listeners
+    const handleToggleOverlay = () => {
+      this.isChartOverlayVisible = !this.isChartOverlayVisible;
+      this.isAnalystOverlayVisible = this.isChartOverlayVisible;
+      this.updateOverlayButtons();
+      if (this.onToggleChartOverlay) {
+        this.onToggleChartOverlay(this.isChartOverlayVisible);
+      }
+      if (this.onToggleAnalystOverlay) {
+        this.onToggleAnalystOverlay(this.isChartOverlayVisible);
+      }
+    };
+
+    document.getElementById('btn-hud-toggle-chart')?.addEventListener('click', handleToggleOverlay);
+    document.getElementById('btn-analyst-toggle-overlay')?.addEventListener('click', handleToggleOverlay);
+
     // Market Analyst Event Listeners
+    document.getElementById('btn-toggle-dynamic-analyst')?.addEventListener('click', () => {
+      this.isDynamicAnalysisActive = !this.isDynamicAnalysisActive;
+      if (this.onToggleDynamicAnalysis) {
+        this.onToggleDynamicAnalysis(this.isDynamicAnalysisActive);
+      }
+      if (this.lastContext) {
+        this.render(this.lastContext, this.lastOptions);
+      }
+    });
+
     document.getElementById('btn-analizar-mercado')?.addEventListener('click', () => {
+      this.isDynamicAnalysisActive = true;
+      if (this.onToggleDynamicAnalysis) {
+        this.onToggleDynamicAnalysis(true);
+      }
       if (this.onAnalyzeMarket) {
         this.setAnalyzing(true);
         this.onAnalyzeMarket();
       }
     });
 
-    document.getElementById('btn-analyst-toggle-overlay')?.addEventListener('click', () => {
-      this.isAnalystOverlayVisible = !this.isAnalystOverlayVisible;
-      if (this.onToggleAnalystOverlay) {
-        this.onToggleAnalystOverlay(this.isAnalystOverlayVisible);
-      }
-    });
-
     document.getElementById('btn-analyst-clear-overlay')?.addEventListener('click', () => {
+      this.isDynamicAnalysisActive = false;
+      this.lastDirectionChangeNotice = null;
       if (this.onClearAnalystOverlay) {
         this.onClearAnalystOverlay();
       }

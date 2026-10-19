@@ -11,8 +11,8 @@ export class CanvasRenderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private translator: CoordinateTranslator;
-  private debugMode: boolean = true;
-  private geometryDebugMode: boolean = true;
+  private debugMode: boolean = false;
+  private geometryDebugMode: boolean = false;
   private currentFrameId: number | null = null;
   private fps: number = 60;
   private lastFrameTime: number = performance.now();
@@ -119,6 +119,20 @@ export class CanvasRenderer {
     }
   }
 
+  private isVisible: boolean = true;
+
+  public setVisible(visible: boolean): void {
+    this.isVisible = visible;
+    this.canvas.style.display = visible ? 'block' : 'none';
+    if (!visible) {
+      this.clear();
+    }
+  }
+
+  public getVisible(): boolean {
+    return this.isVisible;
+  }
+
   public clear(): void {
     this.activeVisuals = [];
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -155,6 +169,8 @@ export class CanvasRenderer {
   }
 
   public renderFrame(): void {
+    if (!this.isVisible) return;
+
     const { width, height } = this.canvas;
     this.ctx.clearRect(0, 0, width, height);
 

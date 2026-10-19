@@ -34,6 +34,47 @@ coordinator.getVisualAdapter().setFailClosedOnUnsyncedViewport(true);
 // Initial HUD render so the UI panel and manual analysis button are immediately visible
 coordinator.reevaluate();
 
+// 3.5 Interactive Chart Drag & Wheel Pan/Zoom Tracker
+if (canvasRenderer && typeof window !== 'undefined') {
+  const translator = canvasRenderer.getTranslator();
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+
+  window.addEventListener('mousedown', (e: MouseEvent) => {
+    if (e.button === 0) {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    }
+  }, { passive: true });
+
+  window.addEventListener('mousemove', (e: MouseEvent) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+      translator.pan(dx, dy);
+    }
+  }, { passive: true });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+  }, { passive: true });
+
+  const chartTarget = (document.querySelector('.chart-container') as HTMLElement) ||
+                      (document.querySelector('[class*="chart-container"]') as HTMLElement) ||
+                      document.body;
+
+  chartTarget.addEventListener('wheel', (e: WheelEvent) => {
+    const zoomFactor = e.deltaY > 0 ? 1.05 : 0.95;
+    translator.zoom(zoomFactor, e.clientX);
+  }, { passive: true });
+}
+
 // 4. Inject Page Bridge script into MAIN world
 function injectPageBridge() {
   try {
@@ -98,10 +139,12 @@ window.addEventListener('message', (event) => {
       const current = coordinator.getContext();
       if (current.symbol !== symbol || current.timeframe !== timeframe) {
         coordinator.setContext(symbol, timeframe);
-        recorder.startRecording(symbol, timeframe).catch(() => {});
+        if (coordinator.isRunningState()) {
+          recorder.startRecording(symbol, timeframe).catch(() => {});
+        }
       }
     }
-    if (candle) {
+    if (candle && coordinator.isRunningState()) {
       coordinator.ingestCandle(candle);
       recorder.handleCandleEvent({ type, candle, symbol: symbol || 'MNQ', timeframe: timeframe || '1m' }).catch(() => {});
     }
@@ -109,6 +152,51 @@ window.addEventListener('message', (event) => {
     console.log(`[ICT ContentScript] Historical Probe Response:`, report);
   }
 });
+
+// 6. Chrome Runtime Message Listener (Popup & Background communication)
+if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message.type === 'ICT_SET_RUNNING_STATE') {
+      const running = Boolean(message.running);
+      coordinator.setRunning(running);
+      if (!running) {
+        recorder.stopRecording().catch(() => {});
+      } else {
+        const ctx = coordinator.getContext();
+        recorder.startRecording(ctx.symbol, ctx.timeframe).catch(() => {});
+      }
+      sendResponse({ status: 'OK', running: coordinator.isRunningState() });
+    } else if (message.type === 'ICT_TOGGLE_CHART_OVERLAY') {
+      const visible = Boolean(message.visible);
+      coordinator.setChartOverlayVisible(visible);
+      sendResponse({ status: 'OK', visible: coordinator.isOverlayVisibleState() });
+    } else if (message.type === 'ICT_GET_STATUS') {
+      sendResponse({
+        status: 'OK',
+        running: coordinator.isRunningState(),
+        overlayVisible: coordinator.isOverlayVisibleState(),
+        context: coordinator.getContext(),
+      });
+    } else if (message.type === 'TRIGGER_PROBE') {
+      window.postMessage({ type: 'ICT_TRIGGER_PROBE_REQUEST' }, '*');
+      sendResponse({ status: 'OK' });
+    }
+    return true;
+  });
+}
+
+// 7. Check stored preferences on load
+if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+  chrome.storage.local.get(['extensionRunning', 'chartOverlayVisible'], (res) => {
+    if (res.extensionRunning === false) {
+      coordinator.setRunning(false);
+      recorder.stopRecording().catch(() => {});
+    }
+    if (res.chartOverlayVisible === false) {
+      coordinator.setChartOverlayVisible(false);
+    }
+  });
+}
 
 // Initialization
 injectPageBridge();

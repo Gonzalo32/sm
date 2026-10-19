@@ -138,6 +138,9 @@ export class VisualAdapter {
 
     // 3. Liquidity Levels -> Visual Lines
     for (const lvl of state.liquidityLevels) {
+      if (this.config.hideInvalidated && lvl.swept) {
+        continue;
+      }
       const isBSL = lvl.type === 'BSL';
       visuals.push({
         id: `VIS-${lvl.id}`,
@@ -162,6 +165,11 @@ export class VisualAdapter {
     for (const fvg of state.fairValueGaps) {
       const isBull = fvg.direction === 'BULLISH';
       const isFullyMitigated = fvg.status === 'FULLY_MITIGATED';
+      const isInvalidated = (fvg as any).status === 'INVALIDATED';
+
+      if (this.config.hideInvalidated && (isFullyMitigated || isInvalidated)) {
+        continue;
+      }
 
       visuals.push({
         id: `VIS-${fvg.id}`,
@@ -186,6 +194,10 @@ export class VisualAdapter {
     for (const ob of state.orderBlocks) {
       const isBull = ob.type === 'BULLISH_OB';
       const isInvalidated = ob.status === 'INVALIDATED';
+
+      if (this.config.hideInvalidated && isInvalidated) {
+        continue;
+      }
 
       visuals.push({
         id: `VIS-${ob.id}`,
@@ -228,6 +240,62 @@ export class VisualAdapter {
     if (setups && Array.isArray(setups) && setups.length > 0) {
       const setupVisuals = this.adaptSetupsToVisuals(setups, state, events);
       visuals.push(...setupVisuals);
+    }
+
+    // 8. Draw On Liquidity (DOL) / Market Target Line
+    // When no setup target line is active, mark the primary Draw On Liquidity target with a line
+    const hasSetupTarget = visuals.some((v) => v.id.endsWith('-TGT') || (v.id.startsWith('VIS-SETUP-') && v.id.includes('-TGT')));
+    if (!hasSetupTarget && state.liquidityLevels.length > 0) {
+      const currentPrice = state.activeSwingHigh?.price ?? state.activeSwingLow?.price ?? state.dealingRange?.equilibrium;
+
+      if (currentPrice && isFinite(currentPrice) && currentPrice > 0) {
+        let dolTarget: { price: number; type: string; category: string } | null = null;
+
+        if (state.trend === 'BULLISH') {
+          // Bullish bias -> Targets unswept Buy-Side Liquidity (BSL) above current price
+          const unsweptBsl = state.liquidityLevels
+            .filter((l) => l.type === 'BSL' && !l.swept && l.price > currentPrice)
+            .sort((a, b) => a.price - b.price);
+          if (unsweptBsl.length > 0) {
+            dolTarget = { price: unsweptBsl[0].price, type: 'BSL', category: unsweptBsl[0].category };
+          }
+        } else if (state.trend === 'BEARISH') {
+          // Bearish bias -> Targets unswept Sell-Side Liquidity (SSL) below current price
+          const unsweptSsl = state.liquidityLevels
+            .filter((l) => l.type === 'SSL' && !l.swept && l.price < currentPrice)
+            .sort((a, b) => b.price - a.price);
+          if (unsweptSsl.length > 0) {
+            dolTarget = { price: unsweptSsl[0].price, type: 'SSL', category: unsweptSsl[0].category };
+          }
+        } else {
+          // Neutral/Ranging -> Target nearest unswept liquidity level
+          const unswept = state.liquidityLevels
+            .filter((l) => !l.swept)
+            .sort((a, b) => Math.abs(a.price - currentPrice) - Math.abs(b.price - currentPrice));
+          if (unswept.length > 0) {
+            dolTarget = { price: unswept[0].price, type: unswept[0].type, category: unswept[0].category };
+          }
+        }
+
+        if (dolTarget && isFinite(dolTarget.price) && dolTarget.price > 0) {
+          const isBull = dolTarget.type === 'BSL';
+          visuals.push({
+            id: `VIS-DOL-TARGET-${dolTarget.type}`,
+            type: 'LINE',
+            symbol,
+            timeframe,
+            price: dolTarget.price,
+            startCandleIndex: Math.max(0, state.lastCandleIndex - 15),
+            endCandleIndex: undefined,
+            startTimestamp: state.lastUpdatedTimestamp,
+            lineStyle: 'DASHED',
+            color: isBull ? '#38bdf8' : '#f43f5e',
+            lineWidth: 2,
+            label: `🎯 TARGET (DOL ${dolTarget.type}) $${dolTarget.price.toFixed(2)}`,
+            zIndex: 85,
+          });
+        }
+      }
     }
 
     // Presentation Capping: limit visual render object count without altering underlying logical history
@@ -347,7 +415,8 @@ export class VisualAdapter {
 
     // A. Check Fair Value Gaps
     const matchingFvg = state.fairValueGaps.find((f) =>
-      isLong ? f.direction === 'BULLISH' : f.direction === 'BEARISH'
+      (isLong ? f.direction === 'BULLISH' : f.direction === 'BEARISH') &&
+      (!this.config.hideInvalidated || (f.status !== 'FULLY_MITIGATED' && (f as any).status !== 'INVALIDATED'))
     );
     if (matchingFvg && isFinite(matchingFvg.highPrice) && isFinite(matchingFvg.lowPrice)) {
       entryZone = {
@@ -364,7 +433,8 @@ export class VisualAdapter {
     // B. Check Order Blocks if no FVG
     if (!entryZone) {
       const matchingOb = state.orderBlocks.find((ob) =>
-        isLong ? ob.type === 'BULLISH_OB' : ob.type === 'BEARISH_OB'
+        (isLong ? ob.type === 'BULLISH_OB' : ob.type === 'BEARISH_OB') &&
+        (!this.config.hideInvalidated || ob.status !== 'INVALIDATED')
       );
       if (matchingOb && isFinite(matchingOb.highPrice) && isFinite(matchingOb.lowPrice)) {
         entryZone = {
@@ -597,5 +667,13 @@ export class VisualAdapter {
 
   public setFailClosedOnUnsyncedViewport(failClosed: boolean): void {
     this.config.failClosedOnUnsyncedViewport = failClosed;
+  }
+
+  public setHideInvalidated(hide: boolean): void {
+    this.config.hideInvalidated = hide;
+  }
+
+  public isHideInvalidated(): boolean {
+    return this.config.hideInvalidated ?? true;
   }
 }

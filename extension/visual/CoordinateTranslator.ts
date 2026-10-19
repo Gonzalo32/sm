@@ -101,6 +101,46 @@ export class CoordinateTranslator {
     this.isSynchronized = true;
   }
 
+  /**
+   * Pans the viewport by pixel deltas (e.g. from user dragging the chart).
+   * Horizontally shifts firstCandleIndex and lastCandleIndex.
+   * Vertically shifts minPrice and maxPrice.
+   */
+  public pan(deltaPxX: number, deltaPxY: number): void {
+    if (this.config.barWidth > 0 && Math.abs(deltaPxX) > 0) {
+      const barsDelta = -deltaPxX / this.config.barWidth;
+      this.config.firstCandleIndex += barsDelta;
+      this.config.lastCandleIndex += barsDelta;
+    }
+
+    const drawableHeight = this.config.height - this.config.topPadding - this.config.bottomPadding;
+    const priceRange = this.config.maxPrice - this.config.minPrice;
+    if (drawableHeight > 0 && priceRange > 0 && Math.abs(deltaPxY) > 0) {
+      // Inverted Y: dragging mouse down (+deltaY) moves prices down (+priceDelta to min/max)
+      const priceDelta = (deltaPxY / drawableHeight) * priceRange;
+      this.config.minPrice += priceDelta;
+      this.config.maxPrice += priceDelta;
+    }
+  }
+
+  /**
+   * Zooms the viewport by a scale factor anchored at mouseX pixel coordinate.
+   */
+  public zoom(zoomFactor: number, mouseX?: number): void {
+    if (zoomFactor <= 0 || !isFinite(zoomFactor)) return;
+    const currentSpan = Math.max(5, this.config.lastCandleIndex - this.config.firstCandleIndex);
+    const newSpan = Math.max(5, Math.min(1000, currentSpan * zoomFactor));
+    const spanDiff = newSpan - currentSpan;
+
+    const drawableWidth = this.config.width - this.config.leftPadding - this.config.rightPadding;
+    const ratio = mouseX !== undefined && drawableWidth > 0 ? (mouseX - this.config.leftPadding) / drawableWidth : 0.5;
+    const clampedRatio = Math.max(0, Math.min(1, ratio));
+
+    this.config.firstCandleIndex -= spanDiff * clampedRatio;
+    this.config.lastCandleIndex += spanDiff * (1 - clampedRatio);
+    this.config.barWidth = drawableWidth / newSpan;
+  }
+
   public getViewport(): ViewportConfig {
     return { ...this.config };
   }

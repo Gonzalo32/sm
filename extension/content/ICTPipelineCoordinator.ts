@@ -58,12 +58,19 @@ export class ICTPipelineCoordinator {
   private hud: ICTHUD | null = null;
   private renderer: CanvasRenderer | null = null;
 
+  // Extension & Overlay Controls
+  private isRunning: boolean = true;
+  private isChartOverlayVisible: boolean = true;
+
   // Market Analyst Modules
   private analystEngine: MarketAnalystEngine;
   private analystJournal: MarketAnalystJournal;
   private analystVisualAdapter: MarketAnalystVisualAdapter;
   private lastAnalysis: MarketAnalysis | null = null;
   private lastSessionContext: SessionClassificationResult | null = null;
+  private isDynamicAnalysisActive: boolean = false;
+  private lastAnalyzedCandleTimestamp: number = 0;
+  private lastPreferredDirection: string | null = null;
 
   constructor(
     symbol: string = 'MNQ',
@@ -99,23 +106,41 @@ export class ICTPipelineCoordinator {
     this.analystJournal = new MarketAnalystJournal();
     this.analystVisualAdapter = new MarketAnalystVisualAdapter();
 
-    // Hook HUD Analyst Callbacks
+    // Hook HUD Callbacks
     if (this.hud) {
       this.hud.onAnalyzeMarket = () => {
+        if (!this.isRunning) return;
+        this.setDynamicAnalysisActive(true);
         this.runMarketAnalysis({ allowDelayedFeed: true }).catch((err) => {
           if (this.debugMode) console.error('[ICT Pipeline] Analysis error:', err);
         });
       };
+      this.hud.onToggleDynamicAnalysis = (active: boolean) => {
+        this.setDynamicAnalysisActive(active);
+      };
       this.hud.onToggleAnalystOverlay = (visible: boolean) => {
-        this.analystVisualAdapter.setVisible(visible);
-        this.refreshVisuals();
+        this.setChartOverlayVisible(visible);
+      };
+      this.hud.onToggleChartOverlay = (visible: boolean) => {
+        this.setChartOverlayVisible(visible);
+      };
+      this.hud.onToggleRunning = (running: boolean) => {
+        this.setRunning(running);
+        if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+          chrome.storage.local.set({ extensionRunning: running });
+        }
       };
       this.hud.onClearAnalystOverlay = () => {
+        this.setDynamicAnalysisActive(false);
         this.analystVisualAdapter.clear();
         this.lastAnalysis = null;
         this.lastSessionContext = null;
+        this.lastPreferredDirection = null;
+        this.hud?.setDirectionChangeNotice(null);
         this.hud?.setAnalysis(null);
-        this.refreshVisuals();
+        if (this.renderer) {
+          this.renderer.clear();
+        }
       };
     }
 
@@ -164,7 +189,14 @@ export class ICTPipelineCoordinator {
     this.analystVisualAdapter.setViewportSynchronized(false);
     this.analystVisualAdapter.clear();
     this.lastAnalysis = null;
-    if (this.hud) this.hud.setAnalysis(null);
+    this.isDynamicAnalysisActive = false;
+    this.lastAnalyzedCandleTimestamp = 0;
+    this.lastPreferredDirection = null;
+    if (this.hud) {
+      this.hud.setDynamicAnalysisActive(false);
+      this.hud.setDirectionChangeNotice(null);
+      this.hud.setAnalysis(null);
+    }
 
     if (this.renderer) {
       this.renderer.getTranslator().resetViewportSync();
@@ -255,6 +287,64 @@ export class ICTPipelineCoordinator {
     return this.mtfEngine;
   }
 
+  public isRunningState(): boolean {
+    return this.isRunning;
+  }
+
+  public isOverlayVisibleState(): boolean {
+    return this.isChartOverlayVisible;
+  }
+
+  public setDynamicAnalysisActive(active: boolean): void {
+    this.isDynamicAnalysisActive = active;
+    if (this.hud) {
+      this.hud.setDynamicAnalysisActive(active);
+    }
+    if (active && this.getAnalysisEligibleCandles().length >= 30) {
+      this.runMarketAnalysis({ allowDelayedFeed: true }).catch((err) => {
+        if (this.debugMode) console.warn('[ICT Pipeline] Dynamic analysis trigger error:', err);
+      });
+    }
+  }
+
+  public isDynamicAnalysisActiveState(): boolean {
+    return this.isDynamicAnalysisActive;
+  }
+
+  public setRunning(running: boolean): void {
+    this.isRunning = running;
+    if (this.hud) {
+      this.hud.setRunning(running);
+    }
+    if (!running) {
+      if (this.replayEngine.getState().isPlaying) {
+        this.replayEngine.pause();
+      }
+      if (this.renderer) {
+        this.renderer.setVisible(false);
+      }
+    } else {
+      if (this.renderer && this.isChartOverlayVisible) {
+        this.renderer.setVisible(true);
+      }
+      this.refreshVisuals();
+    }
+  }
+
+  public setChartOverlayVisible(visible: boolean): void {
+    this.isChartOverlayVisible = visible;
+    this.analystVisualAdapter.setVisible(visible);
+    if (this.renderer) {
+      this.renderer.setVisible(visible && this.isRunning);
+    }
+    if (this.hud) {
+      this.hud.setChartOverlayVisible(visible);
+    }
+    if (visible && this.isRunning) {
+      this.refreshVisuals();
+    }
+  }
+
   public ingestCandle(candle: Candle, htfCandidateContext?: CandidateContext): PipelineEvaluationResult {
     this.mode = 'LIVE';
     this.adapter.ingestRealtimeCandle(candle);
@@ -302,6 +392,18 @@ export class ICTPipelineCoordinator {
   }
 
   public reevaluate(htfCandidateContext?: CandidateContext): PipelineEvaluationResult {
+    // If dynamic auto-analysis is enabled and running, auto-evaluate on newly confirmed closed candles
+    if (this.isDynamicAnalysisActive && this.isRunning) {
+      const eligible = this.getAnalysisEligibleCandles();
+      if (eligible.length >= 30) {
+        const latestClosedTs = eligible[eligible.length - 1].timestamp;
+        if (latestClosedTs !== this.lastAnalyzedCandleTimestamp) {
+          this.lastAnalyzedCandleTimestamp = latestClosedTs;
+          this.evaluateAnalysisSync({ allowDelayedFeed: true, isAutoUpdate: true });
+        }
+      }
+    }
+
     const candles = this.store.getCandles();
     return this.evaluateSlice(candles, undefined, htfCandidateContext);
   }
@@ -311,6 +413,11 @@ export class ICTPipelineCoordinator {
    */
   public refreshVisuals(): void {
     if (!this.renderer) return;
+
+    if (!this.isRunning || !this.isChartOverlayVisible) {
+      this.renderer.clear();
+      return;
+    }
 
     const candles = this.store.getCandles();
     const engineResult = this.ictEngine.process(candles, this.symbol, this.timeframe);
@@ -349,7 +456,9 @@ export class ICTPipelineCoordinator {
       );
     }
 
-    const merged = [...filteredSetupVisuals, ...analystVisuals];
+    const merged = (this.isChartOverlayVisible && this.isRunning)
+      ? [...filteredSetupVisuals, ...analystVisuals]
+      : [];
 
     this.renderer.updateVisuals(merged, {
       symbol: this.symbol,
@@ -362,11 +471,10 @@ export class ICTPipelineCoordinator {
   }
 
   /**
-   * User-triggered point-in-time Market Analysis execution.
-   * Evaluates strictly on confirmed closed history via getAnalysisEligibleCandles().
-   * By default, analysis results are transient (zero IndexedDB or ledger writes).
+   * Synchronous core evaluation of market analysis.
+   * Computes scenarios, handles directional transition tracking, updates overlay adapter and HUD.
    */
-  public async runMarketAnalysis(options?: { persistForecast?: boolean; allowDelayedFeed?: boolean }): Promise<MarketAnalysis> {
+  public evaluateAnalysisSync(options?: { allowDelayedFeed?: boolean; isAutoUpdate?: boolean }): MarketAnalysis {
     const analysisCandles = this.getAnalysisEligibleCandles();
     const engineResult = this.ictEngine.process(analysisCandles, this.symbol, this.timeframe);
     const confluences = this.confluenceEngine.evaluateConfluences(engineResult.state, engineResult.events);
@@ -388,7 +496,7 @@ export class ICTPipelineCoordinator {
       evalTimestamp
     );
 
-    // CP105: Explicit user-requested session classification on the latest confirmed closed candle
+    // CP105: Session classification on the latest confirmed closed candle
     if (latestCandle && isValidTimestamp(latestCandle.timestamp)) {
       try {
         this.lastSessionContext = SessionClassifier.classify(latestCandle.timestamp);
@@ -406,20 +514,30 @@ export class ICTPipelineCoordinator {
       analysis.sessionContext = this.lastSessionContext;
     }
 
-    this.lastAnalysis = analysis;
+    // Direction Shift Detection
+    const prevDirection = this.lastPreferredDirection;
+    const newDirection = analysis.preferredDirection;
 
-    // Checkpoint 102: Transient analysis contract — do NOT write forecasts to journal unless explicitly requested
-    if (options?.persistForecast === true) {
-      try {
-        const startTs = analysisCandles.length > 0 ? analysisCandles[0].timestamp : undefined;
-        const endTs = analysisCandles.length > 0 ? analysisCandles[analysisCandles.length - 1].timestamp : undefined;
-        await this.analystJournal.recordForecast(analysis, analysisCandles.length, startTs, endTs);
-      } catch (e) {
-        if (this.debugMode) {
-          console.warn('[ICT Pipeline Coordinator] Failed to record forecast to journal:', e);
-        }
+    if (
+      prevDirection &&
+      prevDirection !== newDirection &&
+      newDirection !== 'INDETERMINATE' &&
+      prevDirection !== 'INDETERMINATE'
+    ) {
+      if (this.debugMode) {
+        console.log(`[ICT Pipeline] Direction Shift Detected: ${prevDirection} -> ${newDirection}`);
+      }
+      if (this.hud) {
+        this.hud.setDirectionChangeNotice({
+          from: prevDirection,
+          to: newDirection,
+          timestamp: Date.now(),
+        });
       }
     }
+
+    this.lastPreferredDirection = newDirection;
+    this.lastAnalysis = analysis;
 
     // Adapt visuals
     const currentIdx = analysisCandles.length > 0 ? analysisCandles.length - 1 : 0;
@@ -440,6 +558,47 @@ export class ICTPipelineCoordinator {
 
     // Refresh renderer
     this.refreshVisuals();
+
+    return analysis;
+  }
+
+  /**
+   * User-triggered point-in-time Market Analysis execution.
+   * Evaluates strictly on confirmed closed history via getAnalysisEligibleCandles().
+   * Enables continuous dynamic auto-evaluation by default.
+   */
+  public async runMarketAnalysis(options?: {
+    persistForecast?: boolean;
+    allowDelayedFeed?: boolean;
+    isAutoUpdate?: boolean;
+    enableDynamicMode?: boolean;
+  }): Promise<MarketAnalysis> {
+    if (options?.enableDynamicMode !== false && !options?.isAutoUpdate) {
+      this.isDynamicAnalysisActive = true;
+      if (this.hud) {
+        this.hud.setDynamicAnalysisActive(true);
+      }
+    }
+
+    const analysisCandles = this.getAnalysisEligibleCandles();
+    if (analysisCandles.length > 0) {
+      this.lastAnalyzedCandleTimestamp = analysisCandles[analysisCandles.length - 1].timestamp;
+    }
+
+    const analysis = this.evaluateAnalysisSync(options);
+
+    // Checkpoint 102: Transient analysis contract — do NOT write forecasts to journal unless explicitly requested
+    if (options?.persistForecast === true) {
+      try {
+        const startTs = analysisCandles.length > 0 ? analysisCandles[0].timestamp : undefined;
+        const endTs = analysisCandles.length > 0 ? analysisCandles[analysisCandles.length - 1].timestamp : undefined;
+        await this.analystJournal.recordForecast(analysis, analysisCandles.length, startTs, endTs);
+      } catch (e) {
+        if (this.debugMode) {
+          console.warn('[ICT Pipeline Coordinator] Failed to record forecast to journal:', e);
+        }
+      }
+    }
 
     return analysis;
   }
@@ -478,7 +637,9 @@ export class ICTPipelineCoordinator {
     // 6. Adapt Visuals (including CP84 confirmed setup annotations and analyst overlays)
     const setupVisuals = this.visualAdapter.adaptStateToVisuals(state, events, candidateContext, setups);
     const analystVisuals = this.analystVisualAdapter.getVisuals();
-    const visuals = [...setupVisuals, ...analystVisuals];
+    const visuals = (this.isChartOverlayVisible && this.isRunning)
+      ? [...setupVisuals, ...analystVisuals]
+      : [];
 
     const executionTimeMs = Math.round(performance.now() - startTime);
 

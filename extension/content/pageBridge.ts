@@ -18,6 +18,8 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
   let currentSymbol = 'MNQ';
   let currentTimeframe = '1m';
   let activeCandleTimestamp = 0;
+  let lastKnownCandle: Candle | null = null;
+  let lastRealtimeFeedTimestamp = Date.now();
   let lastCachedBatch: { candles: Candle[]; symbol: string; timeframe: string } | null = null;
 
   // Detect Symbol & Timeframe from TradingView widget or DOM
@@ -55,6 +57,7 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
       currentSymbol = newSymbol;
       currentTimeframe = newTimeframe;
       activeCandleTimestamp = 0;
+      lastKnownCandle = null;
       window.postMessage({
         type: 'ICT_CONTEXT_CHANGED',
         payload: { symbol: currentSymbol, timeframe: currentTimeframe },
@@ -70,15 +73,34 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
   // Checkpoint 86: Passive Viewport Inspection from TradingView Widget API (Strict Read-Only)
   let lastReportedViewport: { minPrice: number; maxPrice: number; width: number; height: number; firstIdx?: number; lastIdx?: number } | null = null;
 
+  function getTradingViewWidget(): any {
+    const w = window as any;
+    if (w.tvWidget && typeof w.tvWidget.activeChart === 'function') return w.tvWidget;
+    if (w.widget && typeof w.widget.activeChart === 'function') return w.widget;
+    if (w._tvWidget && typeof w._tvWidget.activeChart === 'function') return w._tvWidget;
+    if (w.chartWidget && typeof w.chartWidget.activeChart === 'function') return w.chartWidget;
+    return null;
+  }
+
   function inspectTradingViewViewport() {
     try {
-      const tvWidget = (window as any).tvWidget;
+      const tvWidget = getTradingViewWidget();
       if (!tvWidget || typeof tvWidget.activeChart !== 'function') {
         return;
       }
 
       const chart = tvWidget.activeChart();
       if (!chart) return;
+
+      // Subscribe to visible range changes for real-time panning/zooming updates
+      if (typeof chart.onVisibleRangeChanged === 'function' && !(chart as any).__ict_range_subscribed__) {
+        (chart as any).__ict_range_subscribed__ = true;
+        try {
+          chart.onVisibleRangeChanged().subscribe(null, () => {
+            inspectTradingViewViewport();
+          });
+        } catch (e) {}
+      }
 
       let minPrice: number | null = null;
       let maxPrice: number | null = null;
@@ -112,8 +134,26 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
 
       if (typeof chart.getVisibleRange === 'function') {
         const vr = chart.getVisibleRange();
-        if (vr && typeof vr.from === 'number' && typeof vr.to === 'number') {
-          // If range is available, can estimate visible bars
+        if (vr && typeof vr.from === 'number' && typeof vr.to === 'number' && vr.to > vr.from) {
+          if (lastCachedBatch && Array.isArray(lastCachedBatch.candles) && lastCachedBatch.candles.length > 0) {
+            const candles = lastCachedBatch.candles;
+            const fromMs = vr.from > 1e11 ? vr.from : vr.from * 1000;
+            const toMs = vr.to > 1e11 ? vr.to : vr.to * 1000;
+            const fIdx = candles.findIndex((c) => c.timestamp >= fromMs);
+            const lIdx = candles.findIndex((c) => c.timestamp >= toMs);
+            if (fIdx !== -1) {
+              firstCandleIndex = fIdx;
+              lastCandleIndex = lIdx !== -1 ? lIdx : candles.length - 1;
+            } else {
+              const intervalMs = currentTimeframe === '1m' ? 60000 : currentTimeframe === '5m' ? 300000 : 900000;
+              const baseTs = candles[0].timestamp;
+              firstCandleIndex = Math.max(0, Math.floor((fromMs - baseTs) / intervalMs));
+              lastCandleIndex = Math.max(firstCandleIndex + 1, Math.floor((toMs - baseTs) / intervalMs));
+            }
+          } else if (vr.to <= 10000) {
+            firstCandleIndex = Math.max(0, Math.round(vr.from));
+            lastCandleIndex = Math.max(firstCandleIndex + 1, Math.round(vr.to));
+          }
         }
       }
 
@@ -122,7 +162,9 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
         lastReportedViewport.minPrice === minPrice &&
         lastReportedViewport.maxPrice === maxPrice &&
         lastReportedViewport.width === width &&
-        lastReportedViewport.height === height
+        lastReportedViewport.height === height &&
+        lastReportedViewport.firstIdx === firstCandleIndex &&
+        lastReportedViewport.lastIdx === lastCandleIndex
       ) {
         return;
       }
@@ -150,6 +192,9 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
     }
   }
 
+  window.addEventListener('wheel', () => setTimeout(inspectTradingViewViewport, 30), { passive: true });
+  window.addEventListener('mouseup', () => setTimeout(inspectTradingViewViewport, 30), { passive: true });
+
   setInterval(inspectTradingViewViewport, 500);
 
   // Intercept WebSocket Stream for Real-time Candle Feeds
@@ -157,30 +202,44 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
   (window as any).WebSocket = function (url: string | URL, protocols?: string | string[]) {
     const ws = new OriginalWebSocket(url, protocols);
 
+    function processRawWSData(dataStr: string) {
+      if (!dataStr) return;
+      if (dataStr.startsWith('~m~')) {
+        // TradingView protocol framing: ~m~len~m~json
+        const parts = dataStr.split('~m~');
+        for (const part of parts) {
+          const trimmed = part ? part.trim() : '';
+          if (trimmed && (trimmed.startsWith('{') || trimmed.startsWith('['))) {
+            try {
+              const parsed = JSON.parse(trimmed);
+              handleParsedWSMessage(parsed);
+            } catch (e) {}
+          }
+        }
+      } else if (dataStr.startsWith('{') || dataStr.startsWith('[')) {
+        try {
+          const parsed = JSON.parse(dataStr);
+          handleParsedWSMessage(parsed);
+        } catch (e) {}
+      }
+    }
+
     ws.addEventListener('message', (event) => {
       try {
         if (typeof event.data === 'string') {
-          // TradingView Datafeed or Rithmic WS frame parsing
-          let parsed: any = null;
-
-          if (event.data.startsWith('~m~')) {
-            // TradingView protocol framing: ~m~len~m~json
-            const parts = event.data.split('~m~');
-            for (const part of parts) {
-              if (part && part.startsWith('{')) {
-                try {
-                  parsed = JSON.parse(part);
-                  handleParsedWSMessage(parsed);
-                } catch (e) {}
-              }
-            }
-          } else if (event.data.startsWith('{')) {
-            parsed = JSON.parse(event.data);
-            handleParsedWSMessage(parsed);
-          }
+          processRawWSData(event.data);
+        } else if (event.data instanceof Blob) {
+          event.data.text().then((text) => {
+            processRawWSData(text);
+          }).catch(() => {});
+        } else if (event.data instanceof ArrayBuffer) {
+          try {
+            const text = new TextDecoder('utf-8').decode(event.data);
+            processRawWSData(text);
+          } catch (e) {}
         }
       } catch (err) {
-        // Non-JSON or binary WS payload
+        // Non-JSON or unsupported WS payload
       }
     });
 
@@ -267,94 +326,211 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
     }
   }
 
+  function emitCandleUpdate(candle: Candle) {
+    lastKnownCandle = { ...candle };
+    lastRealtimeFeedTimestamp = Date.now();
+
+    let eventType = 'ICT_CANDLE_UPDATE';
+
+    if (activeCandleTimestamp === 0) {
+      eventType = 'ICT_NEW_CANDLE';
+      activeCandleTimestamp = candle.timestamp;
+    } else if (candle.timestamp > activeCandleTimestamp) {
+      // Emit close for previous, then new candle
+      window.postMessage({
+        type: 'ICT_CANDLE_CLOSE',
+        candle,
+        symbol: currentSymbol,
+        timeframe: currentTimeframe,
+      }, '*');
+      
+      eventType = 'ICT_NEW_CANDLE';
+      activeCandleTimestamp = candle.timestamp;
+    }
+
+    window.postMessage({
+      type: eventType,
+      candle,
+      symbol: currentSymbol,
+      timeframe: currentTimeframe,
+    }, '*');
+  }
+
   function handleParsedWSMessage(parsed: any) {
     if (!parsed) return;
 
-    // Check if payload contains bar / ohlc update
-    let candleData: any = null;
+    let candleData: Candle | null = null;
 
-    if (parsed.m === 'timescale_update' && parsed.p && parsed.p[1]) {
-      // TradingView timescale_update format
+    // A. TradingView Real-time Data: 'timescale_update' and 'du' (streaming updates)
+    if ((parsed.m === 'timescale_update' || parsed.m === 'du') && parsed.p && parsed.p[1]) {
       const series = parsed.p[1];
-      const keys = Object.keys(series);
-      if (keys.length > 0 && series[keys[0]].s) {
-        const bars = series[keys[0]].s;
-        if (bars.length > 0) {
-          if (bars.length > 1) {
-            // Checkpoint 101: Multi-bar historical batch delivery
-            const batchCandles: Candle[] = bars.map((b: any) => ({
-              timestamp: b.v[0] * 1000,
-              open: Number(b.v[1]),
-              high: Number(b.v[2]),
-              low: Number(b.v[3]),
-              close: Number(b.v[4]),
-              volume: b.v[5] !== undefined ? Number(b.v[5]) : 0,
-            }));
+      if (typeof series === 'object') {
+        for (const key of Object.keys(series)) {
+          const sObj = series[key];
+          if (!sObj) continue;
 
-            lastCachedBatch = {
-              candles: batchCandles,
-              symbol: currentSymbol,
-              timeframe: currentTimeframe,
-            };
+          // Check multi-bar array in .s
+          if (Array.isArray(sObj.s) && sObj.s.length > 0) {
+            const bars = sObj.s;
+            if (bars.length > 1) {
+              const batchCandles: Candle[] = bars
+                .filter((b: any) => b && Array.isArray(b.v) && b.v.length >= 5)
+                .map((b: any) => {
+                  const rawT = Number(b.v[0]);
+                  return {
+                    timestamp: rawT > 1e11 ? rawT : rawT * 1000,
+                    open: Number(b.v[1]),
+                    high: Number(b.v[2]),
+                    low: Number(b.v[3]),
+                    close: Number(b.v[4]),
+                    volume: b.v[5] !== undefined ? Number(b.v[5]) : 0,
+                  };
+                });
 
-            window.postMessage({
-              type: 'ICT_HISTORICAL_BATCH',
-              candles: batchCandles,
-              symbol: currentSymbol,
-              timeframe: currentTimeframe,
-            }, '*');
+              if (batchCandles.length > 0) {
+                lastCachedBatch = {
+                  candles: batchCandles,
+                  symbol: currentSymbol,
+                  timeframe: currentTimeframe,
+                };
+                window.postMessage({
+                  type: 'ICT_HISTORICAL_BATCH',
+                  candles: batchCandles,
+                  symbol: currentSymbol,
+                  timeframe: currentTimeframe,
+                }, '*');
+              }
+            }
+
+            const lastItem = bars[bars.length - 1];
+            if (lastItem && Array.isArray(lastItem.v) && lastItem.v.length >= 5) {
+              const rawT = Number(lastItem.v[0]);
+              candleData = {
+                timestamp: rawT > 1e11 ? rawT : rawT * 1000,
+                open: Number(lastItem.v[1]),
+                high: Number(lastItem.v[2]),
+                low: Number(lastItem.v[3]),
+                close: Number(lastItem.v[4]),
+                volume: lastItem.v[5] !== undefined ? Number(lastItem.v[5]) : 0,
+              };
+            }
           }
 
-          const lastBar = bars[bars.length - 1].v; // [time, open, high, low, close, volume]
-          candleData = {
-            timestamp: lastBar[0] * 1000,
-            open: Number(lastBar[1]),
-            high: Number(lastBar[2]),
-            low: Number(lastBar[3]),
-            close: Number(lastBar[4]),
-            volume: lastBar[5] !== undefined ? Number(lastBar[5]) : 0,
-          };
+          // Check Latest Bar Summary in .lbs (TradingView streaming tick/bar update)
+          if (sObj.lbs && Array.isArray(sObj.lbs.v) && sObj.lbs.v.length >= 5) {
+            const b = sObj.lbs.v;
+            const rawT = Number(b[0]);
+            candleData = {
+              timestamp: rawT > 1e11 ? rawT : rawT * 1000,
+              open: Number(b[1]),
+              high: Number(b[2]),
+              low: Number(b[3]),
+              close: Number(b[4]),
+              volume: b[5] !== undefined ? Number(b[5]) : 0,
+            };
+          }
+
+          if (candleData) break;
         }
       }
-    } else if (parsed.open && parsed.high && parsed.low && parsed.close) {
+    } else if (parsed.m === 'qsd' && parsed.p && parsed.p[1]) {
+      // TradingView Quote Stream Data (live last price update)
+      const qData = parsed.p[1];
+      const lp = qData?.v?.lp ?? qData?.lp;
+      if (typeof lp === 'number' && isFinite(lp) && lp > 0 && lastKnownCandle) {
+        candleData = {
+          ...lastKnownCandle,
+          high: Math.max(lastKnownCandle.high, lp),
+          low: Math.min(lastKnownCandle.low, lp),
+          close: lp,
+        };
+      }
+    } else if (parsed.open !== undefined && parsed.high !== undefined && parsed.low !== undefined && parsed.close !== undefined) {
+      const rawT = Number(parsed.timestamp || parsed.time || parsed.t || Date.now());
       candleData = {
-        timestamp: parsed.timestamp || parsed.time || Date.now(),
+        timestamp: rawT > 1e11 ? rawT : rawT * 1000,
         open: Number(parsed.open),
         high: Number(parsed.high),
         low: Number(parsed.low),
         close: Number(parsed.close),
         volume: parsed.volume ? Number(parsed.volume) : 0,
       };
+    } else if (parsed.o !== undefined && parsed.h !== undefined && parsed.l !== undefined && parsed.c !== undefined) {
+      const rawT = Number(parsed.t || parsed.time || Date.now());
+      candleData = {
+        timestamp: rawT > 1e11 ? rawT : rawT * 1000,
+        open: Number(parsed.o),
+        high: Number(parsed.h),
+        low: Number(parsed.l),
+        close: Number(parsed.c),
+        volume: parsed.v ? Number(parsed.v) : 0,
+      };
+    } else if (parsed.bar && (parsed.bar.open !== undefined || parsed.bar.o !== undefined)) {
+      const b = parsed.bar;
+      const rawT = Number(b.timestamp || b.time || b.t || Date.now());
+      candleData = {
+        timestamp: rawT > 1e11 ? rawT : rawT * 1000,
+        open: Number(b.open ?? b.o),
+        high: Number(b.high ?? b.h),
+        low: Number(b.low ?? b.l),
+        close: Number(b.close ?? b.c),
+        volume: Number(b.volume ?? b.v ?? 0),
+      };
+    } else if (parsed.k && (parsed.k.o !== undefined || parsed.k.c !== undefined)) {
+      const k = parsed.k;
+      const rawT = Number(k.t || Date.now());
+      candleData = {
+        timestamp: rawT > 1e11 ? rawT : rawT * 1000,
+        open: Number(k.o),
+        high: Number(k.h),
+        low: Number(k.l),
+        close: Number(k.c),
+        volume: Number(k.v || 0),
+      };
     }
 
     if (candleData) {
-      const candle: Candle = candleData;
-      let eventType = 'ICT_CANDLE_UPDATE';
-
-      if (activeCandleTimestamp === 0) {
-        eventType = 'ICT_NEW_CANDLE';
-        activeCandleTimestamp = candle.timestamp;
-      } else if (candle.timestamp > activeCandleTimestamp) {
-        // Emit close for previous, then new candle
-        window.postMessage({
-          type: 'ICT_CANDLE_CLOSE',
-          candle,
-          symbol: currentSymbol,
-          timeframe: currentTimeframe,
-        }, '*');
-        
-        eventType = 'ICT_NEW_CANDLE';
-        activeCandleTimestamp = candle.timestamp;
-      }
-
-      window.postMessage({
-        type: eventType,
-        candle,
-        symbol: currentSymbol,
-        timeframe: currentTimeframe,
-      }, '*');
+      emitCandleUpdate(candleData);
     }
   }
+
+  // Passive DOM Realtime OHLC inspection fallback
+  function inspectRealtimeDOMPrice() {
+    if (Date.now() - lastRealtimeFeedTimestamp < 1500 && lastKnownCandle) {
+      return;
+    }
+
+    try {
+      const legendValues = document.querySelectorAll(
+        '[class*="itemValue-"], [class*="valueValue-"], .pane-legend-item-value, [data-name="legend-series-item"] [class*="value"]'
+      );
+      if (legendValues.length >= 4) {
+        const o = parseFloat(legendValues[0]?.textContent?.replace(/,/g, '') || '');
+        const h = parseFloat(legendValues[1]?.textContent?.replace(/,/g, '') || '');
+        const l = parseFloat(legendValues[2]?.textContent?.replace(/,/g, '') || '');
+        const c = parseFloat(legendValues[3]?.textContent?.replace(/,/g, '') || '');
+
+        if (isFinite(o) && isFinite(h) && isFinite(l) && isFinite(c) && o > 0 && h >= l) {
+          const now = Date.now();
+          const intervalMs = currentTimeframe === '1m' ? 60000 : currentTimeframe === '5m' ? 300000 : 900000;
+          const barTimestamp = Math.floor(now / intervalMs) * intervalMs;
+
+          emitCandleUpdate({
+            timestamp: barTimestamp,
+            open: o,
+            high: h,
+            low: l,
+            close: c,
+            volume: 0,
+          });
+        }
+      }
+    } catch (e) {
+      // Passive fallback, ignore errors
+    }
+  }
+
+  setInterval(inspectRealtimeDOMPrice, 500);
 
   // Simulated & Real Historical Data Fetcher Test Probe
   function runHistoricalScanProbe(requestedCount: number): HistoricalFetchReport {

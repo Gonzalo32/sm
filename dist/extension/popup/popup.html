@@ -72,7 +72,12 @@
 <body>
   <div class="header">
     <div class="title">ICT Assistant</div>
-    <div class="status-badge">Phase 0 — Investigation</div>
+    <div class="status-badge" id="extension-status-badge" style="background:#22c55e;">ACTIVA</div>
+  </div>
+
+  <div class="card" style="display:flex; flex-direction:column; gap:8px;">
+    <button id="btn-toggle-power" style="background:#ef4444;">⏹ Detener Extensión</button>
+    <button id="btn-toggle-overlay" style="background:#1e293b; border:1px solid #475569; color:#cbd5e1;">👁 Ocultar Gráfico</button>
   </div>
 
   <div class="card">
@@ -98,7 +103,7 @@
     </div>
   </div>
 
-  <button id="btn-scan">Trigger Probe Scan</button>
+  <button id="btn-scan" style="background:#0284c7;">Trigger Probe Scan</button>
 
 </body>
 </html>

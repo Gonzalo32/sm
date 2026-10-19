@@ -88,6 +88,7 @@ export interface SetupVisualAnnotation {
 export interface VisualAdapterConfig {
   debugMode: boolean;
   failClosedOnUnsyncedViewport?: boolean;
+  hideInvalidated?: boolean;
   colorScheme: {
     swingHigh: string;
     swingLow: string;
@@ -111,6 +112,7 @@ export interface VisualAdapterConfig {
 
 export const DEFAULT_VISUAL_CONFIG: VisualAdapterConfig = {
   debugMode: true,
+  hideInvalidated: true,
   colorScheme: {
     swingHigh: '#f43f5e',
     swingLow: '#10b981',
