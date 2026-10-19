@@ -61,6 +61,10 @@ export class ICTHUD {
     timestamp: number;
   } | null = null;
 
+  // Position Sizing & Risk Management State
+  private userRiskBudgetUsd: number = 100;
+  private selectedInstrumentType: 'MNQ' | 'NQ' = 'MNQ';
+
   // Market Analyst Callbacks
   public onAnalyzeMarket?: () => void;
   public onToggleDynamicAnalysis?: (active: boolean) => void;
@@ -82,6 +86,18 @@ export class ICTHUD {
   public onValidationReview?: (caseId: string, status: 'CLEAR' | 'BORDERLINE' | 'QUESTIONABLE', reason?: string, notes?: string) => void;
 
   constructor() {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const savedRisk = localStorage.getItem('ict_risk_budget_usd');
+        if (savedRisk && isFinite(Number(savedRisk)) && Number(savedRisk) > 0) {
+          this.userRiskBudgetUsd = Number(savedRisk);
+        }
+        const savedType = localStorage.getItem('ict_contract_type');
+        if (savedType === 'MNQ' || savedType === 'NQ') {
+          this.selectedInstrumentType = savedType;
+        }
+      } catch (_) {}
+    }
     this.mount();
   }
 
@@ -267,6 +283,57 @@ export class ICTHUD {
 
   public setDirectionChangeNotice(notice: { from: string; to: string; timestamp: number } | null): void {
     this.lastDirectionChangeNotice = notice;
+  }
+
+  public getUserRiskBudget(): number {
+    return this.userRiskBudgetUsd;
+  }
+
+  public setUserRiskBudget(budget: number): void {
+    if (isFinite(budget) && budget > 0) {
+      this.userRiskBudgetUsd = budget;
+      if (typeof localStorage !== 'undefined') {
+        try {
+          localStorage.setItem('ict_risk_budget_usd', String(budget));
+        } catch (_) {}
+      }
+    }
+  }
+
+  public getSelectedInstrumentType(): 'MNQ' | 'NQ' {
+    return this.selectedInstrumentType;
+  }
+
+  public setSelectedInstrumentType(type: 'MNQ' | 'NQ'): void {
+    this.selectedInstrumentType = type;
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('ict_contract_type', type);
+      } catch (_) {}
+    }
+  }
+
+  public calculatePositionSize(riskDistancePts: number, estimatedMovePts?: number): {
+    contracts: number;
+    totalRiskUsd: number;
+    totalRewardUsd: number;
+    riskPerContract: number;
+    pointValue: number;
+  } {
+    const pointValue = this.selectedInstrumentType === 'MNQ' ? 2 : 20;
+    const riskPerContract = Math.max(0, riskDistancePts * pointValue);
+    const contracts = riskPerContract > 0 ? Math.floor(this.userRiskBudgetUsd / riskPerContract) : 0;
+    const totalRiskUsd = contracts * riskPerContract;
+    const movePts = estimatedMovePts && estimatedMovePts > 0 ? estimatedMovePts : 0;
+    const totalRewardUsd = contracts * movePts * pointValue;
+
+    return {
+      contracts,
+      totalRiskUsd,
+      totalRewardUsd,
+      riskPerContract,
+      pointValue,
+    };
   }
 
   public getAnalystOverlayVisible(): boolean {
@@ -708,6 +775,63 @@ export class ICTHUD {
             ${scenario.frictionAssumptionNote ? `<div style="color:#64748b; font-size:8px; margin-top:4px; line-height:1.2;">* ${scenario.frictionAssumptionNote}</div>` : ''}
           </div>
         `;
+
+        if (scenario.riskDistance !== undefined && isFinite(scenario.riskDistance) && scenario.riskDistance > 0) {
+          const sizing = this.calculatePositionSize(
+            scenario.riskDistance,
+            scenario.estimatedNetMove || scenario.estimatedGrossMove
+          );
+          const isMnq = this.selectedInstrumentType === 'MNQ';
+          const isNq = this.selectedInstrumentType === 'NQ';
+
+          scenarioDetails += `
+            <div style="margin-top:6px; background:#0b1120; padding:8px 9px; border-radius:6px; border:1px solid #059669; box-shadow:0 2px 6px rgba(5,150,105,0.15);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="color:#34d399; font-weight:800; font-size:9.5px; letter-spacing:0.3px;">🛡️ CALCULADORA FONDEO</span>
+                <div style="display:flex; gap:3px;">
+                  <button class="btn-risk-type" data-type="MNQ" style="padding:2px 5px; font-size:8.5px; font-weight:700; border-radius:3px; cursor:pointer; border:1px solid ${isMnq ? '#34d399' : '#475569'}; background:${isMnq ? '#065f46' : '#1e293b'}; color:${isMnq ? '#f0fdf4' : '#94a3b8'};">MNQ ($2/pt)</button>
+                  <button class="btn-risk-type" data-type="NQ" style="padding:2px 5px; font-size:8.5px; font-weight:700; border-radius:3px; cursor:pointer; border:1px solid ${isNq ? '#34d399' : '#475569'}; background:${isNq ? '#065f46' : '#1e293b'}; color:${isNq ? '#f0fdf4' : '#94a3b8'};">NQ ($20/pt)</button>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;">
+                <span style="color:#94a3b8; font-size:9px;">Presupuesto de Riesgo:</span>
+                <div style="display:flex; align-items:center; gap:2px;">
+                  <span style="color:#cbd5e1; font-size:9.5px; font-weight:700;">$</span>
+                  <input id="input-risk-budget" type="number" min="10" max="5000" step="10" value="${this.userRiskBudgetUsd}" style="width:52px; background:#090d16; border:1px solid #475569; border-radius:4px; color:#f8fafc; font-size:9.5px; font-weight:700; padding:1px 3px; text-align:right;" />
+                  <span style="color:#94a3b8; font-size:8.5px;">USD</span>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:3px; margin-bottom:6px;">
+                ${[50, 100, 150, 200, 300].map((val) => `
+                  <button class="btn-risk-preset" data-val="${val}" style="flex:1; padding:2px 0; font-size:8.5px; font-weight:700; border-radius:3px; cursor:pointer; border:1px solid ${this.userRiskBudgetUsd === val ? '#34d399' : '#334155'}; background:${this.userRiskBudgetUsd === val ? 'rgba(52,211,153,0.2)' : '#1e293b'}; color:${this.userRiskBudgetUsd === val ? '#34d399' : '#94a3b8'};">$${val}</button>
+                `).join('')}
+              </div>
+
+              ${sizing.contracts > 0 ? `
+                <div style="background:rgba(6,78,59,0.35); border:1px solid rgba(52,211,153,0.3); border-radius:5px; padding:5px 7px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                    <span style="color:#cbd5e1; font-size:9px;">Tamaño Sugerido:</span>
+                    <b style="color:#34d399; font-size:11px; font-weight:800;">🎯 ${sizing.contracts} Contrato${sizing.contracts > 1 ? 's' : ''} ${this.selectedInstrumentType}</b>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:8.5px; margin-bottom:1px;">
+                    <span style="color:#94a3b8;">Riesgo Total en SL:</span>
+                    <span style="color:#f87171; font-weight:700;">-$${sizing.totalRiskUsd.toFixed(2)} USD (${scenario.riskDistance.toFixed(2)} pts)</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:8.5px;">
+                    <span style="color:#94a3b8;">Beneficio Est. (Target):</span>
+                    <span style="color:#4ade80; font-weight:700;">+$${sizing.totalRewardUsd.toFixed(2)} USD</span>
+                  </div>
+                </div>
+              ` : `
+                <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:5px; padding:4px 6px; color:#fca5a5; font-size:8.5px; line-height:1.2;">
+                  ⚠️ <b>Riesgo Excedido:</b> 1 contrato ${this.selectedInstrumentType} arriesga <b>$${sizing.riskPerContract.toFixed(2)} USD</b> (${scenario.riskDistance.toFixed(2)} pts), superando tu límite de <b>$${this.userRiskBudgetUsd} USD</b>. No se recomienda operar.
+                </div>
+              `}
+            </div>
+          `;
+        }
       }
 
       let sessionBadgeHtml = '';
@@ -850,6 +974,44 @@ export class ICTHUD {
         this.onClearAnalystOverlay();
       }
     });
+
+    // Position Sizing Listeners
+    document.querySelectorAll('.btn-risk-type').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const type = (e.currentTarget as HTMLElement).getAttribute('data-type') as 'MNQ' | 'NQ';
+        if (type) {
+          this.setSelectedInstrumentType(type);
+          if (this.lastContext) {
+            this.render(this.lastContext, this.lastOptions);
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-risk-preset').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const val = Number((e.currentTarget as HTMLElement).getAttribute('data-val'));
+        if (isFinite(val) && val > 0) {
+          this.setUserRiskBudget(val);
+          if (this.lastContext) {
+            this.render(this.lastContext, this.lastOptions);
+          }
+        }
+      });
+    });
+
+    const riskInput = document.getElementById('input-risk-budget') as HTMLInputElement | null;
+    if (riskInput) {
+      riskInput.addEventListener('change', () => {
+        const val = Number(riskInput.value);
+        if (isFinite(val) && val > 0) {
+          this.setUserRiskBudget(val);
+          if (this.lastContext) {
+            this.render(this.lastContext, this.lastOptions);
+          }
+        }
+      });
+    }
 
     document.getElementById('btn-hud-minimize')?.addEventListener('click', () => {
       this.isMinimized = true;

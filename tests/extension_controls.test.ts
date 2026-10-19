@@ -420,4 +420,78 @@ describe('Extension Controls — Stop/Resume & Hide Chart Overlay Tests', () => 
       expect(coordinator.getLastAnalysis()).toBeNull();
     });
   });
+
+  describe('Funded Account Position Sizing & Risk Management Tests', () => {
+    it('calculates suggested MNQ contracts accurately based on $2/pt', () => {
+      hud.setUserRiskBudget(100);
+      hud.setSelectedInstrumentType('MNQ');
+
+      // 15 pts risk * $2/pt = $30 risk per contract.
+      // Floor($100 / $30) = 3 contracts.
+      // Estimated move: 30 pts * $2/pt = $60 reward per contract * 3 = $180 total reward.
+      const sizing = coordinator.calculatePositionSize(15, 30);
+
+      expect(sizing.pointValue).toBe(2);
+      expect(sizing.contracts).toBe(3);
+      expect(sizing.riskPerContract).toBe(30);
+      expect(sizing.totalRiskUsd).toBe(90);
+      expect(sizing.totalRewardUsd).toBe(180);
+    });
+
+    it('calculates suggested NQ contracts accurately based on $20/pt', () => {
+      hud.setUserRiskBudget(1000);
+      hud.setSelectedInstrumentType('NQ');
+
+      // 15 pts risk * $20/pt = $300 risk per contract.
+      // Floor($1000 / $300) = 3 contracts.
+      const sizing = coordinator.calculatePositionSize(15, 30);
+
+      expect(sizing.pointValue).toBe(20);
+      expect(sizing.contracts).toBe(3);
+      expect(sizing.riskPerContract).toBe(300);
+      expect(sizing.totalRiskUsd).toBe(900);
+      expect(sizing.totalRewardUsd).toBe(1800);
+    });
+
+    it('returns 0 contracts when risk exceeds user budget (protects funded account drawdown)', () => {
+      hud.setUserRiskBudget(50);
+      hud.setSelectedInstrumentType('MNQ');
+
+      // 30 pts risk * $2/pt = $60 risk per contract.
+      // Budget is $50, so 0 contracts can be safely taken.
+      const sizing = coordinator.calculatePositionSize(30, 60);
+
+      expect(sizing.contracts).toBe(0);
+      expect(sizing.riskPerContract).toBe(60);
+      expect(sizing.totalRiskUsd).toBe(0);
+    });
+
+    it('updates contract calculation dynamically when budget changes', () => {
+      hud.setSelectedInstrumentType('MNQ');
+
+      // 20 pts risk ($40/contract)
+      hud.setUserRiskBudget(50);
+      expect(coordinator.calculatePositionSize(20).contracts).toBe(1);
+
+      hud.setUserRiskBudget(150);
+      expect(coordinator.calculatePositionSize(20).contracts).toBe(3);
+
+      hud.setUserRiskBudget(200);
+      expect(coordinator.calculatePositionSize(20).contracts).toBe(5);
+    });
+
+    it('switches point value seamlessly when changing instrument type', () => {
+      coordinator.setUserRiskBudget(500);
+
+      coordinator.setSelectedInstrumentType('MNQ');
+      expect(coordinator.getSelectedInstrumentType()).toBe('MNQ');
+      // 10 pts * $2 = $20/contract -> 25 contracts
+      expect(coordinator.calculatePositionSize(10).contracts).toBe(25);
+
+      coordinator.setSelectedInstrumentType('NQ');
+      expect(coordinator.getSelectedInstrumentType()).toBe('NQ');
+      // 10 pts * $20 = $200/contract -> 2 contracts
+      expect(coordinator.calculatePositionSize(10).contracts).toBe(2);
+    });
+  });
 });

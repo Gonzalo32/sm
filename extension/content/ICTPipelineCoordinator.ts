@@ -311,6 +311,48 @@ export class ICTPipelineCoordinator {
     return this.isDynamicAnalysisActive;
   }
 
+  public calculatePositionSize(riskDistancePts: number, estimatedMovePts?: number): {
+    contracts: number;
+    totalRiskUsd: number;
+    totalRewardUsd: number;
+    riskPerContract: number;
+    pointValue: number;
+  } {
+    if (this.hud) {
+      return this.hud.calculatePositionSize(riskDistancePts, estimatedMovePts);
+    }
+    const pointValue = 2;
+    const riskPerContract = Math.max(0, riskDistancePts * pointValue);
+    const contracts = riskPerContract > 0 ? Math.floor(100 / riskPerContract) : 0;
+    return {
+      contracts,
+      totalRiskUsd: contracts * riskPerContract,
+      totalRewardUsd: contracts * (estimatedMovePts || 0) * pointValue,
+      riskPerContract,
+      pointValue,
+    };
+  }
+
+  public getUserRiskBudget(): number {
+    return this.hud ? this.hud.getUserRiskBudget() : 100;
+  }
+
+  public setUserRiskBudget(budget: number): void {
+    if (this.hud) {
+      this.hud.setUserRiskBudget(budget);
+    }
+  }
+
+  public getSelectedInstrumentType(): 'MNQ' | 'NQ' {
+    return this.hud ? this.hud.getSelectedInstrumentType() : 'MNQ';
+  }
+
+  public setSelectedInstrumentType(type: 'MNQ' | 'NQ'): void {
+    if (this.hud) {
+      this.hud.setSelectedInstrumentType(type);
+    }
+  }
+
   public setRunning(running: boolean): void {
     this.isRunning = running;
     if (this.hud) {
