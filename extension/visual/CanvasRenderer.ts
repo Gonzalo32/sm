@@ -241,16 +241,17 @@ export class CanvasRenderer {
 
   private drawLine(l: VisualLine): void {
     const y = this.translator.priceToY(l.price);
-    const x1 = this.translator.indexToX(l.startCandleIndex, l.startTimestamp);
     const viewportWidth = this.translator.getViewport().width;
+    const isFullWidth = l.startCandleIndex === undefined || l.startCandleIndex < 0;
+    const x1 = isFullWidth ? 0 : this.translator.indexToX(l.startCandleIndex, l.startTimestamp);
     const x2 = l.endCandleIndex !== undefined ? this.translator.indexToX(l.endCandleIndex, l.endTimestamp) : viewportWidth;
 
     this.ctx.save();
     this.ctx.strokeStyle = l.color;
-    this.ctx.lineWidth = l.lineWidth || 1;
+    this.ctx.lineWidth = l.lineWidth || 1.5;
 
     if (l.lineStyle === 'DASHED') this.ctx.setLineDash([6, 4]);
-    else if (l.lineStyle === 'DOTTED') this.ctx.setLineDash([2, 2]);
+    else if (l.lineStyle === 'DOTTED') this.ctx.setLineDash([3, 3]);
 
     this.ctx.beginPath();
     this.ctx.moveTo(x1, y);
@@ -258,9 +259,30 @@ export class CanvasRenderer {
     this.ctx.stroke();
 
     if (l.label) {
+      this.ctx.save();
+      this.ctx.font = 'bold 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+      const textMetrics = this.ctx.measureText(l.label);
+      const paddingX = 6;
+      const pillWidth = textMetrics.width + paddingX * 2;
+      const pillHeight = 18;
+
+      // Ensure label is comfortably visible inside chart
+      const rawLabelX = isFullWidth ? 70 : (x1 + 8);
+      const labelX = Math.max(70, Math.min(rawLabelX, viewportWidth - pillWidth - 15));
+      const labelY = y - 4;
+
+      // Dark background pill with 1px colored border
+      this.ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+      this.ctx.fillRect(labelX - paddingX, labelY - 13, pillWidth, pillHeight);
+      this.ctx.strokeStyle = l.color;
+      this.ctx.lineWidth = 1;
+      this.ctx.setLineDash([]);
+      this.ctx.strokeRect(labelX - paddingX, labelY - 13, pillWidth, pillHeight);
+
+      // Label text
       this.ctx.fillStyle = l.color;
-      this.ctx.font = '10px sans-serif';
-      this.ctx.fillText(l.label, x1 + 4, y - 3);
+      this.ctx.fillText(l.label, labelX, labelY);
+      this.ctx.restore();
     }
 
     this.ctx.restore();

@@ -534,16 +534,75 @@ export class ICTPipelineCoordinator {
       }
     }
 
-    // Checkpoint 100.3 / 102: Apply visual suppression filter for non-READY analysis
-    let filteredSetupVisuals = setupVisuals;
-    if (this.lastAnalysis && this.lastAnalysis.status !== 'ANALYSIS_READY') {
-      filteredSetupVisuals = setupVisuals.filter(
-        (v) => !v.id.endsWith('-MARKER') && !v.id.endsWith('-TGT')
-      );
+    // Clean Chart Overlay: Draw ONLY horizontal lines marking price targets, invalidation, and reference entry.
+    // Full ICT analysis (FVGs, Order Blocks, Structure, Liquidity Pools) runs 100% in background and is reported in the HUD.
+    const cleanLines: VisualObject[] = [];
+
+    // 1. If Market Analyst scenario lines exist, extract them as full-width horizontal lines
+    if (analystVisuals && analystVisuals.length > 0) {
+      for (const v of analystVisuals) {
+        if (v.type === 'LINE') {
+          let label = v.label || '';
+          if (v.id.includes('nearby_line') && !label.includes('OBJETIVO')) {
+            label = `🎯 OBJETIVO: $${v.price.toFixed(2)}`;
+          } else if (v.id.includes('extended_line') && !label.includes('EXTENDIDO')) {
+            label = `🚀 EXTENDIDO: $${v.price.toFixed(2)}`;
+          } else if (v.id.includes('inv_line') && !label.includes('INVALIDACIÓN')) {
+            label = `🛑 INVALIDACIÓN: $${v.price.toFixed(2)}`;
+          } else if (v.id.includes('ref_line') && !label.includes('ENTRADA')) {
+            label = `📍 ENTRADA REF: $${v.price.toFixed(2)}`;
+          }
+
+          cleanLines.push({
+            ...v,
+            label,
+            startCandleIndex: -1, // Span full chart width
+          });
+        } else if (v.type === 'RECTANGLE' && v.id.includes('nearby_zone') && this.lastAnalysis?.selectedScenario?.nearbyTarget) {
+          // If nearby target was adapted as a rectangle zone, render it as a clean horizontal line
+          const tgt = this.lastAnalysis.selectedScenario.nearbyTarget;
+          cleanLines.push({
+            id: `${v.id}_line`,
+            type: 'LINE',
+            symbol: v.symbol,
+            timeframe: v.timeframe,
+            price: tgt.price,
+            startCandleIndex: -1,
+            startTimestamp: v.startTimestamp,
+            lineStyle: 'DASHED',
+            color: v.color,
+            lineWidth: 2,
+            label: `🎯 OBJETIVO: $${tgt.price.toFixed(2)}${tgt.rationale ? ' (' + tgt.rationale + ')' : ''}`,
+            zIndex: 95,
+          });
+        }
+      }
+    }
+
+    // 2. Fallback: if no active analyst lines yet, extract target/invalidation lines from setups or Draw On Liquidity (DOL)
+    if (cleanLines.length === 0 && setupVisuals.length > 0) {
+      for (const v of setupVisuals) {
+        if (v.type === 'LINE' && (v.id.includes('-TGT') || v.id.includes('DOL-TARGET') || v.id.includes('-INV'))) {
+          let label = v.label || '';
+          if (v.id.includes('-TGT') && !label.includes('OBJETIVO')) {
+            label = `🎯 OBJETIVO: $${v.price.toFixed(2)}`;
+          } else if (v.id.includes('-INV') && !label.includes('INVALIDACIÓN')) {
+            label = `🛑 INVALIDACIÓN: $${v.price.toFixed(2)}`;
+          } else if (v.id.includes('DOL-TARGET') && !label.includes('OBJETIVO')) {
+            label = `🎯 DOL OBJETIVO: $${v.price.toFixed(2)}`;
+          }
+
+          cleanLines.push({
+            ...v,
+            label,
+            startCandleIndex: -1,
+          });
+        }
+      }
     }
 
     const merged = (this.isChartOverlayVisible && this.isRunning)
-      ? [...filteredSetupVisuals, ...analystVisuals]
+      ? cleanLines
       : [];
 
     this.renderer.updateVisuals(merged, {

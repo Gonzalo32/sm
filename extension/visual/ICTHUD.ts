@@ -116,9 +116,9 @@ export class ICTHUD {
     hud.id = 'ict-assistant-hud';
     hud.style.cssText = `
       position: fixed;
-      top: 50px;
-      right: 20px;
-      width: 370px;
+      top: 60px;
+      left: 55px;
+      width: 360px;
       max-height: 85vh;
       overflow-y: auto;
       background: rgba(15, 23, 42, 0.96);
@@ -366,7 +366,7 @@ export class ICTHUD {
 
   public updateOverlayButtons(): void {
     if (typeof document === 'undefined') return;
-    const text = this.isChartOverlayVisible ? '👁 Ocultar Gráfico' : '👁 Mostrar Gráfico';
+    const text = this.isChartOverlayVisible ? '👁 Ocultar Líneas' : '👁 Mostrar Líneas';
     const bg = this.isChartOverlayVisible ? '#1e293b' : '#334155';
     const color = this.isChartOverlayVisible ? '#cbd5e1' : '#facc15';
 
