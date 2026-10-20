@@ -70,6 +70,9 @@ export class ICTHUD {
   public onToggleDynamicAnalysis?: (active: boolean) => void;
   public onToggleAnalystOverlay?: (visible: boolean) => void;
   public onClearAnalystOverlay?: () => void;
+  public onCalibrateViewport?: () => void;
+  public onAdjustZoom?: (factor: number) => void;
+  public onAdjustPan?: (bars: number) => void;
 
   // Replay Control Callbacks
   public onModeChange?: (mode: HUDMode) => void;
@@ -702,7 +705,7 @@ export class ICTHUD {
 
       <!-- Geometry & Engine Debug Info at the very end of ICT Assistant -->
       <div style="border-top:1px solid #334155; padding-top:6px; margin-top:8px; font-size:9px; color:#64748b; display:flex; justify-content:space-between; align-items:center;">
-        <span>Velas: ${options?.candleCount || 0} • Exec: ${options?.executionTimeMs || 0}ms</span>
+        <span>Velas: <b style="color:#f8fafc;">${options?.candleCount || 0}</b> • Feed: <b style="color:#4ade80;">LIVE</b></span>
         <span style="color:#38bdf8; font-weight:600;">Geometría: Sincronizada</span>
         <span style="color:${(options?.fps || 60) >= 55 ? '#4ade80' : '#facc15'}; font-weight:700;">${options?.fps || 60} FPS</span>
       </div>
@@ -866,6 +869,17 @@ export class ICTHUD {
           ${sessionBadgeHtml}
           ${scenarioDetails}
           <div style="display:flex; gap:4px; margin-top:6px;">
+            <button id="btn-hud-calibrate" style="flex:2; padding:5px 8px; background:#0284c7; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:4px;" title="Alinear y centrar dibujos sobre las velas visibles">
+              🎯 Centrar en Velas
+            </button>
+            <button id="btn-hud-zoom-out" style="flex:1; padding:5px 6px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:10px; font-weight:700;" title="Alejar escala (ver más velas)">
+              🔍 -
+            </button>
+            <button id="btn-hud-zoom-in" style="flex:1; padding:5px 6px; background:#1e293b; color:#cbd5e1; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:10px; font-weight:700;" title="Acercar escala (ver menos velas)">
+              🔍 +
+            </button>
+          </div>
+          <div style="display:flex; gap:4px; margin-top:4px;">
             <button id="btn-analyst-toggle-overlay" style="flex:1; padding:3px 6px; background:${this.isChartOverlayVisible ? '#1e293b' : '#334155'}; color:${this.isChartOverlayVisible ? '#cbd5e1' : '#facc15'}; border:1px solid #475569; border-radius:4px; cursor:pointer; font-size:9px; font-weight:700;">
               ${this.isChartOverlayVisible ? '👁 Ocultar Gráfico' : '👁 Mostrar Gráfico'}
             </button>
@@ -972,6 +986,24 @@ export class ICTHUD {
       this.lastDirectionChangeNotice = null;
       if (this.onClearAnalystOverlay) {
         this.onClearAnalystOverlay();
+      }
+    });
+
+    document.getElementById('btn-hud-calibrate')?.addEventListener('click', () => {
+      if (this.onCalibrateViewport) {
+        this.onCalibrateViewport();
+      }
+    });
+
+    document.getElementById('btn-hud-zoom-out')?.addEventListener('click', () => {
+      if (this.onAdjustZoom) {
+        this.onAdjustZoom(1.15);
+      }
+    });
+
+    document.getElementById('btn-hud-zoom-in')?.addEventListener('click', () => {
+      if (this.onAdjustZoom) {
+        this.onAdjustZoom(0.85);
       }
     });
 

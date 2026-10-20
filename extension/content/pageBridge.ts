@@ -79,6 +79,51 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
     if (w.widget && typeof w.widget.activeChart === 'function') return w.widget;
     if (w._tvWidget && typeof w._tvWidget.activeChart === 'function') return w._tvWidget;
     if (w.chartWidget && typeof w.chartWidget.activeChart === 'function') return w.chartWidget;
+    if (w.TradingView && typeof w.TradingView.activeChart === 'function') return w.TradingView;
+
+    // A. Check iframes for embedded TradingView widget instance
+    try {
+      const iframes = document.querySelectorAll('iframe');
+      for (let i = 0; i < iframes.length; i++) {
+        const ifr = iframes[i];
+        try {
+          const cw = ifr.contentWindow as any;
+          if (!cw) continue;
+          if (cw.tvWidget && typeof cw.tvWidget.activeChart === 'function') return cw.tvWidget;
+          if (cw.widget && typeof cw.widget.activeChart === 'function') return cw.widget;
+          if (cw._tvWidget && typeof cw._tvWidget.activeChart === 'function') return cw._tvWidget;
+          if (cw.chartWidget && typeof cw.chartWidget.activeChart === 'function') return cw.chartWidget;
+          if (cw.TradingView && typeof cw.TradingView.activeChart === 'function') return cw.TradingView;
+        } catch (_) {}
+      }
+    } catch (_) {}
+
+    // B. Check React fiber on chart / canvas container
+    try {
+      const chartEl = document.querySelector('.tv-side-toolbar') || 
+                      document.querySelector('iframe[id^="tradingview_"]') ||
+                      document.querySelector('canvas');
+      if (chartEl) {
+        let curr: any = chartEl;
+        while (curr && curr !== document.body) {
+          const fiberKey = Object.keys(curr).find(k => k.startsWith('__reactFiber') || k.startsWith('__reactInternalInstance'));
+          if (fiberKey) {
+            let fiber = (curr as any)[fiberKey];
+            for (let depth = 0; depth < 20 && fiber; depth++) {
+              const p = fiber.memoizedProps;
+              const s = fiber.memoizedState;
+              if (p?.widget && typeof p.widget.activeChart === 'function') return p.widget;
+              if (p?.tvWidget && typeof p.tvWidget.activeChart === 'function') return p.tvWidget;
+              if (s?.widget && typeof s.widget.activeChart === 'function') return s.widget;
+              if (fiber.stateNode?.widget && typeof fiber.stateNode.widget.activeChart === 'function') return fiber.stateNode.widget;
+              fiber = fiber.return;
+            }
+          }
+          curr = curr.parentElement;
+        }
+      }
+    } catch (_) {}
+
     return null;
   }
 
@@ -123,11 +168,22 @@ import { Candle, HistoricalFetchReport } from '../../core/market/Candle';
         return;
       }
 
-      const container = (document.querySelector('.chart-container') as HTMLElement) ||
-                        (document.querySelector('[class*="chart-container"]') as HTMLElement) ||
-                        document.body;
-      const width = container.clientWidth || 800;
-      const height = container.clientHeight || 600;
+      let width = 800;
+      let height = 600;
+      const canvases = Array.from(document.querySelectorAll('canvas')).filter(
+        (c) => c.id !== 'ict-canvas-overlay' && c.clientWidth > 250 && c.clientHeight > 150
+      );
+      if (canvases.length > 0) {
+        canvases.sort((a, b) => (b.clientWidth * b.clientHeight) - (a.clientWidth * a.clientHeight));
+        width = canvases[0].clientWidth;
+        height = canvases[0].clientHeight;
+      } else {
+        const container = (document.querySelector('.chart-container') as HTMLElement) ||
+                          (document.querySelector('[class*="chart-container"]') as HTMLElement) ||
+                          document.body;
+        width = container.clientWidth || 800;
+        height = container.clientHeight || 600;
+      }
 
       let firstCandleIndex = 0;
       let lastCandleIndex = 100;

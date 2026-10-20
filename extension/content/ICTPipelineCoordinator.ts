@@ -142,6 +142,23 @@ export class ICTPipelineCoordinator {
           this.renderer.clear();
         }
       };
+      this.hud.onCalibrateViewport = () => {
+        this.calibrateToCandles();
+      };
+      this.hud.onAdjustZoom = (factor: number) => {
+        if (this.renderer) {
+          this.renderer.getTranslator().zoom(factor);
+          this.refreshVisuals();
+        }
+      };
+      this.hud.onAdjustPan = (bars: number) => {
+        if (this.renderer) {
+          const trans = this.renderer.getTranslator();
+          const dx = bars * trans.getViewport().barWidth;
+          trans.pan(dx, 0);
+          this.refreshVisuals();
+        }
+      };
     }
 
     // Listen to replay updates to re-evaluate on every step
@@ -451,6 +468,44 @@ export class ICTPipelineCoordinator {
   }
 
   /**
+   * Calibrates the overlay canvas coordinate system to fit visible market candles.
+   * Scans confirmed candles to establish precise minPrice/maxPrice with realistic 8% auto-scale padding,
+   * aligns horizontal barWidth, and refreshes visuals.
+   */
+  public calibrateToCandles(visibleCount?: number): void {
+    if (!this.renderer) return;
+    const translator = this.renderer.getTranslator();
+    const candles = this.store.getCandles();
+    if (candles.length === 0) return;
+
+    // Determine count of candles to show. If not specified, show all session candles (up to 450)
+    // or default to comfortably framing recent market structure.
+    const count = visibleCount && visibleCount > 0
+      ? Math.min(candles.length, Math.max(10, visibleCount))
+      : Math.min(candles.length, Math.max(60, Math.min(450, candles.length)));
+
+    const visibleCandles = candles.slice(-count);
+    const minLow = Math.min(...visibleCandles.map((c) => c.low));
+    const maxHigh = Math.max(...visibleCandles.map((c) => c.high));
+
+    // Realistic auto-scale padding matching TradingView's vertical margins (~8%)
+    const priceRange = maxHigh - minLow;
+    const pad = Math.max(5, priceRange * 0.08);
+
+    translator.updateViewport({
+      minPrice: minLow - pad,
+      maxPrice: maxHigh + pad,
+      firstCandleIndex: Math.max(0, candles.length - count),
+      lastCandleIndex: candles.length - 1,
+    });
+    translator.setViewportSynchronized(true);
+    this.visualAdapter.setViewportSynchronized(true);
+    this.analystVisualAdapter.setViewportSynchronized(true);
+
+    this.refreshVisuals();
+  }
+
+  /**
    * Refreshes chart overlay canvas with merged visuals (ICT setups + Market Analyst).
    */
   public refreshVisuals(): void {
@@ -475,18 +530,7 @@ export class ICTPipelineCoordinator {
     if (translator && candles.length > 0) {
       const vp = translator.getViewport();
       if (!translator.isViewportSynchronized() || (vp.minPrice === 21400 && vp.maxPrice === 21500)) {
-        const recentCandles = candles.slice(-80);
-        const minLow = Math.min(...recentCandles.map((c) => c.low));
-        const maxHigh = Math.max(...recentCandles.map((c) => c.high));
-        const pad = Math.max(10, (maxHigh - minLow) * 0.15);
-        translator.updateViewport({
-          minPrice: minLow - pad,
-          maxPrice: maxHigh + pad,
-          firstCandleIndex: Math.max(0, candles.length - 80),
-          lastCandleIndex: candles.length - 1,
-        });
-        translator.setViewportSynchronized(true);
-        this.analystVisualAdapter.setViewportSynchronized(true);
+        this.calibrateToCandles();
       }
     }
 

@@ -34,6 +34,11 @@ coordinator.getVisualAdapter().setFailClosedOnUnsyncedViewport(true);
 // Initial HUD render so the UI panel and manual analysis button are immediately visible
 coordinator.reevaluate();
 
+hud.onCalibrateViewport = () => {
+  canvasManager.reattachToChartIfAvailable();
+  coordinator.calibrateToCandles();
+};
+
 // 3.5 Interactive Chart Drag & Wheel Pan/Zoom Tracker
 if (canvasRenderer && typeof window !== 'undefined') {
   const translator = canvasRenderer.getTranslator();
@@ -132,6 +137,7 @@ window.addEventListener('message', (event) => {
     }
     const batchCandles: Candle[] = event.data.candles;
     if (Array.isArray(batchCandles) && batchCandles.length > 0) {
+      canvasManager.reattachToChartIfAvailable();
       coordinator.ingestCandles(batchCandles);
     }
   } else if (type === 'ICT_CANDLE_UPDATE' || type === 'ICT_NEW_CANDLE' || type === 'ICT_CANDLE_CLOSE') {
@@ -145,6 +151,7 @@ window.addEventListener('message', (event) => {
       }
     }
     if (candle && coordinator.isRunningState()) {
+      canvasManager.reattachToChartIfAvailable();
       coordinator.ingestCandle(candle);
       recorder.handleCandleEvent({ type, candle, symbol: symbol || 'MNQ', timeframe: timeframe || '1m' }).catch(() => {});
     }

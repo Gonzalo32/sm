@@ -32,6 +32,64 @@ export class OverlayCanvasManager {
   }
 
   /**
+   * Resolves the TradeSea / TradingView chart container element safely.
+   */
+  public static resolveChartContainer(): HTMLElement {
+    if (typeof document === 'undefined') return null as any;
+
+    // A. Check for TradingView chart iframe parent
+    const iframe = document.querySelector('iframe[id^="tradingview_"]') ||
+                   document.querySelector('iframe[src*="tradingview"]');
+    if (iframe && iframe.parentElement) {
+      return iframe.parentElement as HTMLElement;
+    }
+
+    // B. Check for TradingView Side Toolbar container
+    const tvToolbar = document.querySelector('.tv-side-toolbar');
+    if (tvToolbar && tvToolbar.parentElement) {
+      return tvToolbar.parentElement as HTMLElement;
+    }
+
+    // C. Check for common chart container selectors
+    const classCandidates = [
+      '.chart-container',
+      '[class*="chart-container"]',
+      '.chart-gui-wrapper',
+      '[class*="chartWrapper"]',
+      '[class*="chart-pane"]',
+      '.layout__area--center',
+    ];
+    for (const sel of classCandidates) {
+      try {
+        const el = document.querySelector(sel) as HTMLElement;
+        if (el && el.clientWidth > 200 && el.clientHeight > 150) {
+          return el;
+        }
+      } catch (_) {}
+    }
+
+    // D. Check for the largest canvas on page (excluding our overlay canvas)
+    try {
+      if (typeof document.querySelectorAll === 'function') {
+        const canvases = Array.from(document.querySelectorAll('canvas')).filter(
+          (c) => c.id !== 'ict-canvas-overlay' && c.clientWidth > 250 && c.clientHeight > 150
+        );
+        if (canvases.length > 0) {
+          canvases.sort((a, b) => (b.clientWidth * b.clientHeight) - (a.clientWidth * a.clientHeight));
+          if (canvases[0].parentElement) {
+            return canvases[0].parentElement as HTMLElement;
+          }
+        }
+      }
+    } catch (_) {}
+
+    return (document.querySelector('.chart-container') as HTMLElement) ||
+           (document.querySelector('[class*="chart-container"]') as HTMLElement) ||
+           (document.querySelector('iframe[id^="tradingview_"]')?.parentElement as HTMLElement) ||
+           document.body;
+  }
+
+  /**
    * Initializes the overlay canvas, attaches renderer, and starts passive resize observation.
    * Safe against missing containers, repeated initialization, and zero-sized containers.
    */
@@ -46,12 +104,19 @@ export class OverlayCanvasManager {
     // 1. Resolve container safely without touching trading controls
     const container =
       targetContainer ||
-      (document.querySelector('.chart-container') as HTMLElement) ||
-      (document.querySelector('[class*="chart-container"]') as HTMLElement) ||
-      (document.querySelector('iframe[id^="tradingview_"]')?.parentElement as HTMLElement) ||
-      document.body;
+      OverlayCanvasManager.resolveChartContainer();
 
     this.container = container;
+
+    // Ensure non-static position on container if not body
+    if (container !== document.body && typeof window !== 'undefined') {
+      try {
+        const pos = window.getComputedStyle ? window.getComputedStyle(container).position : container.style.position;
+        if (pos === 'static') {
+          container.style.position = 'relative';
+        }
+      } catch (_) {}
+    }
 
     // 2. Prevent duplicate canvases or redundant initialization
     const existingCanvas = document.getElementById(this.canvasId) as HTMLCanvasElement | null;
@@ -103,6 +168,36 @@ export class OverlayCanvasManager {
   }
 
   /**
+   * Reattaches the canvas to the TradeSea chart container if it became available after initial load.
+   */
+  public reattachToChartIfAvailable(): boolean {
+    if (typeof document === 'undefined' || !this.canvas) return false;
+    const bestContainer = OverlayCanvasManager.resolveChartContainer();
+    if (bestContainer && bestContainer !== this.container && bestContainer !== document.body) {
+      try {
+        if (this.canvas.parentElement) {
+          this.canvas.parentElement.removeChild(this.canvas);
+        }
+        bestContainer.appendChild(this.canvas);
+        this.container = bestContainer;
+        if (typeof window !== 'undefined') {
+          const pos = window.getComputedStyle ? window.getComputedStyle(bestContainer).position : bestContainer.style.position;
+          if (pos === 'static') {
+            bestContainer.style.position = 'relative';
+          }
+        }
+        this.canvas.style.position = 'absolute';
+        this.canvas.style.top = '0';
+        this.canvas.style.left = '0';
+        this.setupResizeObserver(bestContainer);
+        this.syncDimensions(bestContainer.clientWidth, bestContainer.clientHeight);
+        return true;
+      } catch (_) {}
+    }
+    return false;
+  }
+
+  /**
    * Synchronizes canvas drawing-buffer dimensions and CSS layout dimensions with container.
    * Handles DPR scaling without double-scaling or distortion.
    */
@@ -112,6 +207,24 @@ export class OverlayCanvasManager {
     // Handle zero-sized or temporarily hidden containers gracefully without throwing
     if (clientWidth <= 0 || clientHeight <= 0) {
       return;
+    }
+
+    // If mounted on body, align directly to the largest chart canvas bounding box
+    if (this.container === document.body && typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+      try {
+        const canvases = Array.from(document.querySelectorAll('canvas')).filter(
+          (c) => c.id !== this.canvasId && c.clientWidth > 250 && c.clientHeight > 150
+        );
+        if (canvases.length > 0) {
+          canvases.sort((a, b) => (b.clientWidth * b.clientHeight) - (a.clientWidth * a.clientHeight));
+          const rect = canvases[0].getBoundingClientRect();
+          this.canvas.style.position = 'fixed';
+          this.canvas.style.top = `${rect.top}px`;
+          this.canvas.style.left = `${rect.left}px`;
+          clientWidth = rect.width;
+          clientHeight = rect.height;
+        }
+      } catch (_) {}
     }
 
     const safeW = Math.max(1, Math.round(clientWidth));
